@@ -170,7 +170,7 @@ const Chatflows = () => {
                     <Box
                         sx={{
                             borderRadius: '10px',
-                            border: '.5px solid grey',
+                            backgroundColor: '#F6F6F6',
                             padding: '4rem',
                             display: 'flex',
                             justifyContent: 'center',
@@ -216,6 +216,7 @@ const Chatflows = () => {
                                     variant='outlined'
                                     type='search'
                                     placeholder='Search name or category'
+                                    onChange={onSearchChange}
                                 />
 
                                 <StyledButton
