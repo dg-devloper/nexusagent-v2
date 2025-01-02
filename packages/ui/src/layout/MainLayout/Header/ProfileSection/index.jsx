@@ -40,7 +40,7 @@ import AboutDialog from '@/ui-component/dialog/AboutDialog'
 import Transitions from '@/ui-component/extended/Transitions'
 
 // assets
-import { IconFileExport, IconFileUpload, IconInfoCircle, IconLogout, IconSettings, IconX } from '@tabler/icons-react'
+import { IconFileExport, IconFileUpload, IconInfoCircle, IconLogout, IconX } from '@tabler/icons-react'
 import './index.css'
 import ExportingGIF from '@/assets/images/Exporting.gif'
 
@@ -331,9 +331,7 @@ const ProfileSection = ({ username, handleLogout }) => {
                     }}
                     onClick={handleToggle}
                     color='inherit'
-                >
-                    <IconSettings stroke={1.5} size='1.3rem' />
-                </Avatar>
+                ></Avatar>
             </ButtonBase>
             <Popper
                 placement='bottom-end'

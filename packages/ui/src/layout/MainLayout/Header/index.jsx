@@ -9,7 +9,6 @@ import { Avatar, Box, ButtonBase, Switch } from '@mui/material'
 import { styled } from '@mui/material/styles'
 
 // project imports
-import LogoSection from '../LogoSection'
 import ProfileSection from './ProfileSection'
 
 // assets
@@ -101,9 +100,6 @@ const Header = ({ handleLeftDrawerToggle }) => {
                     }
                 }}
             >
-                <Box component='span' sx={{ display: { xs: 'none', md: 'block' }, flexGrow: 1 }}>
-                    <LogoSection />
-                </Box>
                 <ButtonBase sx={{ borderRadius: '12px', overflow: 'hidden' }}>
                     <Avatar
                         variant='rounded'

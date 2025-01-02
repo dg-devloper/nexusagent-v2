@@ -74,7 +74,7 @@ const Sidebar = ({ drawerOpen, drawerToggle, window }) => {
                         background: theme.palette.background.default,
                         color: theme.palette.text.primary,
                         [theme.breakpoints.up('md')]: {
-                            top: `${headerHeight}px`
+                            top: `0px`
                         },
                         borderRight: drawerOpen ? '1px solid' : 'none',
                         borderColor: drawerOpen ? theme.palette.primary[200] + 75 : 'transparent',

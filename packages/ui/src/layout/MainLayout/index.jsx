@@ -75,27 +75,28 @@ const MainLayout = () => {
     return (
         <Box sx={{ display: 'flex' }}>
             <CssBaseline />
-            {/* header */}
-            <AppBar
-                enableColorOnDark
-                position='fixed'
-                color='inherit'
-                elevation={0}
-                sx={{
-                    bgcolor: theme.palette.background.default,
-                    transition: leftDrawerOpened ? theme.transitions.create('width') : 'none'
-                }}
-            >
-                <Toolbar sx={{ height: `${headerHeight}px`, borderBottom: '1px solid', borderColor: theme.palette.primary[200] + 75 }}>
-                    <Header handleLeftDrawerToggle={handleLeftDrawerToggle} />
-                </Toolbar>
-            </AppBar>
 
             {/* drawer */}
             <Sidebar drawerOpen={leftDrawerOpened} drawerToggle={handleLeftDrawerToggle} />
 
             {/* main content */}
             <Main theme={theme} open={leftDrawerOpened}>
+                {/* header */}
+                <AppBar
+                    enableColorOnDark
+                    position='sticky'
+                    color='inherit'
+                    elevation={0}
+                    sx={{
+                        bgcolor: theme.palette.background.default,
+                        transition: leftDrawerOpened ? theme.transitions.create('width') : 'none'
+                    }}
+                >
+                    <Toolbar sx={{ height: `${headerHeight}px`, borderBottom: '1px solid', borderColor: theme.palette.primary[200] + 75 }}>
+                        <Header handleLeftDrawerToggle={handleLeftDrawerToggle} />
+                    </Toolbar>
+                </AppBar>
+
                 <Outlet />
             </Main>
         </Box>

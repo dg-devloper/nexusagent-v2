@@ -2,19 +2,16 @@ import { useEffect, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 
 // material-ui
-import { Box, Skeleton, Stack, ToggleButton, ToggleButtonGroup } from '@mui/material'
+import { Box, Grid, OutlinedInput, Stack, Typography } from '@mui/material'
 import { useTheme } from '@mui/material/styles'
 
 // project imports
 import MainCard from '@/ui-component/cards/MainCard'
-import ItemCard from '@/ui-component/cards/ItemCard'
-import { gridSpacing } from '@/store/constant'
 import WorkflowEmptySVG from '@/assets/images/workflow_empty.svg'
 import LoginDialog from '@/ui-component/dialog/LoginDialog'
 import ConfirmDialog from '@/ui-component/dialog/ConfirmDialog'
 import { FlowListTable } from '@/ui-component/table/FlowListTable'
 import { StyledButton } from '@/ui-component/button/StyledButton'
-import ViewHeader from '@/layout/MainLayout/ViewHeader'
 import ErrorBoundary from '@/ErrorBoundary'
 
 // API
@@ -27,7 +24,8 @@ import useApi from '@/hooks/useApi'
 import { baseURL } from '@/store/constant'
 
 // icons
-import { IconPlus, IconLayoutGrid, IconList } from '@tabler/icons-react'
+import { IconPlus } from '@tabler/icons-react'
+import { IconSearch } from '@tabler/icons-react'
 
 // ==============================|| CHATFLOWS ||============================== //
 
@@ -43,7 +41,7 @@ const Chatflows = () => {
     const [loginDialogProps, setLoginDialogProps] = useState({})
 
     const getAllChatflowsApi = useApi(chatflowsApi.getAllChatflows)
-    const [view, setView] = useState(localStorage.getItem('flowDisplayStyle') || 'card')
+    const [view, setView] = useState('list')
 
     const handleChange = (event, nextView) => {
         if (nextView === null) return
@@ -131,7 +129,7 @@ const Chatflows = () => {
                 <ErrorBoundary error={error} />
             ) : (
                 <Stack flexDirection='column' sx={{ gap: 3 }}>
-                    <ViewHeader onSearchChange={onSearchChange} search={true} searchPlaceholder='Search Name or Category' title='Chatflows'>
+                    {/* <ViewHeader onSearchChange={onSearchChange} search={true} searchPlaceholder='Search Name or Category' title='Chatflows'>
                         <ToggleButtonGroup
                             sx={{ borderRadius: 2, maxHeight: 40 }}
                             value={view}
@@ -167,24 +165,72 @@ const Chatflows = () => {
                         <StyledButton variant='contained' onClick={addNew} startIcon={<IconPlus />} sx={{ borderRadius: 2, height: 40 }}>
                             Add New
                         </StyledButton>
-                    </ViewHeader>
-                    {!view || view === 'card' ? (
-                        <>
-                            {isLoading && !getAllChatflowsApi.data ? (
-                                <Box display='grid' gridTemplateColumns='repeat(3, 1fr)' gap={gridSpacing}>
-                                    <Skeleton variant='rounded' height={160} />
-                                    <Skeleton variant='rounded' height={160} />
-                                    <Skeleton variant='rounded' height={160} />
-                                </Box>
-                            ) : (
-                                <Box display='grid' gridTemplateColumns='repeat(3, 1fr)' gap={gridSpacing}>
-                                    {getAllChatflowsApi.data?.filter(filterFlows).map((data, index) => (
-                                        <ItemCard key={index} onClick={() => goToCanvas(data)} data={data} images={images[data.id]} />
-                                    ))}
-                                </Box>
-                            )}
-                        </>
-                    ) : (
+                    </ViewHeader> */}
+
+                    <Box
+                        sx={{
+                            borderRadius: '10px',
+                            border: '.5px solid grey',
+                            padding: '4rem',
+                            display: 'flex',
+                            justifyContent: 'center',
+                            marginTop: '1rem'
+                        }}
+                    >
+                        <Stack spacing={1}>
+                            <Grid container justifyContent='center' alignItems='center' gap={2}>
+                                <Grid>Logo</Grid>
+                                <Grid>
+                                    <Typography variant='h1'>Chatflows</Typography>
+                                </Grid>
+                            </Grid>
+
+                            <Typography sx={{ widht: '100%' }}>
+                                Lorem ipsum dolor sit amet consectetur adipisicing elit. Praesentium quos, qui minus voluptatum corrupti
+                            </Typography>
+
+                            <Box sx={{ display: 'flex', flexWrap: 'wrap', height: '40px', gap: '1rem' }}>
+                                <OutlinedInput
+                                    size='small'
+                                    sx={{
+                                        minWidth: '80%',
+                                        height: '100%',
+                                        borderRadius: 2,
+                                        '& .MuiOutlinedInput-notchedOutline': {
+                                            borderRadius: 2
+                                        }
+                                    }}
+                                    startAdornment={
+                                        <Box
+                                            sx={{
+                                                color: theme.palette.grey[400],
+                                                display: 'flex',
+                                                alignItems: 'center',
+                                                justifyContent: 'center',
+                                                mr: 1
+                                            }}
+                                        >
+                                            <IconSearch style={{ color: 'inherit', width: 16, height: 16 }} />
+                                        </Box>
+                                    }
+                                    variant='outlined'
+                                    type='search'
+                                    placeholder='Search name or category'
+                                />
+
+                                <StyledButton
+                                    variant='contained'
+                                    onClick={addNew}
+                                    startIcon={<IconPlus />}
+                                    sx={{ borderRadius: 2, height: 40 }}
+                                >
+                                    Add
+                                </StyledButton>
+                            </Box>
+                        </Stack>
+                    </Box>
+
+                    {view === 'list' && (
                         <FlowListTable
                             data={getAllChatflowsApi.data}
                             images={images}
