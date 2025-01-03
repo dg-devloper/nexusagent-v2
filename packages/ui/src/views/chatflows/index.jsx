@@ -3,7 +3,6 @@ import { useNavigate } from 'react-router-dom'
 
 // material-ui
 import { Box, Stack } from '@mui/material'
-import { useTheme } from '@mui/material/styles'
 
 // project imports
 import MainCard from '@/ui-component/cards/MainCard'
@@ -30,7 +29,6 @@ import { IconHierarchy } from '@tabler/icons-react'
 
 const Chatflows = () => {
     const navigate = useNavigate()
-    const theme = useTheme()
 
     const [isLoading, setLoading] = useState(true)
     const [error, setError] = useState(null)

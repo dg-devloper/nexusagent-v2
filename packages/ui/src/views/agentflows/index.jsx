@@ -2,8 +2,7 @@ import { useEffect, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 
 // material-ui
-import { Box, Skeleton, Stack, ToggleButton, ToggleButtonGroup } from '@mui/material'
-import { useTheme } from '@mui/material/styles'
+import { Box, Skeleton, Stack } from '@mui/material'
 
 // project imports
 import MainCard from '@/ui-component/cards/MainCard'
@@ -13,8 +12,6 @@ import AgentsEmptySVG from '@/assets/images/agents_empty.svg'
 import LoginDialog from '@/ui-component/dialog/LoginDialog'
 import ConfirmDialog from '@/ui-component/dialog/ConfirmDialog'
 import { FlowListTable } from '@/ui-component/table/FlowListTable'
-import { StyledButton } from '@/ui-component/button/StyledButton'
-import ViewHeader from '@/layout/MainLayout/ViewHeader'
 import ErrorBoundary from '@/ErrorBoundary'
 
 // API
@@ -27,13 +24,13 @@ import useApi from '@/hooks/useApi'
 import { baseURL } from '@/store/constant'
 
 // icons
-import { IconPlus, IconLayoutGrid, IconList } from '@tabler/icons-react'
+import HeaderSection from '@/layout/MainLayout/HeaderSection'
+import { IconUsersGroup } from '@tabler/icons-react'
 
 // ==============================|| AGENTS ||============================== //
 
 const Agentflows = () => {
     const navigate = useNavigate()
-    const theme = useTheme()
 
     const [isLoading, setLoading] = useState(true)
     const [error, setError] = useState(null)
@@ -43,13 +40,14 @@ const Agentflows = () => {
     const [loginDialogProps, setLoginDialogProps] = useState({})
 
     const getAllAgentflows = useApi(chatflowsApi.getAllAgentflows)
-    const [view, setView] = useState(localStorage.getItem('flowDisplayStyle') || 'card')
 
-    const handleChange = (event, nextView) => {
-        if (nextView === null) return
-        localStorage.setItem('flowDisplayStyle', nextView)
-        setView(nextView)
-    }
+    const view = 'list'
+
+    // const handleChange = (event, nextView) => {
+    //     if (nextView === null) return
+    //     localStorage.setItem('flowDisplayStyle', nextView)
+    //     setView(nextView)
+    // }
 
     const onSearchChange = (event) => {
         setSearch(event.target.value)
@@ -131,43 +129,7 @@ const Agentflows = () => {
                 <ErrorBoundary error={error} />
             ) : (
                 <Stack flexDirection='column' sx={{ gap: 3 }}>
-                    <ViewHeader onSearchChange={onSearchChange} search={true} searchPlaceholder='Search Name or Category' title='Agents'>
-                        <ToggleButtonGroup
-                            sx={{ borderRadius: 2, maxHeight: 40 }}
-                            value={view}
-                            color='primary'
-                            exclusive
-                            onChange={handleChange}
-                        >
-                            <ToggleButton
-                                sx={{
-                                    borderColor: theme.palette.grey[900] + 25,
-                                    borderRadius: 2,
-                                    color: theme?.customization?.isDarkMode ? 'white' : 'inherit'
-                                }}
-                                variant='contained'
-                                value='card'
-                                title='Card View'
-                            >
-                                <IconLayoutGrid />
-                            </ToggleButton>
-                            <ToggleButton
-                                sx={{
-                                    borderColor: theme.palette.grey[900] + 25,
-                                    borderRadius: 2,
-                                    color: theme?.customization?.isDarkMode ? 'white' : 'inherit'
-                                }}
-                                variant='contained'
-                                value='list'
-                                title='List View'
-                            >
-                                <IconList />
-                            </ToggleButton>
-                        </ToggleButtonGroup>
-                        <StyledButton variant='contained' onClick={addNew} startIcon={<IconPlus />} sx={{ borderRadius: 2, height: 40 }}>
-                            Add New
-                        </StyledButton>
-                    </ViewHeader>
+                    <HeaderSection onSearchChange={onSearchChange} onButtonClick={addNew} title='Agenflows' icon={<IconUsersGroup />} />
                     {!view || view === 'card' ? (
                         <>
                             {isLoading && !getAllAgentflows.data ? (
