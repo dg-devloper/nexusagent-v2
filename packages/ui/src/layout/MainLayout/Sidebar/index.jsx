@@ -71,7 +71,7 @@ const Sidebar = ({ drawerOpen, drawerToggle, window }) => {
                 sx={{
                     '& .MuiDrawer-paper': {
                         width: drawerWidth,
-                        background: theme.palette.background.default,
+                        background: theme.palette['primary'].main,
                         color: theme.palette.text.primary,
                         [theme.breakpoints.up('md')]: {
                             top: `0px`

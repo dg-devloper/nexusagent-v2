@@ -111,13 +111,15 @@ const NavItem = ({ item, level, navType, onClick, onUploadFile }) => {
             onClick={() => itemHandler(item.id)}
         >
             {item.id === 'loadChatflow' && <input type='file' hidden accept='.json' onChange={(e) => handleFileUpload(e)} />}
-            <ListItemIcon sx={{ my: 'auto', minWidth: !item?.icon ? 18 : 36 }}>{itemIcon}</ListItemIcon>
+            <ListItemIcon sx={{ my: 'auto', minWidth: !item?.icon ? 18 : 36, color: theme.palette['primary'].light }}>
+                {itemIcon}
+            </ListItemIcon>
             <ListItemText
                 primary={
                     <Typography
                         variant={customization.isOpen.findIndex((id) => id === item.id) > -1 ? 'h5' : 'body1'}
                         color='inherit'
-                        sx={{ my: 0.5 }}
+                        sx={{ my: 0.5, color: theme.palette['primary'].light }}
                     >
                         {item.title}
                     </Typography>

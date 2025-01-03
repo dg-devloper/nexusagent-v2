@@ -2,14 +2,18 @@ import { styled } from '@mui/material/styles'
 import { Button } from '@mui/material'
 import MuiToggleButton from '@mui/material/ToggleButton'
 
-export const StyledButton = styled(Button)(({ theme, color = 'primary' }) => ({
-    color: 'white',
-    backgroundColor: theme.palette[color].main,
-    '&:hover': {
+export const StyledButton = styled(Button)(({ theme, color = 'primary' }) => {
+    console.log(theme.palette[color].main)
+
+    return {
+        color: 'white',
         backgroundColor: theme.palette[color].main,
-        backgroundImage: `linear-gradient(rgb(0 0 0/10%) 0 0)`
+        '&:hover': {
+            backgroundColor: theme.palette[color].main,
+            backgroundImage: `linear-gradient(rgb(0 0 0/10%) 0 0)`
+        }
     }
-}))
+})
 
 export const StyledToggleButton = styled(MuiToggleButton)(({ theme, color = 'primary' }) => ({
     '&.Mui-selected, &.Mui-selected:hover': {
