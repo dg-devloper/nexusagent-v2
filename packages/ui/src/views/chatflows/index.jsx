@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 
 // material-ui
-import { Box, Grid, OutlinedInput, Stack, Typography } from '@mui/material'
+import { Box, Stack } from '@mui/material'
 import { useTheme } from '@mui/material/styles'
 
 // project imports
@@ -11,7 +11,6 @@ import WorkflowEmptySVG from '@/assets/images/workflow_empty.svg'
 import LoginDialog from '@/ui-component/dialog/LoginDialog'
 import ConfirmDialog from '@/ui-component/dialog/ConfirmDialog'
 import { FlowListTable } from '@/ui-component/table/FlowListTable'
-import { StyledButton } from '@/ui-component/button/StyledButton'
 import ErrorBoundary from '@/ErrorBoundary'
 
 // API
@@ -24,8 +23,8 @@ import useApi from '@/hooks/useApi'
 import { baseURL } from '@/store/constant'
 
 // icons
-import { IconPlus } from '@tabler/icons-react'
-import { IconSearch } from '@tabler/icons-react'
+import HeaderSection from '@/layout/MainLayout/HeaderSection'
+import { IconHierarchy } from '@tabler/icons-react'
 
 // ==============================|| CHATFLOWS ||============================== //
 
@@ -129,107 +128,7 @@ const Chatflows = () => {
                 <ErrorBoundary error={error} />
             ) : (
                 <Stack flexDirection='column' sx={{ gap: 3 }}>
-                    {/* <ViewHeader onSearchChange={onSearchChange} search={true} searchPlaceholder='Search Name or Category' title='Chatflows'>
-                        <ToggleButtonGroup
-                            sx={{ borderRadius: 2, maxHeight: 40 }}
-                            value={view}
-                            color='primary'
-                            exclusive
-                            onChange={handleChange}
-                        >
-                            <ToggleButton
-                                sx={{
-                                    borderColor: theme.palette.grey[900] + 25,
-                                    borderRadius: 2,
-                                    color: theme?.customization?.isDarkMode ? 'white' : 'inherit'
-                                }}
-                                variant='contained'
-                                value='card'
-                                title='Card View'
-                            >
-                                <IconLayoutGrid />
-                            </ToggleButton>
-                            <ToggleButton
-                                sx={{
-                                    borderColor: theme.palette.grey[900] + 25,
-                                    borderRadius: 2,
-                                    color: theme?.customization?.isDarkMode ? 'white' : 'inherit'
-                                }}
-                                variant='contained'
-                                value='list'
-                                title='List View'
-                            >
-                                <IconList />
-                            </ToggleButton>
-                        </ToggleButtonGroup>
-                        <StyledButton variant='contained' onClick={addNew} startIcon={<IconPlus />} sx={{ borderRadius: 2, height: 40 }}>
-                            Add New
-                        </StyledButton>
-                    </ViewHeader> */}
-
-                    <Box
-                        sx={{
-                            borderRadius: '10px',
-                            backgroundColor: '#F6F6F6',
-                            padding: '4rem',
-                            display: 'flex',
-                            justifyContent: 'center',
-                            marginTop: '1rem'
-                        }}
-                    >
-                        <Stack spacing={1}>
-                            <Grid container justifyContent='center' alignItems='center' gap={2}>
-                                <Grid>Logo</Grid>
-                                <Grid>
-                                    <Typography variant='h1'>Chatflows</Typography>
-                                </Grid>
-                            </Grid>
-
-                            <Typography sx={{ widht: '100%' }}>
-                                Lorem ipsum dolor sit amet consectetur adipisicing elit. Praesentium quos, qui minus voluptatum corrupti
-                            </Typography>
-
-                            <Box sx={{ display: 'flex', flexWrap: 'wrap', height: '40px', gap: '1rem' }}>
-                                <OutlinedInput
-                                    size='small'
-                                    sx={{
-                                        minWidth: '80%',
-                                        height: '100%',
-                                        borderRadius: 2,
-                                        '& .MuiOutlinedInput-notchedOutline': {
-                                            borderRadius: 2
-                                        }
-                                    }}
-                                    startAdornment={
-                                        <Box
-                                            sx={{
-                                                color: theme.palette.grey[400],
-                                                display: 'flex',
-                                                alignItems: 'center',
-                                                justifyContent: 'center',
-                                                mr: 1
-                                            }}
-                                        >
-                                            <IconSearch style={{ color: 'inherit', width: 16, height: 16 }} />
-                                        </Box>
-                                    }
-                                    variant='outlined'
-                                    type='search'
-                                    placeholder='Search name or category'
-                                    onChange={onSearchChange}
-                                />
-
-                                <StyledButton
-                                    variant='contained'
-                                    onClick={addNew}
-                                    startIcon={<IconPlus />}
-                                    sx={{ borderRadius: 2, height: 40 }}
-                                >
-                                    Add
-                                </StyledButton>
-                            </Box>
-                        </Stack>
-                    </Box>
+                    <HeaderSection onButtonClick={addNew} onSearchChange={onSearchChange} title='Chatflows' icon={<IconHierarchy />} />
 
                     {view === 'list' && (
                         <FlowListTable
