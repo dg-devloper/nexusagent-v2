@@ -105,7 +105,20 @@ const NavItem = ({ item, level, navType, onClick, onUploadFile }) => {
                 alignItems: 'flex-start',
                 backgroundColor: level > 1 ? 'transparent !important' : 'inherit',
                 py: level > 1 ? 1 : 1.25,
-                pl: `${level * 24}px`
+                pl: `${level * 24}px`,
+                color: theme.palette['primary'].light,
+                '&.Mui-selected': {
+                    '.MuiListItemIcon-root': {
+                        color: theme.palette['primary'].main
+                    },
+                    color: theme.palette['primary'].main
+                },
+                '&:hover': {
+                    '.MuiListItemIcon-root': {
+                        color: theme.palette['primary'].main
+                    },
+                    color: theme.palette['primary'].main
+                }
             }}
             selected={customization.isOpen.findIndex((id) => id === item.id) > -1}
             onClick={() => itemHandler(item.id)}
@@ -119,7 +132,7 @@ const NavItem = ({ item, level, navType, onClick, onUploadFile }) => {
                     <Typography
                         variant={customization.isOpen.findIndex((id) => id === item.id) > -1 ? 'h5' : 'body1'}
                         color='inherit'
-                        sx={{ my: 0.5, color: theme.palette['primary'].light }}
+                        sx={{ my: 0.5 }}
                     >
                         {item.title}
                     </Typography>

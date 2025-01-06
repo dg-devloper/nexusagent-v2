@@ -3,8 +3,6 @@ import { Button } from '@mui/material'
 import MuiToggleButton from '@mui/material/ToggleButton'
 
 export const StyledButton = styled(Button)(({ theme, color = 'primary' }) => {
-    console.log(theme.palette[color].main)
-
     return {
         color: 'white',
         backgroundColor: theme.palette[color].main,
