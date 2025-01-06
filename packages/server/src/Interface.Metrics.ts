@@ -15,6 +15,9 @@ export enum FLOWISE_METRIC_COUNTERS {
     AGENTFLOW_CREATED = 'agentflow_created',
     ASSISTANT_CREATED = 'assistant_created',
     TOOL_CREATED = 'tool_created',
+    USER_CREATED = 'user_created',
+    USER_REGISTERED = 'user_registered',
+    USER_LOGGED_IN = 'user_logged_in',
     VECTORSTORE_UPSERT = 'vector_upserted',
 
     CHATFLOW_PREDICTION_INTERNAL = 'chatflow_prediction_internal',
