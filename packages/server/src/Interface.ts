@@ -66,6 +66,19 @@ export interface IChatMessageFeedback {
     createdDate: Date
 }
 
+export interface IUser {
+    id: string
+    name: string
+    username: string
+    email: string
+    password: string
+    role: string
+    isActive: boolean
+    expiredAt: Date
+    updatedDate: Date
+    createdDate: Date
+}
+
 export interface ITool {
     id: string
     name: string
