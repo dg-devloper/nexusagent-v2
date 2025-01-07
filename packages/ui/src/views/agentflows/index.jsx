@@ -26,6 +26,8 @@ import { baseURL } from '@/store/constant'
 // icons
 import HeaderSection from '@/layout/MainLayout/HeaderSection'
 import { IconUsersGroup } from '@tabler/icons-react'
+import { StyledButton } from '@/ui-component/button/StyledButton'
+import { IconPlus } from '@tabler/icons-react'
 
 // ==============================|| AGENTS ||============================== //
 
@@ -129,7 +131,11 @@ const Agentflows = () => {
                 <ErrorBoundary error={error} />
             ) : (
                 <Stack flexDirection='column' sx={{ gap: 3 }}>
-                    <HeaderSection onSearchChange={onSearchChange} onButtonClick={addNew} title='Agenflows' icon={<IconUsersGroup />} />
+                    <HeaderSection onSearchChange={onSearchChange} onButtonClick={addNew} title='Agenflows' icon={<IconUsersGroup />}>
+                        <StyledButton variant='contained' onClick={addNew} startIcon={<IconPlus />} sx={{ borderRadius: 2, height: 40 }}>
+                            Add
+                        </StyledButton>
+                    </HeaderSection>
                     {!view || view === 'card' ? (
                         <>
                             {isLoading && !getAllAgentflows.data ? (

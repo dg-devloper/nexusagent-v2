@@ -8,7 +8,6 @@ import {
     Box,
     Stack,
     Badge,
-    ToggleButton,
     InputLabel,
     FormControl,
     Select,
@@ -17,14 +16,13 @@ import {
     ListItemText,
     Skeleton,
     FormControlLabel,
-    ToggleButtonGroup,
     MenuItem,
     Button,
     Tabs,
     Tab
 } from '@mui/material'
 import { useTheme } from '@mui/material/styles'
-import { IconLayoutGrid, IconList, IconX } from '@tabler/icons-react'
+import { IconX } from '@tabler/icons-react'
 
 // project imports
 import MainCard from '@/ui-component/cards/MainCard'
@@ -32,7 +30,6 @@ import ItemCard from '@/ui-component/cards/ItemCard'
 import WorkflowEmptySVG from '@/assets/images/workflow_empty.svg'
 import ToolDialog from '@/views/tools/ToolDialog'
 import { MarketplaceTable } from '@/ui-component/table/MarketplaceTable'
-import ViewHeader from '@/layout/MainLayout/ViewHeader'
 import ErrorBoundary from '@/ErrorBoundary'
 import { TabPanel } from '@/ui-component/tabs/TabPanel'
 import { closeSnackbar as closeSnackbarAction, enqueueSnackbar as enqueueSnackbarAction } from '@/store/actions'
@@ -49,6 +46,8 @@ import useConfirm from '@/hooks/useConfirm'
 import { baseURL } from '@/store/constant'
 import { gridSpacing } from '@/store/constant'
 import useNotifier from '@/utils/useNotifier'
+import HeaderSection from '@/layout/MainLayout/HeaderSection'
+import { IconHierarchy } from '@tabler/icons-react'
 
 const badges = ['POPULAR', 'NEW']
 const types = ['Chatflow', 'Agentflow', 'Tool']
@@ -60,11 +59,7 @@ const MenuProps = {
         }
     }
 }
-const SelectStyles = {
-    '& .MuiOutlinedInput-notchedOutline': {
-        borderRadius: 2
-    }
-}
+
 // ==============================|| Marketplace ||============================== //
 
 const Marketplace = () => {
@@ -73,6 +68,22 @@ const Marketplace = () => {
     useNotifier()
 
     const theme = useTheme()
+
+    const SelectStyles = {
+        '& .MuiOutlinedInput-notchedOutline': {
+            borderRadius: 2
+        },
+
+        '& .MuiSelect-icon': {
+            '& .MuiSelect-iconOutlined': {
+                backgroundColor: 'red'
+            }
+        },
+        width: '150px',
+        [theme.breakpoints.down('sm')]: {
+            width: '245px'
+        }
+    }
 
     const [isLoading, setLoading] = useState(true)
     const [error, setError] = useState(null)
@@ -163,6 +174,11 @@ const Marketplace = () => {
             frameworkFilter: typeof value === 'string' ? value.split(',') : value,
             search
         })
+    }
+
+    const handleUseCaseChange = (usecase) => {
+        const isUseCaseExists = selectedUsecases.find((u) => u === usecase)
+        setSelectedUsecases(!isUseCaseExists ? [...selectedUsecases, usecase] : selectedUsecases.filter((item) => item !== usecase))
     }
 
     const handleViewChange = (event, nextView) => {
@@ -404,196 +420,159 @@ const Marketplace = () => {
                     <ErrorBoundary error={error} />
                 ) : (
                     <Stack flexDirection='column'>
-                        <ViewHeader
-                            filters={
-                                <>
-                                    <FormControl
-                                        sx={{
-                                            borderRadius: 2,
-                                            display: 'flex',
-                                            flexDirection: 'column',
-                                            justifyContent: 'end',
-                                            minWidth: 120
-                                        }}
-                                    >
-                                        <InputLabel size='small' id='filter-badge-label'>
-                                            Tag
-                                        </InputLabel>
-                                        <Select
-                                            labelId='filter-badge-label'
-                                            id='filter-badge-checkbox'
-                                            size='small'
-                                            multiple
-                                            value={badgeFilter}
-                                            onChange={handleBadgeFilterChange}
-                                            input={<OutlinedInput label='Badge' />}
-                                            renderValue={(selected) => selected.join(', ')}
-                                            MenuProps={MenuProps}
-                                            sx={SelectStyles}
-                                        >
-                                            {badges.map((name) => (
-                                                <MenuItem
-                                                    key={name}
-                                                    value={name}
-                                                    sx={{ display: 'flex', alignItems: 'center', gap: 1, p: 1 }}
-                                                >
-                                                    <Checkbox checked={badgeFilter.indexOf(name) > -1} sx={{ p: 0 }} />
-                                                    <ListItemText primary={name} />
-                                                </MenuItem>
-                                            ))}
-                                        </Select>
-                                    </FormControl>
-                                    <FormControl
-                                        sx={{
-                                            borderRadius: 2,
-                                            display: 'flex',
-                                            flexDirection: 'column',
-                                            justifyContent: 'end',
-                                            minWidth: 120
-                                        }}
-                                    >
-                                        <InputLabel size='small' id='type-badge-label'>
-                                            Type
-                                        </InputLabel>
-                                        <Select
-                                            size='small'
-                                            labelId='type-badge-label'
-                                            id='type-badge-checkbox'
-                                            multiple
-                                            value={typeFilter}
-                                            onChange={handleTypeFilterChange}
-                                            input={<OutlinedInput label='Badge' />}
-                                            renderValue={(selected) => selected.join(', ')}
-                                            MenuProps={MenuProps}
-                                            sx={SelectStyles}
-                                        >
-                                            {types.map((name) => (
-                                                <MenuItem
-                                                    key={name}
-                                                    value={name}
-                                                    sx={{ display: 'flex', alignItems: 'center', gap: 1, p: 1 }}
-                                                >
-                                                    <Checkbox checked={typeFilter.indexOf(name) > -1} sx={{ p: 0 }} />
-                                                    <ListItemText primary={name} />
-                                                </MenuItem>
-                                            ))}
-                                        </Select>
-                                    </FormControl>
-                                    <FormControl
-                                        sx={{
-                                            borderRadius: 2,
-                                            display: 'flex',
-                                            flexDirection: 'column',
-                                            justifyContent: 'end',
-                                            minWidth: 120
-                                        }}
-                                    >
-                                        <InputLabel size='small' id='type-fw-label'>
-                                            Framework
-                                        </InputLabel>
-                                        <Select
-                                            size='small'
-                                            labelId='type-fw-label'
-                                            id='type-fw-checkbox'
-                                            multiple
-                                            value={frameworkFilter}
-                                            onChange={handleFrameworkFilterChange}
-                                            input={<OutlinedInput label='Badge' />}
-                                            renderValue={(selected) => selected.join(', ')}
-                                            MenuProps={MenuProps}
-                                            sx={SelectStyles}
-                                        >
-                                            {framework.map((name) => (
-                                                <MenuItem
-                                                    key={name}
-                                                    value={name}
-                                                    sx={{ display: 'flex', alignItems: 'center', gap: 1, p: 1 }}
-                                                >
-                                                    <Checkbox checked={frameworkFilter.indexOf(name) > -1} sx={{ p: 0 }} />
-                                                    <ListItemText primary={name} />
-                                                </MenuItem>
-                                            ))}
-                                        </Select>
-                                    </FormControl>
-                                </>
-                            }
-                            onSearchChange={onSearchChange}
-                            search={true}
-                            searchPlaceholder='Search Name/Description/Node'
-                            title='Marketplace'
-                        >
-                            <ToggleButtonGroup
-                                sx={{ borderRadius: 2, height: '100%' }}
-                                value={view}
-                                color='primary'
-                                exclusive
-                                onChange={handleViewChange}
-                            >
-                                <ToggleButton
+                        <HeaderSection onSearchChange={onSearchChange} title='Chatflows' icon={<IconHierarchy />}>
+                            <>
+                                <FormControl
                                     sx={{
-                                        borderColor: theme.palette.grey[900] + 25,
                                         borderRadius: 2,
-                                        color: theme?.customization?.isDarkMode ? 'white' : 'inherit'
+                                        display: 'flex',
+                                        flexDirection: 'column',
+                                        justifyContent: 'end',
+                                        minWidth: 120
                                     }}
-                                    variant='contained'
-                                    value='card'
-                                    title='Card View'
                                 >
-                                    <IconLayoutGrid />
-                                </ToggleButton>
-                                <ToggleButton
+                                    <InputLabel size='small' id='filter-badge-label'>
+                                        Tag
+                                    </InputLabel>
+                                    <Select
+                                        labelId='filter-badge-label'
+                                        id='filter-badge-checkbox'
+                                        size='small'
+                                        multiple
+                                        value={badgeFilter}
+                                        onChange={handleBadgeFilterChange}
+                                        input={<OutlinedInput label='Badge' />}
+                                        renderValue={(selected) => selected.join(', ')}
+                                        MenuProps={MenuProps}
+                                        sx={SelectStyles}
+                                    >
+                                        {badges.map((name) => (
+                                            <MenuItem key={name} value={name} sx={{ display: 'flex', alignItems: 'center', gap: 1, p: 1 }}>
+                                                <Checkbox checked={badgeFilter.indexOf(name) > -1} />
+                                                <ListItemText primary={name} />
+                                            </MenuItem>
+                                        ))}
+                                    </Select>
+                                </FormControl>
+                                <FormControl
                                     sx={{
-                                        borderColor: theme.palette.grey[900] + 25,
                                         borderRadius: 2,
-                                        color: theme?.customization?.isDarkMode ? 'white' : 'inherit'
+                                        display: 'flex',
+                                        flexDirection: 'column',
+                                        justifyContent: 'end',
+                                        minWidth: 120
                                     }}
-                                    variant='contained'
-                                    value='list'
-                                    title='List View'
                                 >
-                                    <IconList />
-                                </ToggleButton>
-                            </ToggleButtonGroup>
-                        </ViewHeader>
+                                    <InputLabel size='small' id='type-badge-label'>
+                                        Type
+                                    </InputLabel>
+                                    <Select
+                                        size='small'
+                                        labelId='type-badge-label'
+                                        id='type-badge-checkbox'
+                                        multiple
+                                        value={typeFilter}
+                                        onChange={handleTypeFilterChange}
+                                        input={<OutlinedInput label='Badge' />}
+                                        renderValue={(selected) => selected.join(', ')}
+                                        MenuProps={MenuProps}
+                                        sx={SelectStyles}
+                                    >
+                                        {types.map((name) => (
+                                            <MenuItem key={name} value={name} sx={{ display: 'flex', alignItems: 'center', gap: 1, p: 1 }}>
+                                                <Checkbox checked={typeFilter.indexOf(name) > -1} sx={{ p: 0 }} />
+                                                <ListItemText primary={name} />
+                                            </MenuItem>
+                                        ))}
+                                    </Select>
+                                </FormControl>
+                                <FormControl
+                                    sx={{
+                                        borderRadius: 2,
+                                        display: 'flex',
+                                        flexDirection: 'column',
+                                        justifyContent: 'end',
+                                        minWidth: 120
+                                    }}
+                                >
+                                    <InputLabel size='small' id='type-fw-label'>
+                                        Framework
+                                    </InputLabel>
+                                    <Select
+                                        size='small'
+                                        labelId='type-fw-label'
+                                        id='type-fw-checkbox'
+                                        multiple
+                                        value={frameworkFilter}
+                                        onChange={handleFrameworkFilterChange}
+                                        input={<OutlinedInput label='Badge' />}
+                                        renderValue={(selected) => selected.join(', ')}
+                                        MenuProps={MenuProps}
+                                        sx={SelectStyles}
+                                    >
+                                        {framework.map((name) => (
+                                            <MenuItem key={name} value={name} sx={{ display: 'flex', alignItems: 'center', gap: 1, p: 1 }}>
+                                                <Checkbox checked={frameworkFilter.indexOf(name) > -1} sx={{ p: 0 }} />
+                                                <ListItemText primary={name} />
+                                            </MenuItem>
+                                        ))}
+                                    </Select>
+                                </FormControl>
+                                <FormControl
+                                    sx={{
+                                        borderRadius: 2,
+                                        display: 'flex',
+                                        flexDirection: 'column',
+                                        justifyContent: 'end',
+                                        minWidth: 120
+                                    }}
+                                >
+                                    <InputLabel size='small' id='type-fw-label'>
+                                        Filters
+                                    </InputLabel>
+                                    <Select
+                                        size='small'
+                                        labelId='type-fw-label'
+                                        id='type-fw-checkbox'
+                                        multiple
+                                        value={selectedUsecases}
+                                        input={<OutlinedInput label='Badge' />}
+                                        renderValue={(selected) => selected.join(', ')}
+                                        MenuProps={MenuProps}
+                                        sx={SelectStyles}
+                                    >
+                                        {usecases.map((usecase, index) => (
+                                            <MenuItem
+                                                key={index}
+                                                value={usecase}
+                                                sx={{ display: 'flex', alignItems: 'center', gap: 1, p: 1 }}
+                                            >
+                                                <Checkbox
+                                                    disabled={eligibleUsecases.length === 0 ? true : !eligibleUsecases.includes(usecase)}
+                                                    checked={selectedUsecases.includes(usecase)}
+                                                    onChange={() => {
+                                                        handleUseCaseChange(usecase)
+                                                    }}
+                                                    sx={{ p: 0 }}
+                                                />
+
+                                                <ListItemText
+                                                    onClick={() => {
+                                                        handleUseCaseChange(usecase)
+                                                    }}
+                                                    primary={usecase}
+                                                />
+                                            </MenuItem>
+                                        ))}
+                                    </Select>
+                                </FormControl>
+                            </>
+                        </HeaderSection>
                         <Tabs value={activeTabValue} onChange={handleTabChange} textColor='primary' aria-label='tabs' centered>
                             <Tab value={0} label='Community Templates'></Tab>
                             <Tab value={1} label='My Templates' />
                         </Tabs>
                         <TabPanel value={activeTabValue} index={0}>
-                            <Stack direction='row' sx={{ gap: 2, my: 2, alignItems: 'center', flexWrap: 'wrap' }}>
-                                {usecases.map((usecase, index) => (
-                                    <FormControlLabel
-                                        key={index}
-                                        size='small'
-                                        control={
-                                            <Checkbox
-                                                disabled={eligibleUsecases.length === 0 ? true : !eligibleUsecases.includes(usecase)}
-                                                color='success'
-                                                checked={selectedUsecases.includes(usecase)}
-                                                onChange={(event) => {
-                                                    setSelectedUsecases(
-                                                        event.target.checked
-                                                            ? [...selectedUsecases, usecase]
-                                                            : selectedUsecases.filter((item) => item !== usecase)
-                                                    )
-                                                }}
-                                            />
-                                        }
-                                        label={usecase}
-                                    />
-                                ))}
-                            </Stack>
-                            {selectedUsecases.length > 0 && (
-                                <Button
-                                    sx={{ width: 'max-content', mb: 2, borderRadius: '20px' }}
-                                    variant='outlined'
-                                    onClick={() => clearAllUsecases()}
-                                    startIcon={<IconX />}
-                                >
-                                    Clear All
-                                </Button>
-                            )}
-
                             {!view || view === 'card' ? (
                                 <>
                                     {isLoading ? (

@@ -24,6 +24,8 @@ import { baseURL } from '@/store/constant'
 // icons
 import HeaderSection from '@/layout/MainLayout/HeaderSection'
 import { IconHierarchy } from '@tabler/icons-react'
+import { IconPlus } from '@tabler/icons-react'
+import { StyledButton } from '@/ui-component/button/StyledButton'
 
 // ==============================|| CHATFLOWS ||============================== //
 
@@ -126,7 +128,11 @@ const Chatflows = () => {
                 <ErrorBoundary error={error} />
             ) : (
                 <Stack flexDirection='column' sx={{ gap: 3 }}>
-                    <HeaderSection onButtonClick={addNew} onSearchChange={onSearchChange} title='Chatflows' icon={<IconHierarchy />} />
+                    <HeaderSection onButtonClick={addNew} onSearchChange={onSearchChange} title='Chatflows' icon={<IconHierarchy />}>
+                        <StyledButton variant='contained' onClick={addNew} startIcon={<IconPlus />} sx={{ borderRadius: 2, height: 40 }}>
+                            Add
+                        </StyledButton>
+                    </HeaderSection>
 
                     {view === 'list' && (
                         <FlowListTable

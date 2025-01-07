@@ -18,21 +18,21 @@ const cards = [
         description: 'Create custom assistant using your choice of LLMs',
         icon: <IconRobotFace />,
         iconText: 'Custom',
-        gradient: 'linear-gradient(135deg, #fff8e14e 0%, #ffcc802f 100%)'
+        gradient: 'linear-gradient(324deg, rgba(128,167,255,1) 0%, rgba(31,100,255,1) 15%)'
     },
     {
         title: 'OpenAI Assistant',
         description: 'Create assistant using OpenAI Assistant API',
         icon: <IconBrandOpenai />,
         iconText: 'OpenAI',
-        gradient: 'linear-gradient(135deg, #c9ffd85f 0%, #a0f0b567 100%)'
+        gradient: 'linear-gradient(324deg, rgba(160,93,255,1) 5%, rgba(124,31,255,1) 19%)'
     },
     {
         title: 'Azure Assistant (Coming Soon)',
         description: 'Create assistant using Azure Assistant API',
         icon: <IconBrandAzure />,
         iconText: 'Azure',
-        gradient: 'linear-gradient(135deg, #c4e1ff57 0%, #80b7ff5a 100%)'
+        gradient: 'linear-gradient(324deg, rgba(255,153,90,1) 5%, rgba(255,117,31,1) 19%)'
     }
 ]
 
@@ -92,7 +92,7 @@ const FeatureCards = () => {
                         border: 1,
                         borderColor: theme.palette.grey[900] + 25,
                         borderRadius: 2,
-                        color: customization.isDarkMode ? theme.palette.common.white : '#333333',
+                        color: theme.palette.common.white,
                         cursor: index === 2 ? 'not-allowed' : 'pointer',
                         opacity: index === 2 ? 0.6 : 1,
                         '&:hover': {
