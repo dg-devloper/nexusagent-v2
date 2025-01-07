@@ -23,4 +23,18 @@ apiClient.interceptors.request.use(function (config) {
     return config
 })
 
+apiClient.interceptors.request.use(
+    function (config) {
+        const token = localStorage.getItem('site')
+
+        if (token) {
+            config.headers['Authorization'] = token
+        }
+        return config
+    },
+    (error) => {
+        Promise.reject(error)
+    }
+)
+
 export default apiClient

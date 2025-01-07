@@ -49,6 +49,8 @@ import usersService from '../services/users'
 
 const router = express.Router()
 router.use('/auth', auth)
+router.use('/node-icon', nodeIconRouter)
+router.use('/node-load-method', nodeLoadMethodRouter)
 
 router.use(async (req, res, next) => {
     let token = req.headers.authorization!
@@ -119,8 +121,6 @@ router.use('/load-prompt', loadPromptRouter)
 router.use('/marketplaces', marketplacesRouter)
 router.use('/node-config', nodeConfigRouter)
 router.use('/node-custom-function', nodeCustomFunctionRouter)
-router.use('/node-icon', nodeIconRouter)
-router.use('/node-load-method', nodeLoadMethodRouter)
 router.use('/nodes', nodesRouter)
 router.use('/openai-assistants', openaiAssistantsRouter)
 router.use('/openai-assistants-file', openaiAssistantsFileRouter)

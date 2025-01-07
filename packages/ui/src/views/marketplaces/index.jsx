@@ -79,10 +79,7 @@ const Marketplace = () => {
                 backgroundColor: 'red'
             }
         },
-        width: '150px',
-        [theme.breakpoints.down('sm')]: {
-            width: '245px'
-        }
+        minWidth: '200px'
     }
 
     const [isLoading, setLoading] = useState(true)
@@ -420,7 +417,7 @@ const Marketplace = () => {
                     <ErrorBoundary error={error} />
                 ) : (
                     <Stack flexDirection='column'>
-                        <HeaderSection onSearchChange={onSearchChange} title='Chatflows' icon={<IconHierarchy />}>
+                        <HeaderSection onSearchChange={onSearchChange} title='Marketplace' icon={<IconHierarchy />}>
                             <>
                                 <FormControl
                                     sx={{

@@ -12,6 +12,7 @@ import { Provider } from 'react-redux'
 import { SnackbarProvider } from 'notistack'
 import ConfirmContextProvider from '@/store/context/ConfirmContextProvider'
 import { ReactFlowContext } from '@/store/context/ReactFlowContext'
+import AuthContextProvider from './store/context/AuthContextProvider'
 
 const container = document.getElementById('root')
 const root = createRoot(container)
@@ -23,7 +24,9 @@ root.render(
                 <SnackbarProvider>
                     <ConfirmContextProvider>
                         <ReactFlowContext>
-                            <App />
+                            <AuthContextProvider>
+                                <App />
+                            </AuthContextProvider>
                         </ReactFlowContext>
                     </ConfirmContextProvider>
                 </SnackbarProvider>

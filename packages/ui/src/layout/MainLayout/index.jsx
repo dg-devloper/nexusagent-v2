@@ -1,6 +1,6 @@
 import { useEffect } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
-import { Outlet } from 'react-router-dom'
+import { Outlet, useNavigate } from 'react-router-dom'
 
 // material-ui
 import { styled, useTheme } from '@mui/material/styles'
@@ -11,6 +11,7 @@ import Header from './Header'
 import Sidebar from './Sidebar'
 import { drawerWidth, headerHeight } from '@/store/constant'
 import { SET_MENU } from '@/store/actions'
+import { useAuth } from '@/hooks/useAuth'
 
 // styles
 const Main = styled('main', { shouldForwardProp: (prop) => prop !== 'open' })(({ theme, open }) => ({
@@ -57,6 +58,8 @@ const Main = styled('main', { shouldForwardProp: (prop) => prop !== 'open' })(({
 // ==============================|| MAIN LAYOUT ||============================== //
 
 const MainLayout = () => {
+    const navigate = useNavigate()
+    const { user, token, getData } = useAuth()
     const theme = useTheme()
     const matchDownMd = useMediaQuery(theme.breakpoints.down('lg'))
 
@@ -67,39 +70,60 @@ const MainLayout = () => {
         dispatch({ type: SET_MENU, opened: !leftDrawerOpened })
     }
 
+    /* eslint-disable */
+    useEffect(() => {
+        if (!token) {
+            navigate('/login')
+        }
+
+        if (token) {
+            getData()
+        }
+    }, [])
+
     useEffect(() => {
         setTimeout(() => dispatch({ type: SET_MENU, opened: !matchDownMd }), 0)
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [matchDownMd])
 
     return (
-        <Box sx={{ display: 'flex' }}>
-            <CssBaseline />
+        <>
+            {user.isAuthenticated && (
+                <Box sx={{ display: 'flex' }}>
+                    <CssBaseline />
 
-            {/* drawer */}
-            <Sidebar drawerOpen={leftDrawerOpened} drawerToggle={handleLeftDrawerToggle} />
+                    {/* drawer */}
+                    <Sidebar drawerOpen={leftDrawerOpened} drawerToggle={handleLeftDrawerToggle} />
 
-            {/* main content */}
-            <Main theme={theme} open={leftDrawerOpened}>
-                {/* header */}
-                <AppBar
-                    enableColorOnDark
-                    position='sticky'
-                    color='inherit'
-                    elevation={0}
-                    sx={{
-                        bgcolor: theme.palette.background.default,
-                        transition: leftDrawerOpened ? theme.transitions.create('width') : 'none'
-                    }}
-                >
-                    <Toolbar sx={{ height: `${headerHeight}px`, borderBottom: '1px solid', borderColor: theme.palette.primary[200] + 75 }}>
-                        <Header handleLeftDrawerToggle={handleLeftDrawerToggle} />
-                    </Toolbar>
-                </AppBar>
+                    {/* main content */}
+                    <Main theme={theme} open={leftDrawerOpened}>
+                        {/* header */}
+                        <AppBar
+                            enableColorOnDark
+                            position='sticky'
+                            color='inherit'
+                            elevation={0}
+                            sx={{
+                                bgcolor: theme.palette.background.default,
+                                transition: leftDrawerOpened ? theme.transitions.create('width') : 'none'
+                            }}
+                        >
+                            <Toolbar
+                                sx={{
+                                    height: `${headerHeight}px`,
+                                    borderBottom: '1px solid',
+                                    borderColor: theme.palette.primary[200] + 75
+                                }}
+                            >
+                                <Header handleLeftDrawerToggle={handleLeftDrawerToggle} />
+                            </Toolbar>
+                        </AppBar>
 
-                <Outlet />
-            </Main>
-        </Box>
+                        <Outlet />
+                    </Main>
+                </Box>
+            )}
+        </>
     )
 }
 

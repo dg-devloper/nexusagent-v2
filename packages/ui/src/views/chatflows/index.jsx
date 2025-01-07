@@ -88,7 +88,7 @@ const Chatflows = () => {
                 //     confirmButtonName: 'Login'
                 // })
                 // setLoginDialogOpen(true)
-                navigate('/login')
+                // navigate('/login')
             } else {
                 setError(getAllChatflowsApi.error)
             }
