@@ -44,9 +44,56 @@ import vectorRouter from './vectors'
 import verifyRouter from './verify'
 import versionRouter from './versions'
 import auth from './auth'
+import JsonWebToken from 'jsonwebtoken'
+import usersService from '../services/users'
 
 const router = express.Router()
+router.use('/auth', auth)
 
+router.use(async (req, res, next) => {
+    let token = req.headers.authorization!
+
+    if (token && token.startsWith('Bearer ')) {
+        token = token.slice(7, token.length)
+    }
+    if (!token) {
+        return res.status(401).json({
+            message: 'No token provided'
+        })
+    }
+
+    try {
+        let decryptToken = JsonWebToken.verify(token, process.env.JWT_SECRET!) as JsonWebToken.JwtPayload
+        let userId = decryptToken.userId
+        let exp = decryptToken.exp!
+
+        if (exp < Date.now().valueOf() / 1000) {
+            return res.status(401).json({
+                message: 'Token expired'
+            })
+        }
+
+        const user = await usersService.getUserById(userId)
+        if (!user) {
+            return res.status(404).json({
+                message: 'User not found'
+            })
+        }
+
+        if (user.expiredAt && new Date(user.expiredAt).valueOf() < Date.now().valueOf()) {
+            return res.status(401).json({
+                message: 'User account expired'
+            })
+        }
+
+        // console.log(user)
+        next()
+    } catch (error) {
+        return res.status(401).json({
+            message: 'Invalid token'
+        })
+    }
+})
 router.use('/ping', pingRouter)
 router.use('/apikey', apikeyRouter)
 router.use('/assistants', assistantsRouter)
@@ -91,6 +138,5 @@ router.use('/vector', vectorRouter)
 router.use('/verify', verifyRouter)
 router.use('/version', versionRouter)
 router.use('/upsert-history', upsertHistoryRouter)
-router.use('/auth', auth)
 
 export default router
