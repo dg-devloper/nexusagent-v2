@@ -394,7 +394,6 @@ const AddNodes = ({ nodesData, node, isAgentCanvas }) => {
                                                 ))}
                                             </Tabs>
                                         )}
-
                                         <Divider />
                                     </Box>
                                     <PerfectScrollbar

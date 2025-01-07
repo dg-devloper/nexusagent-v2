@@ -46,8 +46,9 @@ import CredentialEmptySVG from '@/assets/images/credential_empty.svg'
 // const
 import { baseURL } from '@/store/constant'
 import { SET_COMPONENT_CREDENTIALS } from '@/store/actions'
-import ViewHeader from '@/layout/MainLayout/ViewHeader'
 import ErrorBoundary from '@/ErrorBoundary'
+import HeaderSection from '@/layout/MainLayout/HeaderSection'
+import { IconHierarchy } from '@tabler/icons-react'
 
 const StyledTableCell = styled(TableCell)(({ theme }) => ({
     borderColor: theme.palette.grey[900] + 25,
@@ -228,11 +229,11 @@ const Credentials = () => {
                     <ErrorBoundary error={error} />
                 ) : (
                     <Stack flexDirection='column' sx={{ gap: 3 }}>
-                        <ViewHeader
+                        <HeaderSection
                             onSearchChange={onSearchChange}
-                            search={true}
-                            searchPlaceholder='Search Credentials'
                             title='Credentials'
+                            subtitle={`Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s`}
+                            icon={<IconHierarchy />}
                         >
                             <StyledButton
                                 variant='contained'
@@ -242,7 +243,7 @@ const Credentials = () => {
                             >
                                 Add Credential
                             </StyledButton>
-                        </ViewHeader>
+                        </HeaderSection>
                         {!isLoading && credentials.length <= 0 ? (
                             <Stack sx={{ alignItems: 'center', justifyContent: 'center' }} flexDirection='column'>
                                 <Box sx={{ p: 2, height: 'auto' }}>

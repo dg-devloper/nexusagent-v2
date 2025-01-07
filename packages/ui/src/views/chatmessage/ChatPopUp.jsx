@@ -136,19 +136,37 @@ export const ChatPopUp = ({ chatflowid, isAgentCanvas }) => {
     return (
         <>
             <StyledFab
-                sx={{ position: 'absolute', right: 20, top: 20 }}
+                variant='extended'
+                sx={{
+                    position: 'absolute',
+                    right: 180,
+                    top: 20,
+                    borderRadius: '8px',
+                    padding: '.5rem 1.2rem',
+                    display: 'flex',
+                    justifyContent: 'center',
+                    alignItems: 'center',
+                    gap: '.5rem',
+                    backgroundColor: 'white',
+                    color: theme.palette.primary.main,
+                    '&:hover': {
+                        backgroundColor: '#f5f5f5'
+                    }
+                }}
                 ref={anchorRef}
                 size='small'
-                color='secondary'
+                color='primary'
                 aria-label='chat'
                 title='Chat'
                 onClick={handleToggle}
             >
-                {open ? <IconX /> : <IconMessage />}
+                <IconMessage size={19} />
+                Chat
             </StyledFab>
+
             {open && (
                 <StyledFab
-                    sx={{ position: 'absolute', right: 80, top: 20 }}
+                    sx={{ position: 'absolute', right: 290, top: 18 }}
                     onClick={clearChat}
                     size='small'
                     color='error'
@@ -160,7 +178,7 @@ export const ChatPopUp = ({ chatflowid, isAgentCanvas }) => {
             )}
             {open && (
                 <StyledFab
-                    sx={{ position: 'absolute', right: 140, top: 20 }}
+                    sx={{ position: 'absolute', right: 340, top: 18 }}
                     onClick={expandChat}
                     size='small'
                     color='primary'

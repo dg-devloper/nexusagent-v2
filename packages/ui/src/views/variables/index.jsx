@@ -45,8 +45,8 @@ import VariablesEmptySVG from '@/assets/images/variables_empty.svg'
 // const
 import AddEditVariableDialog from './AddEditVariableDialog'
 import HowToUseVariablesDialog from './HowToUseVariablesDialog'
-import ViewHeader from '@/layout/MainLayout/ViewHeader'
 import ErrorBoundary from '@/ErrorBoundary'
+import HeaderSection from '@/layout/MainLayout/HeaderSection'
 
 const StyledTableCell = styled(TableCell)(({ theme }) => ({
     borderColor: theme.palette.grey[900] + 25,
@@ -200,10 +200,19 @@ const Variables = () => {
                     <ErrorBoundary error={error} />
                 ) : (
                     <Stack flexDirection='column' sx={{ gap: 3 }}>
-                        <ViewHeader onSearchChange={onSearchChange} search={true} searchPlaceholder='Search Variables' title='Variables'>
-                            <Button variant='outlined' sx={{ borderRadius: 2, height: '100%' }} onClick={() => setShowHowToDialog(true)}>
+                        <HeaderSection
+                            onSearchChange={onSearchChange}
+                            title='Variables'
+                            subtitle={`Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s`}
+                            icon={<IconVariable />}
+                        >
+                            <StyledButton
+                                variant='contained'
+                                sx={{ borderRadius: 2, height: '100%' }}
+                                onClick={() => setShowHowToDialog(true)}
+                            >
                                 How To Use
-                            </Button>
+                            </StyledButton>
                             <StyledButton
                                 variant='contained'
                                 sx={{ borderRadius: 2, height: '100%' }}
@@ -213,7 +222,7 @@ const Variables = () => {
                             >
                                 Add Variable
                             </StyledButton>
-                        </ViewHeader>
+                        </HeaderSection>
                         {!isLoading && variables.length === 0 ? (
                             <Stack sx={{ alignItems: 'center', justifyContent: 'center' }} flexDirection='column'>
                                 <Box sx={{ p: 2, height: 'auto' }}>

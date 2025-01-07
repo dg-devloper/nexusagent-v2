@@ -3,7 +3,7 @@ import { Box, Stack, Grid, Typography, OutlinedInput } from '@mui/material'
 import { IconSearch } from '@tabler/icons-react'
 import { useTheme } from '@emotion/react'
 
-const HeaderSection = ({ children, onSearchChange, title, icon }) => {
+const HeaderSection = ({ children, onSearchChange, title, subtitle, icon }) => {
     const theme = useTheme()
 
     return (
@@ -27,9 +27,7 @@ const HeaderSection = ({ children, onSearchChange, title, icon }) => {
                     </Grid>
                 </Grid>
 
-                <Typography sx={{ widht: '100%', textAlign: 'center' }}>
-                    Connect your favorite tools and streamline your workflow. Seamlessly integrate apps to boost productivity.
-                </Typography>
+                <Typography sx={{ widht: '100%', textAlign: 'center' }}>{subtitle}</Typography>
 
                 <Box
                     sx={{
@@ -79,7 +77,8 @@ HeaderSection.propTypes = {
     onSearchChange: PropTypes.func,
     onButtonClick: PropTypes.func,
     title: PropTypes.string,
-    icon: PropTypes.node
+    icon: PropTypes.node,
+    subtitle: PropTypes.string
 }
 
 export default HeaderSection

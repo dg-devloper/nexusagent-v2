@@ -14,14 +14,13 @@ import {
 import { omit, cloneDeep } from 'lodash'
 
 // material-ui
-import { Toolbar, Box, AppBar, Button, Fab } from '@mui/material'
+import { Box, Button, Fab } from '@mui/material'
 import { useTheme } from '@mui/material/styles'
 
 // project imports
 import CanvasNode from './CanvasNode'
 import ButtonEdge from './ButtonEdge'
 import StickyNote from './StickyNote'
-import CanvasHeader from './CanvasHeader'
 import AddNodes from './AddNodes'
 import ConfirmDialog from '@/ui-component/dialog/ConfirmDialog'
 import { ChatPopUp } from '@/views/chatmessage/ChatPopUp'
@@ -53,6 +52,7 @@ import { usePrompt } from '@/utils/usePrompt'
 
 // const
 import { FLOWISE_CREDENTIAL_ID } from '@/store/constant'
+import CanvasSubHeader from './CanvasSubHeader'
 
 const nodeTypes = { customNode: CanvasNode, stickyNote: StickyNote }
 const edgeTypes = { buttonedge: ButtonEdge }
@@ -515,8 +515,8 @@ const Canvas = () => {
 
     return (
         <>
-            <Box>
-                <AppBar
+            <Box sx={{ height: '100%' }}>
+                {/* <AppBar
                     enableColorOnDark
                     position='fixed'
                     color='inherit'
@@ -534,8 +534,8 @@ const Canvas = () => {
                             isAgentCanvas={isAgentCanvas}
                         />
                     </Toolbar>
-                </AppBar>
-                <Box sx={{ pt: '70px', height: '100vh', width: '100%' }}>
+                </AppBar> */}
+                <Box sx={{ height: '100%', width: '100%' }}>
                     <div className='reactflow-parent-wrapper'>
                         <div className='reactflow-wrapper' ref={reactFlowWrapper}>
                             <ReactFlow
@@ -587,6 +587,13 @@ const Canvas = () => {
                                     </Fab>
                                 )}
                                 {isUpsertButtonEnabled && <VectorStorePopUp chatflowid={chatflowId} />}
+                                <CanvasSubHeader
+                                    chatflow={chatflow}
+                                    handleSaveFlow={handleSaveFlow}
+                                    handleDeleteFlow={handleDeleteFlow}
+                                    handleLoadFlow={handleLoadFlow}
+                                    isAgentCanvas={isAgentCanvas}
+                                />
                                 <ChatPopUp isAgentCanvas={isAgentCanvas} chatflowid={chatflowId} />
                             </ReactFlow>
                         </div>

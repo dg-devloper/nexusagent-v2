@@ -3,21 +3,7 @@ import { useNavigate } from 'react-router-dom'
 import { useSelector } from 'react-redux'
 
 // material-ui
-import {
-    Box,
-    Paper,
-    Skeleton,
-    Stack,
-    Table,
-    TableBody,
-    TableCell,
-    TableContainer,
-    TableHead,
-    TableRow,
-    ToggleButton,
-    ToggleButtonGroup,
-    Typography
-} from '@mui/material'
+import { Box, Paper, Skeleton, Stack, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Typography } from '@mui/material'
 import { useTheme } from '@mui/material/styles'
 
 // project imports
@@ -26,7 +12,6 @@ import DocumentStoreCard from '@/ui-component/cards/DocumentStoreCard'
 import { StyledButton } from '@/ui-component/button/StyledButton'
 import AddDocStoreDialog from '@/views/docstore/AddDocStoreDialog'
 import ErrorBoundary from '@/ErrorBoundary'
-import ViewHeader from '@/layout/MainLayout/ViewHeader'
 import DocumentStoreStatus from '@/views/docstore/DocumentStoreStatus'
 
 // API
@@ -34,11 +19,13 @@ import useApi from '@/hooks/useApi'
 import documentsApi from '@/api/documentstore'
 
 // icons
-import { IconPlus, IconLayoutGrid, IconList } from '@tabler/icons-react'
+import { IconPlus } from '@tabler/icons-react'
 import doc_store_empty from '@/assets/images/doc_store_empty.svg'
 
 // const
 import { baseURL, gridSpacing } from '@/store/constant'
+import HeaderSection from '@/layout/MainLayout/HeaderSection'
+import { IconFiles } from '@tabler/icons-react'
 
 // ==============================|| DOCUMENTS ||============================== //
 
@@ -56,7 +43,7 @@ const Documents = () => {
     const [showDialog, setShowDialog] = useState(false)
     const [dialogProps, setDialogProps] = useState({})
     const [docStores, setDocStores] = useState([])
-    const [view, setView] = useState(localStorage.getItem('docStoreDisplayStyle') || 'card')
+    const [view, setView] = useState('list')
 
     const handleChange = (event, nextView) => {
         if (nextView === null) return
@@ -145,39 +132,12 @@ const Documents = () => {
                 <ErrorBoundary error={error} />
             ) : (
                 <Stack flexDirection='column' sx={{ gap: 3 }}>
-                    <ViewHeader onSearchChange={onSearchChange} search={true} searchPlaceholder='Search Name' title='Document Store'>
-                        <ToggleButtonGroup
-                            sx={{ borderRadius: 2, maxHeight: 40 }}
-                            value={view}
-                            color='primary'
-                            exclusive
-                            onChange={handleChange}
-                        >
-                            <ToggleButton
-                                sx={{
-                                    borderColor: theme.palette.grey[900] + 25,
-                                    borderRadius: 2,
-                                    color: theme?.customization?.isDarkMode ? 'white' : 'inherit'
-                                }}
-                                variant='contained'
-                                value='card'
-                                title='Card View'
-                            >
-                                <IconLayoutGrid />
-                            </ToggleButton>
-                            <ToggleButton
-                                sx={{
-                                    borderColor: theme.palette.grey[900] + 25,
-                                    borderRadius: 2,
-                                    color: theme?.customization?.isDarkMode ? 'white' : 'inherit'
-                                }}
-                                variant='contained'
-                                value='list'
-                                title='List View'
-                            >
-                                <IconList />
-                            </ToggleButton>
-                        </ToggleButtonGroup>
+                    <HeaderSection
+                        onSearchChange={onSearchChange}
+                        title='Document Store'
+                        subtitle={`Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s`}
+                        icon={<IconFiles />}
+                    >
                         <StyledButton
                             variant='contained'
                             sx={{ borderRadius: 2, height: '100%' }}
@@ -187,7 +147,7 @@ const Documents = () => {
                         >
                             Add New
                         </StyledButton>
-                    </ViewHeader>
+                    </HeaderSection>
                     {!view || view === 'card' ? (
                         <>
                             {isLoading && !docStores ? (

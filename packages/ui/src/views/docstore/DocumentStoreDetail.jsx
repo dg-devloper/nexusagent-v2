@@ -443,7 +443,7 @@ const DocumentStoreDetails = () => {
                                 disableElevation
                                 color='secondary'
                                 onClick={handleClick}
-                                sx={{ minWidth: 150 }}
+                                sx={{ minWidth: 150, borderColor: theme.palette['primary'].main, color: theme.palette['primary'].main }}
                                 endIcon={<KeyboardArrowDownIcon />}
                             >
                                 More Actions

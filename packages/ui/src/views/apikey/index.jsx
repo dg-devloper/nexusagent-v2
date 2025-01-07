@@ -30,7 +30,6 @@ import MainCard from '@/ui-component/cards/MainCard'
 import { StyledButton } from '@/ui-component/button/StyledButton'
 import APIKeyDialog from './APIKeyDialog'
 import ConfirmDialog from '@/ui-component/dialog/ConfirmDialog'
-import ViewHeader from '@/layout/MainLayout/ViewHeader'
 import ErrorBoundary from '@/ErrorBoundary'
 
 // API
@@ -58,6 +57,8 @@ import {
 } from '@tabler/icons-react'
 import APIEmptySVG from '@/assets/images/api_empty.svg'
 import UploadJSONFileDialog from '@/views/apikey/UploadJSONFileDialog'
+import HeaderSection from '@/layout/MainLayout/HeaderSection'
+import { IconKey } from '@tabler/icons-react'
 
 // ==============================|| APIKey ||============================== //
 
@@ -367,26 +368,31 @@ const APIKey = () => {
                     <ErrorBoundary error={error} />
                 ) : (
                     <Stack flexDirection='column' sx={{ gap: 3 }}>
-                        <ViewHeader onSearchChange={onSearchChange} search={true} searchPlaceholder='Search API Keys' title='API Keys'>
-                            <Button
-                                variant='outlined'
-                                sx={{ borderRadius: 2, height: '100%' }}
-                                onClick={uploadDialog}
-                                startIcon={<IconFileUpload />}
-                                id='btn_importApiKeys'
-                            >
-                                Import
-                            </Button>
+                        <HeaderSection
+                            onSearchChange={onSearchChange}
+                            title='Api Keys'
+                            subtitle={`Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s`}
+                            icon={<IconKey />}
+                        >
                             <StyledButton
                                 variant='contained'
                                 sx={{ borderRadius: 2, height: '100%' }}
                                 onClick={addNew}
-                                startIcon={<IconPlus />}
+                                endIcon={<IconPlus />}
                                 id='btn_createApiKey'
                             >
                                 Create Key
                             </StyledButton>
-                        </ViewHeader>
+                            <StyledButton
+                                variant='contained'
+                                sx={{ borderRadius: 2, height: '100%' }}
+                                onClick={uploadDialog}
+                                endIcon={<IconFileUpload />}
+                                id='btn_importApiKeys'
+                            >
+                                Import
+                            </StyledButton>
+                        </HeaderSection>
                         {!isLoading && apiKeys.length <= 0 ? (
                             <Stack sx={{ alignItems: 'center', justifyContent: 'center' }} flexDirection='column'>
                                 <Box sx={{ p: 2, height: 'auto' }}>
