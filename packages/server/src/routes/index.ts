@@ -91,6 +91,6 @@ router.use('/vector', vectorRouter)
 router.use('/verify', verifyRouter)
 router.use('/version', versionRouter)
 router.use('/upsert-history', upsertHistoryRouter)
-router.use('/', auth)
+router.use('/auth', auth)
 
 export default router

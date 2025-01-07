@@ -2,13 +2,36 @@ import { Request, Response, NextFunction } from 'express'
 import usersService from '../../services/users'
 import { InternalFlowiseError } from '../../errors/internalFlowiseError'
 import { StatusCodes } from 'http-status-codes'
+import bcrypt from 'bcryptjs'
 
 const createUser = async (req: Request, res: Response, next: NextFunction) => {
     try {
         if (!req.body) {
             throw new InternalFlowiseError(StatusCodes.PRECONDITION_FAILED, `Error: usersController.createUser - body not provided!`)
         }
-        const apiResponse = await usersService.createUser(req.body)
+
+        const data: {
+            id: string
+            email: string
+            name: string
+            username: string
+            role: string
+            isActive: boolean
+            password: string | null
+        } = {
+            id: req.body.id,
+            name: req.body.name,
+            username: req.body.username,
+            role: req.body.role,
+            isActive: req.body.isActive,
+            password: null,
+            email: req.body.email
+        }
+
+        const hashPassword = await bcrypt.hash(req.body.password, 10)
+        data.password = hashPassword
+
+        const apiResponse = await usersService.createUser(data)
         return res.json(apiResponse)
     } catch (error) {
         next(error)

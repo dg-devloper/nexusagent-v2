@@ -21,6 +21,7 @@ const login = async (req: Request, res: Response, next: NextFunction) => {
             throw new InternalFlowiseError(StatusCodes.PRECONDITION_FAILED, `Error: authController.login - body not provided!`)
         }
         const apiResponse = await authService.loginUser(req.body)
+
         return res.json(apiResponse)
     } catch (error) {
         next(error)

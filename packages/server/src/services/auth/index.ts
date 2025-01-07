@@ -5,8 +5,8 @@ import { getErrorMessage } from '../../errors/utils'
 import { getAppVersion } from '../../utils'
 import { getRunningExpressApp } from '../../utils/getRunningExpressApp'
 import { FLOWISE_METRIC_COUNTERS, FLOWISE_COUNTER_STATUS } from '../../Interface.Metrics'
-// import bcrypt from 'bcrypt'
-// import jwt from 'jsonwebtoken'
+import bcrypt from 'bcryptjs'
+import jwt from 'jsonwebtoken'
 
 const registerUser = async (requestBody: any): Promise<any> => {
     try {
@@ -31,24 +31,27 @@ const registerUser = async (requestBody: any): Promise<any> => {
 const loginUser = async (requestBody: any): Promise<any> => {
     try {
         const appServer = getRunningExpressApp()
+
         const user = await appServer.AppDataSource.getRepository(User).findOneBy({
             username: requestBody.username
         })
-        // if (!user || !(await bcrypt.compare(requestBody.password, user.password))) {
-        //     throw new InternalFlowiseError(StatusCodes.UNAUTHORIZED, 'Invalid username or password')
-        // }
-        // const token = jwt.sign({ userId: user.id }, process.env.JWT_SECRET!, { expiresIn: '1h' })
-        // await appServer.telemetry.sendTelemetry('user_logged_in', {
-        //     version: await getAppVersion(),
-        //     userId: user.id,
-        //     userName: user.name
-        // })
-        // appServer.metricsProvider?.incrementCounter(FLOWISE_METRIC_COUNTERS.USER_LOGGED_IN, { status: FLOWISE_COUNTER_STATUS.SUCCESS })
-        // return {
-        //     status: 'success',
-        //     token: `Bearer ${token}`,
-        //     user
-        // }
+
+        console.log(user)
+        if (!user || !(await bcrypt.compare(requestBody.password, user.password))) {
+            throw new InternalFlowiseError(StatusCodes.UNAUTHORIZED, 'Invalid username or password')
+        }
+        const token = jwt.sign({ userId: user.id }, process.env.JWT_SECRET!, { expiresIn: '1h' })
+        await appServer.telemetry.sendTelemetry('user_logged_in', {
+            version: await getAppVersion(),
+            userId: user.id,
+            userName: user.name
+        })
+        appServer.metricsProvider?.incrementCounter(FLOWISE_METRIC_COUNTERS.USER_LOGGED_IN, { status: FLOWISE_COUNTER_STATUS.SUCCESS })
+        return {
+            status: 'success',
+            token: `Bearer ${token}`,
+            user
+        }
     } catch (error) {
         throw new InternalFlowiseError(StatusCodes.INTERNAL_SERVER_ERROR, `Error: authService.loginUser - ${getErrorMessage(error)}`)
     }
