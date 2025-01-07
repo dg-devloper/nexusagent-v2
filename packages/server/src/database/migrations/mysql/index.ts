@@ -22,6 +22,7 @@ import { AddDocumentStore1711637331047 } from './1711637331047-AddDocumentStore'
 import { AddAgentReasoningToChatMessage1714679514451 } from './1714679514451-AddAgentReasoningToChatMessage'
 import { AddTypeToChatFlow1716300000000 } from './1716300000000-AddTypeToChatFlow'
 import { AddApiKey1720230151480 } from './1720230151480-AddApiKey'
+import { AddUser1720230151481 } from './1720230151481-AddUser'
 import { AddActionToChatMessage1721078251523 } from './1721078251523-AddActionToChatMessage'
 import { LongTextColumn1722301395521 } from './1722301395521-LongTextColumn'
 import { AddCustomTemplate1725629836652 } from './1725629836652-AddCustomTemplate'
@@ -54,6 +55,7 @@ export const mysqlMigrations = [
     AddTypeToChatFlow1716300000000,
     AddVectorStoreConfigToDocStore1715861032479,
     AddApiKey1720230151480,
+    AddUser1720230151481,
     AddActionToChatMessage1721078251523,
     LongTextColumn1722301395521,
     AddCustomTemplate1725629836652,

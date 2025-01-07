@@ -37,11 +37,13 @@ import publicChatbotRouter from './public-chatbots'
 import publicChatflowsRouter from './public-chatflows'
 import statsRouter from './stats'
 import toolsRouter from './tools'
+import usersRouter from './users'
 import upsertHistoryRouter from './upsert-history'
 import variablesRouter from './variables'
 import vectorRouter from './vectors'
 import verifyRouter from './verify'
 import versionRouter from './versions'
+import auth from './auth'
 
 const router = express.Router()
 
@@ -83,10 +85,12 @@ router.use('/public-chatbotConfig', publicChatbotRouter)
 router.use('/public-chatflows', publicChatflowsRouter)
 router.use('/stats', statsRouter)
 router.use('/tools', toolsRouter)
+router.use('/users', usersRouter)
 router.use('/variables', variablesRouter)
 router.use('/vector', vectorRouter)
 router.use('/verify', verifyRouter)
 router.use('/version', versionRouter)
 router.use('/upsert-history', upsertHistoryRouter)
+router.use('/', auth)
 
 export default router
