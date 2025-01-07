@@ -1,7 +1,7 @@
 import { useEffect, useState, useRef } from 'react'
 
 // material-ui
-import { Box, Stack, Button, ButtonGroup, Skeleton, ToggleButtonGroup, ToggleButton } from '@mui/material'
+import { Box, Stack, ButtonGroup, Skeleton } from '@mui/material'
 
 // project imports
 import MainCard from '@/ui-component/cards/MainCard'
@@ -19,10 +19,11 @@ import toolsApi from '@/api/tools'
 import useApi from '@/hooks/useApi'
 
 // icons
-import { IconPlus, IconFileUpload, IconLayoutGrid, IconList } from '@tabler/icons-react'
-import ViewHeader from '@/layout/MainLayout/ViewHeader'
+import { IconPlus, IconFileUpload } from '@tabler/icons-react'
 import ErrorBoundary from '@/ErrorBoundary'
 import { useTheme } from '@mui/material/styles'
+import HeaderSection from '@/layout/MainLayout/HeaderSection'
+import { IconHierarchy } from '@tabler/icons-react'
 
 // ==============================|| CHATFLOWS ||============================== //
 
@@ -34,7 +35,7 @@ const Tools = () => {
     const [error, setError] = useState(null)
     const [showDialog, setShowDialog] = useState(false)
     const [dialogProps, setDialogProps] = useState({})
-    const [view, setView] = useState(localStorage.getItem('toolsDisplayStyle') || 'card')
+    const [view, setView] = useState(localStorage.getItem('toolsDisplayStyle') || 'list')
 
     const inputRef = useRef(null)
 
@@ -138,48 +139,16 @@ const Tools = () => {
                     <ErrorBoundary error={error} />
                 ) : (
                     <Stack flexDirection='column' sx={{ gap: 3 }}>
-                        <ViewHeader onSearchChange={onSearchChange} search={true} searchPlaceholder='Search Tools' title='Tools'>
-                            <ToggleButtonGroup
-                                sx={{ borderRadius: 2, maxHeight: 40 }}
-                                value={view}
-                                color='primary'
-                                exclusive
-                                onChange={handleChange}
-                            >
-                                <ToggleButton
-                                    sx={{
-                                        borderColor: theme.palette.grey[900] + 25,
-                                        borderRadius: 2,
-                                        color: theme?.customization?.isDarkMode ? 'white' : 'inherit'
-                                    }}
-                                    variant='contained'
-                                    value='card'
-                                    title='Card View'
-                                >
-                                    <IconLayoutGrid />
-                                </ToggleButton>
-                                <ToggleButton
-                                    sx={{
-                                        borderColor: theme.palette.grey[900] + 25,
-                                        borderRadius: 2,
-                                        color: theme?.customization?.isDarkMode ? 'white' : 'inherit'
-                                    }}
-                                    variant='contained'
-                                    value='list'
-                                    title='List View'
-                                >
-                                    <IconList />
-                                </ToggleButton>
-                            </ToggleButtonGroup>
+                        <HeaderSection onSearchChange={onSearchChange} title='Tools' icon={<IconHierarchy />}>
                             <Box sx={{ display: 'flex', alignItems: 'center' }}>
-                                <Button
-                                    variant='outlined'
+                                <StyledButton
+                                    variant='contained'
                                     onClick={() => inputRef.current.click()}
-                                    startIcon={<IconFileUpload />}
+                                    endIcon={<IconFileUpload />}
                                     sx={{ borderRadius: 2, height: 40 }}
                                 >
                                     Load
-                                </Button>
+                                </StyledButton>
                                 <input
                                     style={{ display: 'none' }}
                                     ref={inputRef}
@@ -193,13 +162,13 @@ const Tools = () => {
                                 <StyledButton
                                     variant='contained'
                                     onClick={addNew}
-                                    startIcon={<IconPlus />}
+                                    endIcon={<IconPlus />}
                                     sx={{ borderRadius: 2, height: 40 }}
                                 >
                                     Create
                                 </StyledButton>
                             </ButtonGroup>
-                        </ViewHeader>
+                        </HeaderSection>
                         {!view || view === 'card' ? (
                             <>
                                 {isLoading ? (

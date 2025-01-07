@@ -1,5 +1,5 @@
 import { useNavigate } from 'react-router-dom'
-import { useSelector } from 'react-redux'
+// import { useSelector } from 'react-redux'
 
 // material-ui
 import { Card, CardContent, Stack } from '@mui/material'
@@ -61,7 +61,7 @@ const FeatureIcon = styled('div')(() => ({
 const FeatureCards = () => {
     const navigate = useNavigate()
     const theme = useTheme()
-    const customization = useSelector((state) => state.customization)
+    // const customization = useSelector((state) => state.customization)
 
     const onCardClick = (index) => {
         if (index === 0) navigate('/assistants/custom')
@@ -90,7 +90,6 @@ const FeatureCards = () => {
                         flexDirection: 'column',
                         justifyContent: 'space-between',
                         border: 1,
-                        borderColor: theme.palette.grey[900] + 25,
                         borderRadius: 2,
                         color: theme.palette.common.white,
                         cursor: index === 2 ? 'not-allowed' : 'pointer',
