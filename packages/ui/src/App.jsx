@@ -12,6 +12,9 @@ import themes from '@/themes'
 // project imports
 import NavigationScroll from '@/layout/NavigationScroll'
 
+//i18n
+import './i18n'
+
 // ==============================|| APP ||============================== //
 
 const App = () => {
