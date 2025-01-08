@@ -73,7 +73,7 @@ const MainLayout = () => {
     /* eslint-disable */
     useEffect(() => {
         if (!token) {
-            navigate('/login')
+            navigate('/login', { replace: true })
         }
 
         if (token) {

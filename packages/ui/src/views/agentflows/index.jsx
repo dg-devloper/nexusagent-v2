@@ -86,11 +86,7 @@ const Agentflows = () => {
     useEffect(() => {
         if (getAllAgentflows.error) {
             if (getAllAgentflows.error?.response?.status === 401) {
-                setLoginDialogProps({
-                    title: 'Login',
-                    confirmButtonName: 'Login'
-                })
-                setLoginDialogOpen(true)
+                navigate('/login', { replace: true })
             } else {
                 setError(getAllAgentflows.error)
             }

@@ -14,51 +14,52 @@ import { IconMenu2 } from '@tabler/icons-react'
 
 // ==============================|| MAIN NAVBAR / HEADER ||============================== //
 
-const Header = ({ handleLeftDrawerToggle }) => {
+const Header = ({ handleLeftDrawerToggle, hideLeftDrawerToggle = false }) => {
     const theme = useTheme()
     const navigate = useNavigate()
 
     const signOutClicked = () => {
-        localStorage.removeItem('username')
-        localStorage.removeItem('password')
-        navigate('/', { replace: true })
+        localStorage.removeItem('site')
+        navigate('/login', { replace: true })
         navigate(0)
     }
 
     return (
         <>
             {/* logo & toggler button */}
-            <Box
-                sx={{
-                    width: 228,
-                    display: 'flex',
-                    [theme.breakpoints.down('md')]: {
-                        width: 'auto'
-                    }
-                }}
-            >
-                <ButtonBase sx={{ borderRadius: '12px', overflow: 'hidden' }}>
-                    <Avatar
-                        variant='rounded'
-                        sx={{
-                            ...theme.typography.commonAvatar,
-                            ...theme.typography.mediumAvatar,
-                            transition: 'all .2s ease-in-out',
-                            background: theme.palette.primary.main,
-                            color: 'white',
-                            opacity: '.9',
-                            '&:hover': {
+            {!hideLeftDrawerToggle && (
+                <Box
+                    sx={{
+                        width: 228,
+                        display: 'flex',
+                        [theme.breakpoints.down('md')]: {
+                            width: 'auto'
+                        }
+                    }}
+                >
+                    <ButtonBase sx={{ overflow: 'hidden' }}>
+                        <Avatar
+                            variant='rounded'
+                            sx={{
+                                ...theme.typography.commonAvatar,
+                                ...theme.typography.mediumAvatar,
+                                transition: 'all .2s ease-in-out',
                                 background: theme.palette.primary.main,
-                                opacity: 1
-                            }
-                        }}
-                        onClick={handleLeftDrawerToggle}
-                        color='inherit'
-                    >
-                        <IconMenu2 stroke={1.5} size='1.3rem' />
-                    </Avatar>
-                </ButtonBase>
-            </Box>
+                                color: 'white',
+                                opacity: '.9',
+                                '&:hover': {
+                                    background: theme.palette.primary.main,
+                                    opacity: 1
+                                }
+                            }}
+                            onClick={handleLeftDrawerToggle}
+                            color='inherit'
+                        >
+                            <IconMenu2 stroke={1.5} size='1.3rem' />
+                        </Avatar>
+                    </ButtonBase>
+                </Box>
+            )}
             <Box sx={{ flexGrow: 1 }} />
             <LangSection />
             <Box sx={{ ml: 2 }}></Box>
@@ -68,7 +69,8 @@ const Header = ({ handleLeftDrawerToggle }) => {
 }
 
 Header.propTypes = {
-    handleLeftDrawerToggle: PropTypes.func
+    handleLeftDrawerToggle: PropTypes.func,
+    hideLeftDrawerToggle: PropTypes.bool
 }
 
 export default Header

@@ -161,7 +161,7 @@ export default function SignInCard() {
                         />
                     </FormControl>
                     <ForgotPassword open={open} handleClose={handleClose} />
-                    <Button type='submit' fullWidth variant='contained' onClick={validateInputs}>
+                    <Button type='submit' fullWidth variant='contained' onClick={validateInputs} sx={{ borderRadius: '16px' }}>
                         Sign in
                     </Button>
                     {/* <Typography sx={{ textAlign: 'center' }}>

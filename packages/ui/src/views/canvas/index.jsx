@@ -14,7 +14,7 @@ import {
 import { omit, cloneDeep } from 'lodash'
 
 // material-ui
-import { Box, Button, Fab } from '@mui/material'
+import { Box, Button, Fab, useMediaQuery } from '@mui/material'
 import { useTheme } from '@mui/material/styles'
 
 // project imports
@@ -53,6 +53,7 @@ import { usePrompt } from '@/utils/usePrompt'
 // const
 import { FLOWISE_CREDENTIAL_ID } from '@/store/constant'
 import CanvasSubHeader from './CanvasSubHeader'
+import Sidebar from '@/layout/MinimalLayout/Sidebar'
 
 const nodeTypes = { customNode: CanvasNode, stickyNote: StickyNote }
 const edgeTypes = { buttonedge: ButtonEdge }
@@ -61,6 +62,8 @@ const edgeTypes = { buttonedge: ButtonEdge }
 
 const Canvas = () => {
     const theme = useTheme()
+    const matchDownMd = useMediaQuery(theme.breakpoints.down('md'))
+
     const navigate = useNavigate()
 
     const { state } = useLocation()
@@ -395,6 +398,11 @@ const Canvas = () => {
         setIsSyncNodesButtonEnabled(false)
     }
 
+    const leftDrawerOpened = useSelector((state) => state.customization.opened)
+    const handleLeftDrawerToggle = () => {
+        dispatch({ type: SET_MENU, opened: !leftDrawerOpened })
+    }
+
     // ==============================|| useEffect ||============================== //
 
     // Get specific chatflow successful
@@ -535,7 +543,16 @@ const Canvas = () => {
                         />
                     </Toolbar>
                 </AppBar> */}
-                <Box sx={{ height: '100%', width: '100%' }}>
+
+                <Box sx={{ height: '100%', width: '100%', display: 'flex', marginTop: '70px' }}>
+                    <Sidebar
+                        drawerOpen={leftDrawerOpened}
+                        drawerToggle={handleLeftDrawerToggle}
+                        isAgentCanvas={isAgentCanvas}
+                        nodesData={getNodesApi.data}
+                        node={selectedNode}
+                    />
+
                     <div className='reactflow-parent-wrapper'>
                         <div className='reactflow-wrapper' ref={reactFlowWrapper}>
                             <ReactFlow
@@ -565,7 +582,7 @@ const Canvas = () => {
                                     }}
                                 />
                                 <Background color='#aaa' gap={16} />
-                                <AddNodes isAgentCanvas={isAgentCanvas} nodesData={getNodesApi.data} node={selectedNode} />
+                                {matchDownMd && <AddNodes isAgentCanvas={isAgentCanvas} nodesData={getNodesApi.data} node={selectedNode} />}
                                 {isSyncNodesButtonEnabled && (
                                     <Fab
                                         sx={{
