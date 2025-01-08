@@ -94,6 +94,7 @@ router.use(async (req, res, next) => {
         })
     }
 })
+router.use('/', pingRouter)
 router.use('/ping', pingRouter)
 router.use('/apikey', apikeyRouter)
 router.use('/assistants', assistantsRouter)
