@@ -1,14 +1,17 @@
 import { Request, Response, NextFunction } from 'express'
 import userService from '../../services/user'
-import { InternalFlowiseError } from '../../errors/internalFlowiseError'
-import { StatusCodes } from 'http-status-codes'
 import JsonWebToken from 'jsonwebtoken'
 
 const getUser = async (req: Request, res: Response, next: NextFunction) => {
     try {
         let token = req.headers.authorization
+        if (token && token.startsWith('Bearer ')) {
+            token = token.slice(7, token.length)
+        }
         if (!token) {
-            throw new InternalFlowiseError(StatusCodes.PRECONDITION_FAILED, `Error: usersController.getUserByToken - token not provided!`)
+            return res.status(401).json({
+                message: 'No token provided'
+            })
         }
         let decryptToken = JsonWebToken.verify(token, process.env.JWT_SECRET!) as JsonWebToken.JwtPayload
         let userId = decryptToken.userId

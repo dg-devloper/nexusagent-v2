@@ -44,6 +44,7 @@ import vectorRouter from './vectors'
 import verifyRouter from './verify'
 import versionRouter from './versions'
 import auth from './auth'
+import userRouter from './user'
 import JsonWebToken from 'jsonwebtoken'
 import usersService from '../services/users'
 
@@ -92,11 +93,11 @@ router.use(async (req, res, next) => {
         next()
     } catch (error) {
         return res.status(401).json({
-            message: 'Invalid token'
+            message: 'Invalid token 1'
         })
     }
 })
-router.use('/', pingRouter)
+router.use('/', userRouter)
 router.use('/ping', pingRouter)
 router.use('/apikey', apikeyRouter)
 router.use('/assistants', assistantsRouter)
