@@ -21,7 +21,6 @@ import {
     Tabs,
     Tab
 } from '@mui/material'
-import { useTheme } from '@mui/material/styles'
 import { IconX } from '@tabler/icons-react'
 
 // project imports
@@ -67,8 +66,6 @@ const Marketplace = () => {
     const dispatch = useDispatch()
     useNotifier()
 
-    const theme = useTheme()
-
     const SelectStyles = {
         '& .MuiOutlinedInput-notchedOutline': {
             borderRadius: 2
@@ -79,10 +76,7 @@ const Marketplace = () => {
                 backgroundColor: 'red'
             }
         },
-        width: '150px',
-        [theme.breakpoints.down('sm')]: {
-            width: '245px'
-        }
+        minWidth: '200px'
     }
 
     const [isLoading, setLoading] = useState(true)
@@ -420,7 +414,7 @@ const Marketplace = () => {
                     <ErrorBoundary error={error} />
                 ) : (
                     <Stack flexDirection='column'>
-                        <HeaderSection onSearchChange={onSearchChange} title='Chatflows' icon={<IconHierarchy />}>
+                        <HeaderSection onSearchChange={onSearchChange} title='Marketplace' icon={<IconHierarchy />}>
                             <>
                                 <FormControl
                                     sx={{

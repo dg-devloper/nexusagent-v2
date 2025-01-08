@@ -315,17 +315,15 @@ const ProfileSection = ({ username, handleLogout }) => {
 
     return (
         <>
-            <ButtonBase ref={anchorRef} sx={{ borderRadius: '12px', overflow: 'hidden' }}>
+            <ButtonBase ref={anchorRef} sx={{ borderRadius: '30px', overflow: 'hidden' }}>
                 <Avatar
                     variant='rounded'
                     sx={{
-                        ...theme.typography.commonAvatar,
-                        ...theme.typography.mediumAvatar,
                         transition: 'all .2s ease-in-out',
-                        background: theme.palette.secondary.light,
-                        color: theme.palette.secondary.dark,
+                        background: theme.palette.primary.light,
+                        color: theme.palette.primary.dark,
                         '&:hover': {
-                            background: theme.palette.secondary.dark,
+                            background: theme.palette.primary.dark,
                             color: theme.palette.secondary.light
                         }
                     }}
@@ -417,7 +415,8 @@ const ProfileSection = ({ username, handleLogout }) => {
                                                     </ListItemIcon>
                                                     <ListItemText primary={<Typography variant='body2'>About Flowise</Typography>} />
                                                 </ListItemButton>
-                                                {localStorage.getItem('username') && localStorage.getItem('password') && (
+
+                                                {localStorage.getItem('site') && (
                                                     <ListItemButton
                                                         sx={{ borderRadius: `${customization.borderRadius}px` }}
                                                         onClick={handleLogout}

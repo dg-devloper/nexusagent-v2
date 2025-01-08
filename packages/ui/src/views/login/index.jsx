@@ -2,15 +2,15 @@ import * as React from 'react'
 import Box from '@mui/material/Box'
 import Button from '@mui/material/Button'
 import MuiCard from '@mui/material/Card'
-import Checkbox from '@mui/material/Checkbox'
 import FormLabel from '@mui/material/FormLabel'
 import FormControl from '@mui/material/FormControl'
-import FormControlLabel from '@mui/material/FormControlLabel'
-import Link from '@mui/material/Link'
 import TextField from '@mui/material/TextField'
 import Typography from '@mui/material/Typography'
 import { styled } from '@mui/material/styles'
 import ForgotPassword from './ForgotPassword'
+import authApi from '@/api/auth'
+import { useAuth } from '@/hooks/useAuth'
+import { useNavigate } from 'react-router'
 
 const Card = styled(MuiCard)(({ theme }) => ({
     display: 'flex',
@@ -29,8 +29,10 @@ const Card = styled(MuiCard)(({ theme }) => ({
 }))
 
 export default function SignInCard() {
-    const [emailError, setEmailError] = React.useState(false)
-    const [emailErrorMessage, setEmailErrorMessage] = React.useState('')
+    const { setToken, setUser } = useAuth()
+    const navigate = useNavigate()
+    const [usernameError, setUsernameError] = React.useState(false)
+    const [usernameErrorMessage, setUsernameErrorMessage] = React.useState('')
     const [passwordError, setPasswordError] = React.useState(false)
     const [passwordErrorMessage, setPasswordErrorMessage] = React.useState('')
     const [open, setOpen] = React.useState(false)
@@ -43,31 +45,55 @@ export default function SignInCard() {
         setOpen(false)
     }
 
-    const handleSubmit = (event) => {
-        if (emailError || passwordError) {
-            event.preventDefault()
+    const handleSubmit = async (event) => {
+        event.preventDefault()
+
+        if (usernameError || passwordError) {
             return
         }
         const data = new FormData(event.currentTarget)
         console.log({
-            email: data.get('email'),
+            username: data.get('username'),
             password: data.get('password')
         })
+
+        try {
+            const response = await authApi.login({
+                username: data.get('username'),
+                password: data.get('password')
+            })
+
+            if (response.data) {
+                setToken(response.data.token)
+                setUser({
+                    user: {
+                        id: response.data.user.id,
+                        name: response.data.user.name
+                    },
+                    isAuthenticated: true
+                })
+                localStorage.setItem('site', response.data.token)
+
+                navigate('/')
+            }
+        } catch (e) {
+            alert('Failed to sign in')
+        }
     }
 
     const validateInputs = () => {
-        const email = document.getElementById('email')
+        const username = document.getElementById('username')
         const password = document.getElementById('password')
 
         let isValid = true
 
-        if (!email.value || !/\S+@\S+\.\S+/.test(email.value)) {
-            setEmailError(true)
-            setEmailErrorMessage('Please enter a valid email address.')
+        if (!username.value) {
+            setUsernameError(true)
+            setUsernameErrorMessage('Username cannot be empty.')
             isValid = false
         } else {
-            setEmailError(false)
-            setEmailErrorMessage('')
+            setUsernameError(false)
+            setUsernameErrorMessage('')
         }
 
         if (!password.value || password.value.length < 6) {
@@ -98,27 +124,27 @@ export default function SignInCard() {
                     sx={{ display: 'flex', flexDirection: 'column', width: '100%', gap: 2 }}
                 >
                     <FormControl>
-                        <FormLabel htmlFor='email'>Email</FormLabel>
+                        <FormLabel htmlFor='username'>Username</FormLabel>
                         <TextField
-                            error={emailError}
-                            helperText={emailErrorMessage}
-                            id='email'
-                            type='email'
-                            name='email'
-                            placeholder='your@email.com'
-                            autoComplete='email'
+                            error={usernameError}
+                            helperText={usernameErrorMessage}
+                            id='username'
+                            type='text'
+                            name='username'
+                            placeholder='Username'
+                            autoComplete='username'
                             required
                             fullWidth
                             variant='outlined'
-                            color={emailError ? 'error' : 'primary'}
+                            color={usernameError ? 'error' : 'primary'}
                         />
                     </FormControl>
                     <FormControl>
                         <Box sx={{ display: 'flex', justifyContent: 'space-between' }}>
                             <FormLabel htmlFor='password'>Password</FormLabel>
-                            <Link component='button' type='button' onClick={handleClickOpen} variant='body2' sx={{ alignSelf: 'baseline' }}>
+                            {/* <Link component='button' type='button' onClick={handleClickOpen} variant='body2' sx={{ alignSelf: 'baseline' }}>
                                 Forgot your password?
-                            </Link>
+                            </Link> */}
                         </Box>
                         <TextField
                             error={passwordError}
@@ -134,19 +160,18 @@ export default function SignInCard() {
                             color={passwordError ? 'error' : 'primary'}
                         />
                     </FormControl>
-                    <FormControlLabel control={<Checkbox value='remember' color='primary' />} label='Remember me' />
                     <ForgotPassword open={open} handleClose={handleClose} />
-                    <Button type='submit' fullWidth variant='contained' onClick={validateInputs}>
+                    <Button type='submit' fullWidth variant='contained' onClick={validateInputs} sx={{ borderRadius: '16px' }}>
                         Sign in
                     </Button>
-                    <Typography sx={{ textAlign: 'center' }}>
+                    {/* <Typography sx={{ textAlign: 'center' }}>
                         Don&apos;t have an account?{' '}
                         <span>
                             <Link href='/material-ui/getting-started/templates/sign-in/' variant='body2' sx={{ alignSelf: 'center' }}>
                                 Sign up
                             </Link>
                         </span>
-                    </Typography>
+                    </Typography> */}
                 </Box>
                 {/* <Divider>or</Divider>
             <Box sx={{ display: 'flex', flexDirection: 'column', gap: 2 }}>

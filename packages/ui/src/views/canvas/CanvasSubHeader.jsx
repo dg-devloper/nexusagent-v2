@@ -32,6 +32,7 @@ import { uiBaseURL } from '@/store/constant'
 import { closeSnackbar as closeSnackbarAction, enqueueSnackbar as enqueueSnackbarAction, SET_CHATFLOW } from '@/store/actions'
 import { StyledFab } from '@/ui-component/button/StyledFab'
 import { IconBookmark } from '@tabler/icons-react'
+import { IconCode } from '@tabler/icons-react'
 
 // ==============================|| CANVAS HEADER ||============================== //
 
@@ -241,7 +242,7 @@ const CanvasSubHeader = ({ chatflow, isAgentCanvas, handleSaveFlow, handleDelete
         <>
             <Stack flexDirection='row' justifyContent='space-between' sx={{ position: 'absolute', right: 20, top: 20 }}>
                 <Box sx={{ display: 'flex', gap: '1rem' }}>
-                    {/* {chatflow?.id && (
+                    {chatflow?.id && (
                         <ButtonBase title='API Endpoint' sx={{ borderRadius: '50%', mr: 2 }}>
                             <Avatar
                                 variant='rounded'
@@ -262,7 +263,7 @@ const CanvasSubHeader = ({ chatflow, isAgentCanvas, handleSaveFlow, handleDelete
                                 <IconCode stroke={1.5} size='1.3rem' />
                             </Avatar>
                         </ButtonBase>
-                    )} */}
+                    )}
 
                     <StyledFab
                         variant='extended'

@@ -1,7 +1,7 @@
 import * as React from 'react'
 import Popover from '@mui/material/Popover'
 import Button from '@mui/material/Button'
-import { Avatar, Grid, List, ListItem, ListItemButton, ListItemText } from '@mui/material'
+import { Grid, List, ListItem, ListItemButton, ListItemText } from '@mui/material'
 import { useTheme } from '@emotion/react'
 import { IconChevronDown, IconChevronUp } from '@tabler/icons-react'
 
@@ -33,14 +33,14 @@ export default function LangSection() {
                     borderRadius: '20px',
                     backgroundColor: theme.palette['dark']['900'],
                     '&:hover': {
-                        backgroundColor: theme.palette['dark']['light']
+                        backgroundColor: theme.palette['dark']['900']
                     }
                 }}
             >
-                <Grid container sx={{ alignItems: 'center', gap: '.6rem' }}>
-                    <Grid item>
+                <Grid container sx={{ alignItems: 'center', gap: '.6rem', padding: '0 .5rem' }}>
+                    {/* <Grid item>
                         <Avatar alt='Flag Logo' sx={{ width: 24, height: 24 }} />
-                    </Grid>
+                    </Grid> */}
                     <Grid item>IDN</Grid>
                     <Grid item sx={{ display: 'flex' }}>
                         {anchorEl ? <IconChevronUp size={16} /> : <IconChevronDown size={16} />}

@@ -2,7 +2,7 @@ import PropTypes from 'prop-types'
 
 // material-ui
 import { useTheme } from '@mui/material/styles'
-import { Box, Drawer, useMediaQuery } from '@mui/material'
+import { Box, Drawer, Typography, useMediaQuery } from '@mui/material'
 
 // third-party
 import PerfectScrollbar from 'react-perfect-scrollbar'
@@ -10,8 +10,8 @@ import { BrowserView, MobileView } from 'react-device-detect'
 
 // project imports
 import MenuList from './MenuList'
-import LogoSection from '../LogoSection'
 import { drawerWidth, headerHeight } from '@/store/constant'
+import { IconMacro } from '@tabler/icons-react'
 
 // ==============================|| SIDEBAR DRAWER ||============================== //
 
@@ -23,12 +23,14 @@ const Sidebar = ({ drawerOpen, drawerToggle, window }) => {
         <>
             <Box
                 sx={{
-                    display: { xs: 'block', md: 'none' },
-                    height: '80px'
+                    height: '50px'
                 }}
             >
-                <Box sx={{ display: 'flex', p: 2, mx: 'auto' }}>
-                    <LogoSection />
+                <Box sx={{ display: 'flex', p: 2, mx: 'auto', alignItems: 'center', gap: '1.5rem' }}>
+                    <IconMacro color='white ' />
+                    <Typography variant='h2' sx={{ color: theme.palette.primary.light }}>
+                        Aira-Panel
+                    </Typography>
                 </Box>
             </Box>
             <BrowserView>
