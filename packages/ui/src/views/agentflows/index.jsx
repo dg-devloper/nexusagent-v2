@@ -9,7 +9,6 @@ import MainCard from '@/ui-component/cards/MainCard'
 import ItemCard from '@/ui-component/cards/ItemCard'
 import { gridSpacing } from '@/store/constant'
 import AgentsEmptySVG from '@/assets/images/agents_empty.svg'
-import LoginDialog from '@/ui-component/dialog/LoginDialog'
 import ConfirmDialog from '@/ui-component/dialog/ConfirmDialog'
 import { FlowListTable } from '@/ui-component/table/FlowListTable'
 import ErrorBoundary from '@/ErrorBoundary'
@@ -38,8 +37,6 @@ const Agentflows = () => {
     const [error, setError] = useState(null)
     const [images, setImages] = useState({})
     const [search, setSearch] = useState('')
-    const [loginDialogOpen, setLoginDialogOpen] = useState(false)
-    const [loginDialogProps, setLoginDialogProps] = useState({})
 
     const getAllAgentflows = useApi(chatflowsApi.getAllAgentflows)
 
@@ -63,12 +60,6 @@ const Agentflows = () => {
         )
     }
 
-    const onLoginClick = (username, password) => {
-        localStorage.setItem('username', username)
-        localStorage.setItem('password', password)
-        navigate(0)
-    }
-
     const addNew = () => {
         navigate('/agentcanvas')
     }
@@ -82,16 +73,6 @@ const Agentflows = () => {
 
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [])
-
-    useEffect(() => {
-        if (getAllAgentflows.error) {
-            if (getAllAgentflows.error?.response?.status === 401) {
-                navigate('/login', { replace: true })
-            } else {
-                setError(getAllAgentflows.error)
-            }
-        }
-    }, [getAllAgentflows.error])
 
     useEffect(() => {
         setLoading(getAllAgentflows.loading)
@@ -174,7 +155,6 @@ const Agentflows = () => {
                 </Stack>
             )}
 
-            <LoginDialog show={loginDialogOpen} dialogProps={loginDialogProps} onConfirm={onLoginClick} />
             <ConfirmDialog />
         </MainCard>
     )

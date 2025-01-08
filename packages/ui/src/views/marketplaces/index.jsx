@@ -21,7 +21,6 @@ import {
     Tabs,
     Tab
 } from '@mui/material'
-import { useTheme } from '@mui/material/styles'
 import { IconX } from '@tabler/icons-react'
 
 // project imports
@@ -66,8 +65,6 @@ const Marketplace = () => {
     const navigate = useNavigate()
     const dispatch = useDispatch()
     useNotifier()
-
-    const theme = useTheme()
 
     const SelectStyles = {
         '& .MuiOutlinedInput-notchedOutline': {
