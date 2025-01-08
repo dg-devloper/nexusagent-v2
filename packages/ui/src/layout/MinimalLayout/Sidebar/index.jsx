@@ -46,6 +46,7 @@ import utilNodesPNG from '@/assets/images/utilNodes.png'
 // const
 import { baseURL } from '@/store/constant'
 import { SET_COMPONENT_NODES } from '@/store/actions'
+import { IconMacro } from '@tabler/icons-react'
 
 // ==============================|| SIDEBAR DRAWER ||============================== //
 
@@ -241,10 +242,6 @@ const Sidebar = ({ drawerOpen, drawerToggle, window, nodesData, node, isAgentCan
         setOpen(false)
     }
 
-    const handleToggle = () => {
-        setOpen((prevOpen) => !prevOpen)
-    }
-
     const onDragStart = (event, node) => {
         event.dataTransfer.setData('application/reactflow', JSON.stringify(node))
         event.dataTransfer.effectAllowed = 'move'
@@ -314,10 +311,23 @@ const Sidebar = ({ drawerOpen, drawerToggle, window, nodesData, node, isAgentCan
                 <Paper sx={{ backgroundColor: 'transparent' }}>
                     <ClickAwayListener onClickAway={handleClose}>
                         <MainCard border={false} elevation={16} content={false} sx={{ boxShadow: 'none' }}>
+                            <Box
+                                sx={{
+                                    height: '40px'
+                                }}
+                            >
+                                <Box sx={{ display: 'flex', p: 2, mx: 'auto', alignItems: 'center', gap: '1.5rem' }}>
+                                    <IconMacro color='#495057 ' />
+                                    <Typography variant='h2' sx={{ color: '#495057' }}>
+                                        Aira-Panel
+                                    </Typography>
+                                </Box>
+                            </Box>
                             <Box sx={{ p: 2 }}>
                                 <OutlinedInput
                                     // eslint-disable-next-line
                                     autoFocus
+                                    size='small'
                                     sx={{
                                         width: '100%',
 
@@ -331,12 +341,17 @@ const Sidebar = ({ drawerOpen, drawerToggle, window, nodesData, node, isAgentCan
                                             '&::placeholder': {
                                                 color: 'white'
                                             }
+                                        },
+                                        '&.Mui-focused': {
+                                            '& .MuiOutlinedInput-notchedOutline': {
+                                                border: `1px solid #31363b`
+                                            }
                                         }
                                     }}
                                     id='input-search-node'
                                     value={searchValue}
                                     onChange={(e) => filterSearch(e.target.value)}
-                                    placeholder='Search nodes'
+                                    placeholder='Search tools'
                                     startAdornment={
                                         <InputAdornment position='start'>
                                             <IconSearch stroke={3} size='1rem' color='white' />
@@ -371,11 +386,21 @@ const Sidebar = ({ drawerOpen, drawerToggle, window, nodesData, node, isAgentCan
                                 />
                                 {!isAgentCanvas && (
                                     <Tabs
-                                        sx={{ position: 'relative', minHeight: '50px', height: '50px' }}
+                                        sx={{
+                                            position: 'relative',
+                                            minHeight: '50px',
+                                            height: '50px',
+                                            '& .Mui-selected': {
+                                                color: '#495057'
+                                            }
+                                        }}
                                         variant='fullWidth'
                                         value={tabValue}
                                         onChange={handleTabChange}
                                         aria-label='tabs'
+                                        TabIndicatorProps={{
+                                            style: { background: '#495057', height: '2px', top: '45px' }
+                                        }}
                                     >
                                         {['LangChain', 'LlamaIndex', 'Utilities'].map((item, index) => (
                                             <Tab
@@ -398,7 +423,10 @@ const Sidebar = ({ drawerOpen, drawerToggle, window, nodesData, node, isAgentCan
                                                     </div>
                                                 }
                                                 iconPosition='start'
-                                                sx={{ minHeight: '50px', height: '50px' }}
+                                                sx={{
+                                                    minHeight: '50px',
+                                                    height: '50px'
+                                                }}
                                                 key={index}
                                                 label={item}
                                                 {...a11yProps(index)}
