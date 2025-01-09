@@ -70,9 +70,9 @@ const Chatflows = () => {
         navigate('/canvas')
     }
 
-    const goToCanvas = (selectedChatflow) => {
-        navigate(`/canvas/${selectedChatflow.id}`)
-    }
+    // const goToCanvas = (selectedChatflow) => {
+    //     navigate(`/canvas/${selectedChatflow.id}`)
+    // }
 
     useEffect(() => {
         getAllChatflowsApi.request()
@@ -129,7 +129,13 @@ const Chatflows = () => {
                 <ErrorBoundary error={error} />
             ) : (
                 <Stack flexDirection='column' sx={{ gap: 3 }}>
-                    <HeaderSection onButtonClick={addNew} onSearchChange={onSearchChange} title='Chatflows' icon={<IconHierarchy />}>
+                    <HeaderSection
+                        onButtonClick={addNew}
+                        onSearchChange={onSearchChange}
+                        title='Chatflows'
+                        subtitle={`Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s`}
+                        icon={<IconHierarchy />}
+                    >
                         <StyledButton variant='contained' onClick={addNew} startIcon={<IconPlus />} sx={{ borderRadius: 2, height: 40 }}>
                             Add
                         </StyledButton>

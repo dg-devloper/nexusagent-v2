@@ -36,6 +36,7 @@ export default function SignInCard() {
     const [passwordError, setPasswordError] = React.useState(false)
     const [passwordErrorMessage, setPasswordErrorMessage] = React.useState('')
     const [open, setOpen] = React.useState(false)
+    const [loginError, setLoginError] = React.useState(false)
 
     const handleClickOpen = () => {
         setOpen(true)
@@ -48,14 +49,12 @@ export default function SignInCard() {
     const handleSubmit = async (event) => {
         event.preventDefault()
 
+        setLoginError(false)
+
         if (usernameError || passwordError) {
             return
         }
         const data = new FormData(event.currentTarget)
-        console.log({
-            username: data.get('username'),
-            password: data.get('password')
-        })
 
         try {
             const response = await authApi.login({
@@ -77,7 +76,7 @@ export default function SignInCard() {
                 navigate('/')
             }
         } catch (e) {
-            alert('Failed to sign in')
+            setLoginError(true)
         }
     }
 
@@ -117,6 +116,12 @@ export default function SignInCard() {
                 <Typography component='h1' variant='h4' sx={{ width: '100%', fontSize: 'clamp(2rem, 10vw, 2.15rem)' }}>
                     Sign in
                 </Typography>
+
+                {loginError && (
+                    <Typography variant='span' sx={{ width: '100%', color: 'red' }}>
+                        Invalid Credential
+                    </Typography>
+                )}
                 <Box
                     component='form'
                     onSubmit={handleSubmit}

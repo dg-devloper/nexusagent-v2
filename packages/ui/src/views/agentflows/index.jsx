@@ -108,7 +108,13 @@ const Agentflows = () => {
                 <ErrorBoundary error={error} />
             ) : (
                 <Stack flexDirection='column' sx={{ gap: 3 }}>
-                    <HeaderSection onSearchChange={onSearchChange} onButtonClick={addNew} title='Agenflows' icon={<IconUsersGroup />}>
+                    <HeaderSection
+                        onSearchChange={onSearchChange}
+                        onButtonClick={addNew}
+                        title='Agenflows'
+                        subtitle={`Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s`}
+                        icon={<IconUsersGroup />}
+                    >
                         <StyledButton variant='contained' onClick={addNew} startIcon={<IconPlus />} sx={{ borderRadius: 2, height: 40 }}>
                             Add
                         </StyledButton>

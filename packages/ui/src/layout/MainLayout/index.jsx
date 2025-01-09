@@ -70,15 +70,17 @@ const MainLayout = () => {
         dispatch({ type: SET_MENU, opened: !leftDrawerOpened })
     }
 
-    /* eslint-disable */
     useEffect(() => {
         if (!token) {
             navigate('/login', { replace: true })
         }
 
         if (token) {
-            getData()
+            getData(() => {
+                navigate('/login', { replace: true })
+            })
         }
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [])
 
     useEffect(() => {

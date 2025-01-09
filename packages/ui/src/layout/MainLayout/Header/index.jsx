@@ -11,6 +11,8 @@ import LangSection from './LangSection'
 
 // assets
 import { IconMenu2 } from '@tabler/icons-react'
+import { StyledFab } from '@/ui-component/button/StyledFab'
+import { IconArrowLeft } from '@tabler/icons-react'
 
 // ==============================|| MAIN NAVBAR / HEADER ||============================== //
 
@@ -58,6 +60,13 @@ const Header = ({ handleLeftDrawerToggle, hideLeftDrawerToggle = false }) => {
                             <IconMenu2 stroke={1.5} size='1.3rem' />
                         </Avatar>
                     </ButtonBase>
+                </Box>
+            )}
+            {hideLeftDrawerToggle && (
+                <Box component='span'>
+                    <StyledFab sx={{ mr: 3 }} size='small' color='primary' aria-label='back' title='Back' onClick={() => navigate(-1)}>
+                        <IconArrowLeft />
+                    </StyledFab>
                 </Box>
             )}
             <Box sx={{ flexGrow: 1 }} />

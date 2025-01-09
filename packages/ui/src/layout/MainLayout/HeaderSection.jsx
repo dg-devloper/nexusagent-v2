@@ -18,7 +18,19 @@ const HeaderSection = ({ children, onSearchChange, title, subtitle, icon }) => {
             <Stack spacing={2}>
                 <Grid container justifyContent='center' alignItems='center' gap={2}>
                     <Grid>
-                        <Box sx={{ backgroundColor: '#1F64FF', color: 'white', padding: '.4rem .6rem', borderRadius: '7px' }}>{icon}</Box>
+                        <Box
+                            sx={{
+                                backgroundColor: '#1F64FF',
+                                color: 'white',
+                                padding: '.5rem .6rem',
+                                borderRadius: '7px',
+                                display: 'flex',
+                                justifyContent: 'center',
+                                alignItems: 'center'
+                            }}
+                        >
+                            {icon}
+                        </Box>
                     </Grid>
                     <Grid>
                         <Typography variant='h1' sx={{ color: theme.palette['primary'].main }}>

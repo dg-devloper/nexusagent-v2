@@ -21,14 +21,12 @@ import useApi from '@/hooks/useApi'
 // icons
 import { IconPlus, IconFileUpload } from '@tabler/icons-react'
 import ErrorBoundary from '@/ErrorBoundary'
-import { useTheme } from '@mui/material/styles'
 import HeaderSection from '@/layout/MainLayout/HeaderSection'
-import { IconHierarchy } from '@tabler/icons-react'
+import { IconTool } from '@tabler/icons-react'
 
 // ==============================|| CHATFLOWS ||============================== //
 
 const Tools = () => {
-    const theme = useTheme()
     const getAllToolsApi = useApi(toolsApi.getAllTools)
 
     const [isLoading, setLoading] = useState(true)
@@ -139,7 +137,12 @@ const Tools = () => {
                     <ErrorBoundary error={error} />
                 ) : (
                     <Stack flexDirection='column' sx={{ gap: 3 }}>
-                        <HeaderSection onSearchChange={onSearchChange} title='Tools' icon={<IconHierarchy />}>
+                        <HeaderSection
+                            onSearchChange={onSearchChange}
+                            title='Tools'
+                            subtitle={`Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s`}
+                            icon={<IconTool />}
+                        >
                             <Box sx={{ display: 'flex', alignItems: 'center' }}>
                                 <StyledButton
                                     variant='contained'

@@ -46,7 +46,7 @@ import { baseURL } from '@/store/constant'
 import { gridSpacing } from '@/store/constant'
 import useNotifier from '@/utils/useNotifier'
 import HeaderSection from '@/layout/MainLayout/HeaderSection'
-import { IconHierarchy } from '@tabler/icons-react'
+import { IconBuildingStore } from '@tabler/icons-react'
 
 const badges = ['POPULAR', 'NEW']
 const types = ['Chatflow', 'Agentflow', 'Tool']
@@ -414,7 +414,12 @@ const Marketplace = () => {
                     <ErrorBoundary error={error} />
                 ) : (
                     <Stack flexDirection='column'>
-                        <HeaderSection onSearchChange={onSearchChange} title='Marketplace' icon={<IconHierarchy />}>
+                        <HeaderSection
+                            onSearchChange={onSearchChange}
+                            title='Marketplace'
+                            subtitle={`Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s`}
+                            icon={<IconBuildingStore />}
+                        >
                             <>
                                 <FormControl
                                     sx={{

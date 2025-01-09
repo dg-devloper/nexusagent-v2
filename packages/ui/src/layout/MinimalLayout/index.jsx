@@ -74,8 +74,12 @@ const MainLayout = () => {
     useEffect(() => {
         if (!token) {
             navigate('/login', { replace: true })
-        } else {
-            getData()
+        }
+
+        if (token) {
+            getData(() => {
+                navigate('/login', { replace: true })
+            })
         }
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [])

@@ -48,7 +48,7 @@ import { baseURL } from '@/store/constant'
 import { SET_COMPONENT_CREDENTIALS } from '@/store/actions'
 import ErrorBoundary from '@/ErrorBoundary'
 import HeaderSection from '@/layout/MainLayout/HeaderSection'
-import { IconHierarchy } from '@tabler/icons-react'
+import { IconLock } from '@tabler/icons-react'
 
 const StyledTableCell = styled(TableCell)(({ theme }) => ({
     borderColor: theme.palette.grey[900] + 25,
@@ -233,7 +233,7 @@ const Credentials = () => {
                             onSearchChange={onSearchChange}
                             title='Credentials'
                             subtitle={`Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s`}
-                            icon={<IconHierarchy />}
+                            icon={<IconLock />}
                         >
                             <StyledButton
                                 variant='contained'

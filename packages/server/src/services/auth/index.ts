@@ -36,7 +36,6 @@ const loginUser = async (requestBody: any): Promise<any> => {
             username: requestBody.username
         })
 
-        console.log(user)
         if (!user || !(await bcrypt.compare(requestBody.password, user.password))) {
             throw new InternalFlowiseError(StatusCodes.UNAUTHORIZED, 'Invalid username or password')
         }

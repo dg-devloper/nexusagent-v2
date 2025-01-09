@@ -2,29 +2,34 @@ import { useState } from 'react'
 import PropTypes from 'prop-types'
 import AuthContext from './AuthContext'
 import authAPi from '@/api/auth'
-import useApi from '@/hooks/useApi'
 
 const AuthContextProvider = ({ children }) => {
-    const getUser = useApi(authAPi.getUser)
     const [user, setUser] = useState({ user: null, isAuthenticated: false })
     let [token, setToken] = useState(localStorage.getItem('site') || '')
 
-    const getData = async () => {
+    const getData = async (cb) => {
         try {
-            const response = await getUser.request()
+            const response = await authAPi.getUser()
+
+            if (response.data) {
+                setUser({
+                    user: {
+                        id: response.data[0].id,
+                        name: response.data[0].name
+                    },
+                    isAuthenticated: true
+                })
+            }
         } catch (error) {
-            console.log(error)
+            localStorage.removeItem('site')
+            setToken('')
+            setUser({
+                user: null,
+                isAuthenticated: false
+            })
+
+            cb()
         }
-
-        // console.log(response)
-
-        setUser({
-            user: {
-                id: 1,
-                name: 'John Doe'
-            },
-            isAuthenticated: true
-        })
     }
 
     return <AuthContext.Provider value={{ user, setUser, getData, token, setToken }}>{children}</AuthContext.Provider>

@@ -1,6 +1,6 @@
 import client from './client'
 
-const getUser = (id) => client.get(`/users/${id}`)
+const getUser = () => client.get(`/users`)
 const login = (body) => client.post(`/auth/login`, body)
 
 export default {
