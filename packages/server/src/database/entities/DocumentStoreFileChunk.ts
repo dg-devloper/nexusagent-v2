@@ -6,6 +6,9 @@ export class DocumentStoreFileChunk implements IDocumentStoreFileChunk {
     @PrimaryGeneratedColumn('uuid')
     id: string
 
+    @Column({ type: 'varchar' })
+    userId: string
+
     @Index()
     @Column({ type: 'uuid' })
     docId: string

@@ -24,7 +24,7 @@ const createDocumentStore = async (req: Request, res: Response, next: NextFuncti
         }
         const body = req.body
         const docStore = DocumentStoreDTO.toEntity(body)
-        const apiResponse = await documentStoreService.createDocumentStore(docStore)
+        const apiResponse = await documentStoreService.createDocumentStore(docStore, req.userId!)
         return res.json(apiResponse)
     } catch (error) {
         next(error)
@@ -33,7 +33,7 @@ const createDocumentStore = async (req: Request, res: Response, next: NextFuncti
 
 const getAllDocumentStores = async (req: Request, res: Response, next: NextFunction) => {
     try {
-        const apiResponse = await documentStoreService.getAllDocumentStores()
+        const apiResponse = await documentStoreService.getAllDocumentStores(req.userId!)
         return res.json(DocumentStoreDTO.fromEntities(apiResponse))
     } catch (error) {
         next(error)
@@ -51,7 +51,7 @@ const deleteLoaderFromDocumentStore = async (req: Request, res: Response, next: 
                 `Error: documentStoreController.deleteLoaderFromDocumentStore - missing storeId or loaderId.`
             )
         }
-        const apiResponse = await documentStoreService.deleteLoaderFromDocumentStore(storeId, loaderId)
+        const apiResponse = await documentStoreService.deleteLoaderFromDocumentStore(storeId, req.userId!, loaderId)
         return res.json(DocumentStoreDTO.fromEntity(apiResponse))
     } catch (error) {
         next(error)
@@ -66,7 +66,7 @@ const getDocumentStoreById = async (req: Request, res: Response, next: NextFunct
                 `Error: documentStoreController.getDocumentStoreById - id not provided!`
             )
         }
-        const apiResponse = await documentStoreService.getDocumentStoreById(req.params.id)
+        const apiResponse = await documentStoreService.getDocumentStoreById(req.params.id, req.userId!)
         if (apiResponse && apiResponse.whereUsed) {
             apiResponse.whereUsed = JSON.stringify(await documentStoreService.getUsedChatflowNames(apiResponse))
         }
@@ -91,7 +91,7 @@ const getDocumentStoreFileChunks = async (req: Request, res: Response, next: Nex
             )
         }
         const page = req.params.pageNo ? parseInt(req.params.pageNo) : 1
-        const apiResponse = await documentStoreService.getDocumentStoreFileChunks(req.params.storeId, req.params.fileId, page)
+        const apiResponse = await documentStoreService.getDocumentStoreFileChunks(req.params.storeId, req.userId!, req.params.fileId, page)
         return res.json(apiResponse)
     } catch (error) {
         next(error)
@@ -120,6 +120,7 @@ const deleteDocumentStoreFileChunk = async (req: Request, res: Response, next: N
         }
         const apiResponse = await documentStoreService.deleteDocumentStoreFileChunk(
             req.params.storeId,
+            req.userId!,
             req.params.loaderId,
             req.params.chunkId
         )
@@ -158,6 +159,7 @@ const editDocumentStoreFileChunk = async (req: Request, res: Response, next: Nex
         }
         const apiResponse = await documentStoreService.editDocumentStoreFileChunk(
             req.params.storeId,
+            req.userId!,
             req.params.loaderId,
             req.params.chunkId,
             body.pageContent,
@@ -178,7 +180,7 @@ const saveProcessingLoader = async (req: Request, res: Response, next: NextFunct
             )
         }
         const body = req.body
-        const apiResponse = await documentStoreService.saveProcessingLoader(body)
+        const apiResponse = await documentStoreService.saveProcessingLoader(body, req.userId!)
         return res.json(apiResponse)
     } catch (error) {
         next(error)
@@ -201,7 +203,7 @@ const processLoader = async (req: Request, res: Response, next: NextFunction) =>
         }
         const docLoaderId = req.params.loaderId
         const body = req.body
-        const apiResponse = await documentStoreService.processLoader(body, docLoaderId)
+        const apiResponse = await documentStoreService.processLoader(body, docLoaderId, req.userId!)
         return res.json(apiResponse)
     } catch (error) {
         next(error)
@@ -222,7 +224,7 @@ const updateDocumentStore = async (req: Request, res: Response, next: NextFuncti
                 `Error: documentStoreController.updateDocumentStore - body not provided!`
             )
         }
-        const store = await documentStoreService.getDocumentStoreById(req.params.id)
+        const store = await documentStoreService.getDocumentStoreById(req.params.id, req.userId!)
         if (!store) {
             throw new InternalFlowiseError(
                 StatusCodes.NOT_FOUND,
@@ -247,7 +249,7 @@ const deleteDocumentStore = async (req: Request, res: Response, next: NextFuncti
                 `Error: documentStoreController.deleteDocumentStore - storeId not provided!`
             )
         }
-        const apiResponse = await documentStoreService.deleteDocumentStore(req.params.id)
+        const apiResponse = await documentStoreService.deleteDocumentStore(req.params.id, req.userId!)
         return res.json(apiResponse)
     } catch (error) {
         next(error)
@@ -387,7 +389,7 @@ const upsertDocStoreMiddleware = async (req: Request, res: Response, next: NextF
         }
         const body = req.body
         const files = (req.files as Express.Multer.File[]) || []
-        const apiResponse = await documentStoreService.upsertDocStoreMiddleware(req.params.id, body, files)
+        const apiResponse = await documentStoreService.upsertDocStoreMiddleware(req.params.id, req.userId!, body, files)
         return res.json(apiResponse)
     } catch (error) {
         next(error)
@@ -403,7 +405,7 @@ const refreshDocStoreMiddleware = async (req: Request, res: Response, next: Next
             )
         }
         const body = req.body
-        const apiResponse = await documentStoreService.refreshDocStoreMiddleware(req.params.id, body)
+        const apiResponse = await documentStoreService.refreshDocStoreMiddleware(req.params.id, req.userId!, body)
         return res.json(apiResponse)
     } catch (error) {
         next(error)
@@ -421,7 +423,7 @@ const generateDocStoreToolDesc = async (req: Request, res: Response, next: NextF
         if (typeof req.body === 'undefined') {
             throw new Error('Error: documentStoreController.generateDocStoreToolDesc - body not provided!')
         }
-        const apiResponse = await documentStoreService.generateDocStoreToolDesc(req.params.id, req.body.selectedChatModel)
+        const apiResponse = await documentStoreService.generateDocStoreToolDesc(req.params.id, req.userId!, req.body.selectedChatModel)
         return res.json(apiResponse)
     } catch (error) {
         next(error)
