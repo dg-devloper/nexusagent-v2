@@ -7,10 +7,11 @@ import { ICredentialReturnResponse } from '../../Interface'
 import { InternalFlowiseError } from '../../errors/internalFlowiseError'
 import { getErrorMessage } from '../../errors/utils'
 
-const createCredential = async (requestBody: any) => {
+const createCredential = async (requestBody: any, userId: string) => {
     try {
         const appServer = getRunningExpressApp()
         const newCredential = await transformToCredentialEntity(requestBody)
+        newCredential.userId = userId
         const credential = await appServer.AppDataSource.getRepository(Credential).create(newCredential)
         const dbResponse = await appServer.AppDataSource.getRepository(Credential).save(credential)
         return dbResponse
@@ -23,10 +24,10 @@ const createCredential = async (requestBody: any) => {
 }
 
 // Delete all credentials from chatflowid
-const deleteCredentials = async (credentialId: string): Promise<any> => {
+const deleteCredentials = async (credentialId: string, userId: string): Promise<any> => {
     try {
         const appServer = getRunningExpressApp()
-        const dbResponse = await appServer.AppDataSource.getRepository(Credential).delete({ id: credentialId })
+        const dbResponse = await appServer.AppDataSource.getRepository(Credential).delete({ id: credentialId, userId: userId })
         if (!dbResponse) {
             throw new InternalFlowiseError(StatusCodes.NOT_FOUND, `Credential ${credentialId} not found`)
         }
@@ -39,7 +40,7 @@ const deleteCredentials = async (credentialId: string): Promise<any> => {
     }
 }
 
-const getAllCredentials = async (paramCredentialName: any) => {
+const getAllCredentials = async (paramCredentialName: any, userId: string) => {
     try {
         const appServer = getRunningExpressApp()
         let dbResponse = []
@@ -48,18 +49,24 @@ const getAllCredentials = async (paramCredentialName: any) => {
                 for (let i = 0; i < paramCredentialName.length; i += 1) {
                     const name = paramCredentialName[i] as string
                     const credentials = await appServer.AppDataSource.getRepository(Credential).findBy({
-                        credentialName: name
+                        credentialName: name,
+                        userId: userId
                     })
                     dbResponse.push(...credentials)
                 }
             } else {
                 const credentials = await appServer.AppDataSource.getRepository(Credential).findBy({
-                    credentialName: paramCredentialName as string
+                    credentialName: paramCredentialName as string,
+                    userId: userId
                 })
                 dbResponse = [...credentials]
             }
         } else {
-            const credentials = await appServer.AppDataSource.getRepository(Credential).find()
+            const credentials = await appServer.AppDataSource.getRepository(Credential).find({
+                where: {
+                    userId: userId
+                }
+            })
             for (const credential of credentials) {
                 dbResponse.push(omit(credential, ['encryptedData']))
             }
@@ -73,11 +80,12 @@ const getAllCredentials = async (paramCredentialName: any) => {
     }
 }
 
-const getCredentialById = async (credentialId: string): Promise<any> => {
+const getCredentialById = async (credentialId: string, userId: string): Promise<any> => {
     try {
         const appServer = getRunningExpressApp()
         const credential = await appServer.AppDataSource.getRepository(Credential).findOneBy({
-            id: credentialId
+            id: credentialId,
+            userId: userId
         })
         if (!credential) {
             throw new InternalFlowiseError(StatusCodes.NOT_FOUND, `Credential ${credentialId} not found`)
@@ -102,11 +110,12 @@ const getCredentialById = async (credentialId: string): Promise<any> => {
     }
 }
 
-const updateCredential = async (credentialId: string, requestBody: any): Promise<any> => {
+const updateCredential = async (credentialId: string, userId: string, requestBody: any): Promise<any> => {
     try {
         const appServer = getRunningExpressApp()
         const credential = await appServer.AppDataSource.getRepository(Credential).findOneBy({
-            id: credentialId
+            id: credentialId,
+            userId: userId
         })
         if (!credential) {
             throw new InternalFlowiseError(StatusCodes.NOT_FOUND, `Credential ${credentialId} not found`)

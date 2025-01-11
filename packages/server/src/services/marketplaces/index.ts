@@ -145,7 +145,7 @@ const getAllCustomTemplates = async (): Promise<any> => {
     }
 }
 
-const saveCustomTemplate = async (body: any): Promise<any> => {
+const saveCustomTemplate = async (body: any, userId: string): Promise<any> => {
     try {
         const appServer = getRunningExpressApp()
         let flowDataStr = ''
@@ -154,7 +154,7 @@ const saveCustomTemplate = async (body: any): Promise<any> => {
         Object.assign(customTemplate, body)
 
         if (body.chatflowId) {
-            const chatflow = await chatflowsService.getChatflowById(body.chatflowId)
+            const chatflow = await chatflowsService.getChatflowById(body.chatflowId, userId)
             const flowData = JSON.parse(chatflow.flowData)
             const { framework, exportJson } = _generateExportFlowData(flowData)
             flowDataStr = JSON.stringify(exportJson)

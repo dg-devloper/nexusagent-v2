@@ -42,7 +42,7 @@ const deleteChatflow = async (req: Request, res: Response, next: NextFunction) =
         if (typeof req.params === 'undefined' || !req.params.id) {
             throw new InternalFlowiseError(StatusCodes.PRECONDITION_FAILED, `Error: chatflowsRouter.deleteChatflow - id not provided!`)
         }
-        const apiResponse = await chatflowsService.deleteChatflow(req.params.id)
+        const apiResponse = await chatflowsService.deleteChatflow(req.params.id, req.userId!)
         return res.json(apiResponse)
     } catch (error) {
         next(error)
@@ -51,7 +51,7 @@ const deleteChatflow = async (req: Request, res: Response, next: NextFunction) =
 
 const getAllChatflows = async (req: Request, res: Response, next: NextFunction) => {
     try {
-        const apiResponse = await chatflowsService.getAllChatflows(req.query?.type as ChatflowType)
+        const apiResponse = await chatflowsService.getAllChatflows(req.query?.type as ChatflowType, req.userId!)
         return res.json(apiResponse)
     } catch (error) {
         next(error)
@@ -67,11 +67,11 @@ const getChatflowByApiKey = async (req: Request, res: Response, next: NextFuncti
                 `Error: chatflowsRouter.getChatflowByApiKey - apikey not provided!`
             )
         }
-        const apikey = await apiKeyService.getApiKey(req.params.apikey)
+        const apikey = await apiKeyService.getApiKey(req.params.apikey, req.userId!)
         if (!apikey) {
             return res.status(401).send('Unauthorized')
         }
-        const apiResponse = await chatflowsService.getChatflowByApiKey(apikey.id, req.query.keyonly)
+        const apiResponse = await chatflowsService.getChatflowByApiKey(apikey.id, req.userId!, req.query.keyonly)
         return res.json(apiResponse)
     } catch (error) {
         next(error)
@@ -83,7 +83,7 @@ const getChatflowById = async (req: Request, res: Response, next: NextFunction) 
         if (typeof req.params === 'undefined' || !req.params.id) {
             throw new InternalFlowiseError(StatusCodes.PRECONDITION_FAILED, `Error: chatflowsRouter.getChatflowById - id not provided!`)
         }
-        const apiResponse = await chatflowsService.getChatflowById(req.params.id)
+        const apiResponse = await chatflowsService.getChatflowById(req.params.id, req.userId!)
         return res.json(apiResponse)
     } catch (error) {
         next(error)
@@ -97,6 +97,7 @@ const saveChatflow = async (req: Request, res: Response, next: NextFunction) => 
         }
         const body = req.body
         const newChatFlow = new ChatFlow()
+        newChatFlow.userId = req.userId!
         Object.assign(newChatFlow, body)
         const apiResponse = await chatflowsService.saveChatflow(newChatFlow)
         return res.json(apiResponse)
@@ -108,7 +109,7 @@ const saveChatflow = async (req: Request, res: Response, next: NextFunction) => 
 const importChatflows = async (req: Request, res: Response, next: NextFunction) => {
     try {
         const chatflows: Partial<ChatFlow>[] = req.body.Chatflows
-        const apiResponse = await chatflowsService.importChatflows(chatflows)
+        const apiResponse = await chatflowsService.importChatflows(chatflows, req.userId!)
         return res.json(apiResponse)
     } catch (error) {
         next(error)
@@ -120,7 +121,7 @@ const updateChatflow = async (req: Request, res: Response, next: NextFunction) =
         if (typeof req.params === 'undefined' || !req.params.id) {
             throw new InternalFlowiseError(StatusCodes.PRECONDITION_FAILED, `Error: chatflowsRouter.updateChatflow - id not provided!`)
         }
-        const chatflow = await chatflowsService.getChatflowById(req.params.id)
+        const chatflow = await chatflowsService.getChatflowById(req.params.id, req.userId!)
         if (!chatflow) {
             return res.status(404).send(`Chatflow ${req.params.id} not found`)
         }

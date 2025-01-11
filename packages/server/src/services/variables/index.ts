@@ -5,9 +5,10 @@ import { InternalFlowiseError } from '../../errors/internalFlowiseError'
 import { getErrorMessage } from '../../errors/utils'
 import { QueryRunner } from 'typeorm'
 
-const createVariable = async (newVariable: Variable) => {
+const createVariable = async (newVariable: Variable, userId: string) => {
     try {
         const appServer = getRunningExpressApp()
+        newVariable.userId = userId
         const variable = await appServer.AppDataSource.getRepository(Variable).create(newVariable)
         const dbResponse = await appServer.AppDataSource.getRepository(Variable).save(variable)
         return dbResponse
@@ -19,10 +20,10 @@ const createVariable = async (newVariable: Variable) => {
     }
 }
 
-const deleteVariable = async (variableId: string): Promise<any> => {
+const deleteVariable = async (variableId: string, userId: string): Promise<any> => {
     try {
         const appServer = getRunningExpressApp()
-        const dbResponse = await appServer.AppDataSource.getRepository(Variable).delete({ id: variableId })
+        const dbResponse = await appServer.AppDataSource.getRepository(Variable).delete({ id: variableId, userId: userId })
         return dbResponse
     } catch (error) {
         throw new InternalFlowiseError(
@@ -32,10 +33,12 @@ const deleteVariable = async (variableId: string): Promise<any> => {
     }
 }
 
-const getAllVariables = async () => {
+const getAllVariables = async (userId: string) => {
     try {
         const appServer = getRunningExpressApp()
-        const dbResponse = await appServer.AppDataSource.getRepository(Variable).find()
+        const dbResponse = await appServer.AppDataSource.getRepository(Variable).find({
+            where: { userId: userId }
+        })
         return dbResponse
     } catch (error) {
         throw new InternalFlowiseError(
@@ -45,11 +48,12 @@ const getAllVariables = async () => {
     }
 }
 
-const getVariableById = async (variableId: string) => {
+const getVariableById = async (variableId: string, userId: string) => {
     try {
         const appServer = getRunningExpressApp()
         const dbResponse = await appServer.AppDataSource.getRepository(Variable).findOneBy({
-            id: variableId
+            id: variableId,
+            userId: userId
         })
         return dbResponse
     } catch (error) {

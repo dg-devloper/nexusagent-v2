@@ -27,16 +27,20 @@ const _apikeysStoredInDb = (): boolean => {
     return appConfig.apiKeys.storageType === 'db'
 }
 
-const getAllApiKeys = async () => {
+const getAllApiKeys = async (userId: string) => {
     try {
         if (_apikeysStoredInJson()) {
             const keys = await getAPIKeys_json()
             return await addChatflowsCount(keys)
         } else if (_apikeysStoredInDb()) {
             const appServer = getRunningExpressApp()
-            let keys = await appServer.AppDataSource.getRepository(ApiKey).find()
+            let keys = await appServer.AppDataSource.getRepository(ApiKey).find({
+                where: {
+                    userId: userId
+                }
+            })
             if (keys.length === 0) {
-                await createApiKey('DefaultKey')
+                await createApiKey('DefaultKey', userId)
                 keys = await appServer.AppDataSource.getRepository(ApiKey).find()
             }
             return await addChatflowsCount(keys)
@@ -48,14 +52,15 @@ const getAllApiKeys = async () => {
     }
 }
 
-const getApiKey = async (apiKey: string) => {
+const getApiKey = async (apiKey: string, userId: string) => {
     try {
         if (_apikeysStoredInJson()) {
             return getApiKey_json(apiKey)
         } else if (_apikeysStoredInDb()) {
             const appServer = getRunningExpressApp()
             const currentKey = await appServer.AppDataSource.getRepository(ApiKey).findOneBy({
-                apiKey: apiKey
+                apiKey: apiKey,
+                userId: userId
             })
             if (!currentKey) {
                 return undefined
@@ -69,7 +74,7 @@ const getApiKey = async (apiKey: string) => {
     }
 }
 
-const createApiKey = async (keyName: string) => {
+const createApiKey = async (keyName: string, userId: string) => {
     try {
         if (_apikeysStoredInJson()) {
             const keys = await addAPIKey_json(keyName)
@@ -80,12 +85,13 @@ const createApiKey = async (keyName: string) => {
             const appServer = getRunningExpressApp()
             const newKey = new ApiKey()
             newKey.id = randomBytes(16).toString('hex')
+            newKey.userId = userId
             newKey.apiKey = apiKey
             newKey.apiSecret = apiSecret
             newKey.keyName = keyName
             const key = appServer.AppDataSource.getRepository(ApiKey).create(newKey)
             await appServer.AppDataSource.getRepository(ApiKey).save(key)
-            return getAllApiKeys()
+            return getAllApiKeys(userId)
         } else {
             throw new InternalFlowiseError(StatusCodes.INTERNAL_SERVER_ERROR, `UNKNOWN APIKEY_STORAGE_TYPE`)
         }
@@ -95,7 +101,7 @@ const createApiKey = async (keyName: string) => {
 }
 
 // Update api key
-const updateApiKey = async (id: string, keyName: string) => {
+const updateApiKey = async (id: string, keyName: string, userId: string) => {
     try {
         if (_apikeysStoredInJson()) {
             const keys = await updateAPIKey_json(id, keyName)
@@ -103,14 +109,15 @@ const updateApiKey = async (id: string, keyName: string) => {
         } else if (_apikeysStoredInDb()) {
             const appServer = getRunningExpressApp()
             const currentKey = await appServer.AppDataSource.getRepository(ApiKey).findOneBy({
-                id: id
+                id: id,
+                userId: userId
             })
             if (!currentKey) {
                 throw new InternalFlowiseError(StatusCodes.NOT_FOUND, `ApiKey ${currentKey} not found`)
             }
             currentKey.keyName = keyName
             await appServer.AppDataSource.getRepository(ApiKey).save(currentKey)
-            return getAllApiKeys()
+            return getAllApiKeys(userId)
         } else {
             throw new InternalFlowiseError(StatusCodes.INTERNAL_SERVER_ERROR, `UNKNOWN APIKEY_STORAGE_TYPE`)
         }
@@ -119,18 +126,27 @@ const updateApiKey = async (id: string, keyName: string) => {
     }
 }
 
-const deleteApiKey = async (id: string) => {
+const deleteApiKey = async (id: string, userId: string) => {
     try {
         if (_apikeysStoredInJson()) {
             const keys = await deleteAPIKey_json(id)
             return await addChatflowsCount(keys)
         } else if (_apikeysStoredInDb()) {
             const appServer = getRunningExpressApp()
+
+            const currentKey = await appServer.AppDataSource.getRepository(ApiKey).findOneBy({
+                id: id,
+                userId: userId
+            })
+            if (!currentKey) {
+                throw new InternalFlowiseError(StatusCodes.NOT_FOUND, `ApiKey ${currentKey} not found`)
+            }
+
             const dbResponse = await appServer.AppDataSource.getRepository(ApiKey).delete({ id: id })
             if (!dbResponse) {
                 throw new InternalFlowiseError(StatusCodes.NOT_FOUND, `ApiKey ${id} not found`)
             }
-            return getAllApiKeys()
+            return getAllApiKeys(userId)
         } else {
             throw new InternalFlowiseError(StatusCodes.INTERNAL_SERVER_ERROR, `UNKNOWN APIKEY_STORAGE_TYPE`)
         }
@@ -139,7 +155,7 @@ const deleteApiKey = async (id: string) => {
     }
 }
 
-const importKeys = async (body: any) => {
+const importKeys = async (body: any, userId: string) => {
     try {
         const jsonFile = body.jsonFile
         const splitDataURI = jsonFile.split(',')
@@ -182,6 +198,7 @@ const importKeys = async (body: any) => {
                         case 'overwriteIfExist': {
                             const currentKey = allApiKeys[keyIndex]
                             currentKey.id = key.id
+                            currentKey.userId = userId
                             currentKey.apiKey = key.apiKey
                             currentKey.apiSecret = key.apiSecret
                             await appServer.AppDataSource.getRepository(ApiKey).save(currentKey)
@@ -202,6 +219,7 @@ const importKeys = async (body: any) => {
                 } else {
                     const newKey = new ApiKey()
                     newKey.id = key.id
+                    newKey.userId = userId
                     newKey.apiKey = key.apiKey
                     newKey.apiSecret = key.apiSecret
                     newKey.keyName = key.keyName
@@ -209,7 +227,7 @@ const importKeys = async (body: any) => {
                     await appServer.AppDataSource.getRepository(ApiKey).save(newKeyEntity)
                 }
             }
-            return getAllApiKeys()
+            return getAllApiKeys(userId)
         } else {
             throw new InternalFlowiseError(StatusCodes.INTERNAL_SERVER_ERROR, `UNKNOWN APIKEY_STORAGE_TYPE`)
         }

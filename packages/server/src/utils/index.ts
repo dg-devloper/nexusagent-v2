@@ -759,6 +759,7 @@ const getGlobalVariable = async (
             } else {
                 // add it the variables, if not found locally in the db
                 availableVariables.push({
+                    userId: '',
                     name: propertyName,
                     type: 'static',
                     value: overrideConfig.vars[propertyName],

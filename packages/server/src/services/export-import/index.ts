@@ -45,11 +45,11 @@ const convertExportInput = (body: any): ExportInput => {
 }
 
 const FileDefaultName = 'ExportData.json'
-const exportData = async (exportInput: ExportInput): Promise<{ FileDefaultName: string } & ExportData> => {
+const exportData = async (exportInput: ExportInput, userId: string): Promise<{ FileDefaultName: string } & ExportData> => {
     try {
         // step 1 - get all Tool
         let allTool: Tool[] = []
-        if (exportInput.tool === true) allTool = await toolsService.getAllTools()
+        if (exportInput.tool === true) allTool = await toolsService.getAllTools(userId)
 
         // step 2 - get all ChatFlow
         let allChatflow: ChatFlow[] = []
@@ -60,7 +60,7 @@ const exportData = async (exportInput: ExportInput): Promise<{ FileDefaultName: 
         if (exportInput.agentflow === true) allMultiAgent = await chatflowService.getAllChatflows('MULTIAGENT')
 
         let allVars: Variable[] = []
-        if (exportInput.variable === true) allVars = await variableService.getAllVariables()
+        if (exportInput.variable === true) allVars = await variableService.getAllVariables(userId)
 
         let allAssistants: Assistant[] = []
         if (exportInput.assistant === true) allAssistants = await assistantService.getAllAssistants()
@@ -81,7 +81,7 @@ const exportData = async (exportInput: ExportInput): Promise<{ FileDefaultName: 
     }
 }
 
-const importData = async (importData: ExportData) => {
+const importData = async (importData: ExportData, userId: string) => {
     try {
         const appServer = getRunningExpressApp()
         const queryRunner = appServer.AppDataSource.createQueryRunner()
@@ -89,9 +89,9 @@ const importData = async (importData: ExportData) => {
         try {
             await queryRunner.startTransaction()
 
-            if (importData.Tool.length > 0) await toolsService.importTools(importData.Tool, queryRunner)
-            if (importData.ChatFlow.length > 0) await chatflowService.importChatflows(importData.ChatFlow, queryRunner)
-            if (importData.AgentFlow.length > 0) await chatflowService.importChatflows(importData.AgentFlow, queryRunner)
+            if (importData.Tool.length > 0) await toolsService.importTools(importData.Tool, userId, queryRunner)
+            if (importData.ChatFlow.length > 0) await chatflowService.importChatflows(importData.ChatFlow, userId, queryRunner)
+            if (importData.AgentFlow.length > 0) await chatflowService.importChatflows(importData.AgentFlow, userId, queryRunner)
             if (importData.Variable.length > 0) await variableService.importVariables(importData.Variable, queryRunner)
             if (importData.Assistant.length > 0) await assistantService.importAssistants(importData.Assistant, queryRunner)
 

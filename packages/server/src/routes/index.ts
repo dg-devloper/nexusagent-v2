@@ -52,6 +52,7 @@ const router = express.Router()
 router.use('/auth', auth)
 router.use('/node-icon', nodeIconRouter)
 router.use('/node-load-method', nodeLoadMethodRouter)
+router.use('/components-credentials-icon', componentsCredentialsIconRouter)
 
 router.use(async (req, res, next) => {
     let token = req.headers.authorization!
@@ -88,7 +89,7 @@ router.use(async (req, res, next) => {
                 message: 'User account expired'
             })
         }
-
+        req.userId = userId
         // console.log(user)
         next()
     } catch (error) {
@@ -106,7 +107,7 @@ router.use('/chatflows', chatflowsRouter)
 router.use('/chatflows-streaming', chatflowsStreamingRouter)
 router.use('/chatmessage', chatMessageRouter)
 router.use('/components-credentials', componentsCredentialsRouter)
-router.use('/components-credentials-icon', componentsCredentialsIconRouter)
+
 router.use('/chatflows-uploads', chatflowsUploadsRouter)
 router.use('/credentials', credentialsRouter)
 router.use('/document-store', documentStoreRouter)

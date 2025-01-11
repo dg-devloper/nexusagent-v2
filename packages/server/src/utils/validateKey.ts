@@ -17,7 +17,7 @@ export const validateChatflowAPIKey = async (req: Request, chatflow: ChatFlow) =
 
     const suppliedKey = authorizationHeader.split(`Bearer `).pop()
     if (suppliedKey) {
-        const keys = await apikeyService.getAllApiKeys()
+        const keys = await apikeyService.getAllApiKeys(req.userId!)
         const apiSecret = keys.find((key: any) => key.id === chatFlowApiKeyId)?.apiSecret
         if (!compareKeys(apiSecret, suppliedKey)) return false
         return true
@@ -35,7 +35,7 @@ export const validateAPIKey = async (req: Request) => {
 
     const suppliedKey = authorizationHeader.split(`Bearer `).pop()
     if (suppliedKey) {
-        const keys = await apikeyService.getAllApiKeys()
+        const keys = await apikeyService.getAllApiKeys(req.userId!)
         const apiSecret = keys.find((key: any) => key.apiKey === suppliedKey)?.apiSecret
         if (!apiSecret) return false
         if (!compareKeys(apiSecret, suppliedKey)) return false

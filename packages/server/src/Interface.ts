@@ -20,6 +20,7 @@ export enum ChatMessageRatingType {
  */
 export interface IChatFlow {
     id: string
+    userId: string
     name: string
     flowData: string
     updatedDate: Date
@@ -81,6 +82,7 @@ export interface IUser {
 
 export interface ITool {
     id: string
+    userId: string
     name: string
     description: string
     color: string
@@ -102,6 +104,7 @@ export interface IAssistant {
 
 export interface ICredential {
     id: string
+    userId: string
     name: string
     credentialName: string
     encryptedData: string
@@ -111,6 +114,7 @@ export interface ICredential {
 
 export interface IVariable {
     id: string
+    userId: string
     name: string
     value: string
     type: string
@@ -284,6 +288,7 @@ export interface IUploadFileSizeAndTypes {
 
 export interface IApiKey {
     id: string
+    userId: string
     keyName: string
     apiKey: string
     apiSecret: string

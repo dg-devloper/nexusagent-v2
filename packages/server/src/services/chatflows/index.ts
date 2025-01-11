@@ -76,10 +76,10 @@ const checkIfChatflowIsValidForUploads = async (chatflowId: string): Promise<any
     }
 }
 
-const deleteChatflow = async (chatflowId: string): Promise<any> => {
+const deleteChatflow = async (chatflowId: string, userId: string): Promise<any> => {
     try {
         const appServer = getRunningExpressApp()
-        const dbResponse = await appServer.AppDataSource.getRepository(ChatFlow).delete({ id: chatflowId })
+        const dbResponse = await appServer.AppDataSource.getRepository(ChatFlow).delete({ id: chatflowId, userId: userId })
         try {
             // Delete all uploads corresponding to this chatflow
             await removeFolderFromStorage(chatflowId)
@@ -105,10 +105,12 @@ const deleteChatflow = async (chatflowId: string): Promise<any> => {
     }
 }
 
-const getAllChatflows = async (type?: ChatflowType): Promise<ChatFlow[]> => {
+const getAllChatflows = async (type?: ChatflowType, userId?: string): Promise<ChatFlow[]> => {
     try {
         const appServer = getRunningExpressApp()
-        const dbResponse = await appServer.AppDataSource.getRepository(ChatFlow).find()
+        const dbResponse = await appServer.AppDataSource.getRepository(ChatFlow).find({
+            where: { userId: userId }
+        })
         if (type === 'MULTIAGENT') {
             return dbResponse.filter((chatflow) => chatflow.type === 'MULTIAGENT')
         } else if (type === 'CHATFLOW') {
@@ -124,13 +126,13 @@ const getAllChatflows = async (type?: ChatflowType): Promise<ChatFlow[]> => {
     }
 }
 
-const getChatflowByApiKey = async (apiKeyId: string, keyonly?: unknown): Promise<any> => {
+const getChatflowByApiKey = async (apiKeyId: string, userId: string, keyonly?: unknown): Promise<any> => {
     try {
         // Here we only get chatflows that are bounded by the apikeyid and chatflows that are not bounded by any apikey
         const appServer = getRunningExpressApp()
         let query = appServer.AppDataSource.getRepository(ChatFlow)
             .createQueryBuilder('cf')
-            .where('cf.apikeyid = :apikeyid', { apikeyid: apiKeyId })
+            .where('cf.apikeyid = :apikeyid AND cf.userid = :userid', { apikeyid: apiKeyId, userid: userId })
         if (keyonly === undefined) {
             query = query.orWhere('cf.apikeyid IS NULL').orWhere('cf.apikeyid = ""')
         }
@@ -148,11 +150,12 @@ const getChatflowByApiKey = async (apiKeyId: string, keyonly?: unknown): Promise
     }
 }
 
-const getChatflowById = async (chatflowId: string): Promise<any> => {
+const getChatflowById = async (chatflowId: string, userId: string): Promise<any> => {
     try {
         const appServer = getRunningExpressApp()
         const dbResponse = await appServer.AppDataSource.getRepository(ChatFlow).findOneBy({
-            id: chatflowId
+            id: chatflowId,
+            userId: userId
         })
         if (!dbResponse) {
             throw new InternalFlowiseError(StatusCodes.NOT_FOUND, `Chatflow ${chatflowId} not found in the database!`)
@@ -207,7 +210,7 @@ const saveChatflow = async (newChatFlow: ChatFlow): Promise<any> => {
     }
 }
 
-const importChatflows = async (newChatflows: Partial<ChatFlow>[], queryRunner?: QueryRunner): Promise<any> => {
+const importChatflows = async (newChatflows: Partial<ChatFlow>[], userId: string, queryRunner?: QueryRunner): Promise<any> => {
     try {
         const appServer = getRunningExpressApp()
         const repository = queryRunner ? queryRunner.manager.getRepository(ChatFlow) : appServer.AppDataSource.getRepository(ChatFlow)
@@ -241,6 +244,7 @@ const importChatflows = async (newChatflows: Partial<ChatFlow>[], queryRunner?: 
                 newChatflow.id = undefined
                 newChatflow.name += ' (1)'
             }
+            newChatflow.userId = userId
             newChatflow.flowData = JSON.stringify(JSON.parse(flowData))
             return newChatflow
         })

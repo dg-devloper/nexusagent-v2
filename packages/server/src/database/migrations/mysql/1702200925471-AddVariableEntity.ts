@@ -5,6 +5,7 @@ export class AddVariableEntity1699325775451 implements MigrationInterface {
         await queryRunner.query(
             `CREATE TABLE IF NOT EXISTS \`variable\` (
                 \`id\` varchar(36) NOT NULL,
+                \`userId\` varchar(36) NOT NULL,
                 \`name\` varchar(255) NOT NULL,
                 \`value\` text NOT NULL,
                 \`type\` varchar(255) DEFAULT NULL,

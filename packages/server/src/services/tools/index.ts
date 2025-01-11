@@ -7,11 +7,12 @@ import { getRunningExpressApp } from '../../utils/getRunningExpressApp'
 import { FLOWISE_METRIC_COUNTERS, FLOWISE_COUNTER_STATUS } from '../../Interface.Metrics'
 import { QueryRunner } from 'typeorm'
 
-const createTool = async (requestBody: any): Promise<any> => {
+const createTool = async (requestBody: any, userId: string): Promise<any> => {
     try {
         const appServer = getRunningExpressApp()
         const newTool = new Tool()
         Object.assign(newTool, requestBody)
+        newTool.userId = userId
         const tool = await appServer.AppDataSource.getRepository(Tool).create(newTool)
         const dbResponse = await appServer.AppDataSource.getRepository(Tool).save(tool)
         await appServer.telemetry.sendTelemetry('tool_created', {
@@ -26,11 +27,12 @@ const createTool = async (requestBody: any): Promise<any> => {
     }
 }
 
-const deleteTool = async (toolId: string): Promise<any> => {
+const deleteTool = async (toolId: string, userId: string): Promise<any> => {
     try {
         const appServer = getRunningExpressApp()
         const dbResponse = await appServer.AppDataSource.getRepository(Tool).delete({
-            id: toolId
+            id: toolId,
+            userId: userId
         })
         return dbResponse
     } catch (error) {
@@ -38,21 +40,26 @@ const deleteTool = async (toolId: string): Promise<any> => {
     }
 }
 
-const getAllTools = async (): Promise<Tool[]> => {
+const getAllTools = async (userId: string): Promise<Tool[]> => {
     try {
         const appServer = getRunningExpressApp()
-        const dbResponse = await appServer.AppDataSource.getRepository(Tool).find()
+        const dbResponse = await appServer.AppDataSource.getRepository(Tool).find({
+            where: {
+                userId: userId
+            }
+        })
         return dbResponse
     } catch (error) {
         throw new InternalFlowiseError(StatusCodes.INTERNAL_SERVER_ERROR, `Error: toolsService.getAllTools - ${getErrorMessage(error)}`)
     }
 }
 
-const getToolById = async (toolId: string): Promise<any> => {
+const getToolById = async (toolId: string, userId: string): Promise<any> => {
     try {
         const appServer = getRunningExpressApp()
         const dbResponse = await appServer.AppDataSource.getRepository(Tool).findOneBy({
-            id: toolId
+            id: toolId,
+            userId: userId
         })
         if (!dbResponse) {
             throw new InternalFlowiseError(StatusCodes.NOT_FOUND, `Tool ${toolId} not found`)
@@ -63,7 +70,7 @@ const getToolById = async (toolId: string): Promise<any> => {
     }
 }
 
-const updateTool = async (toolId: string, toolBody: any): Promise<any> => {
+const updateTool = async (toolId: string, userId: string, toolBody: any): Promise<any> => {
     try {
         const appServer = getRunningExpressApp()
         const tool = await appServer.AppDataSource.getRepository(Tool).findOneBy({
@@ -82,7 +89,7 @@ const updateTool = async (toolId: string, toolBody: any): Promise<any> => {
     }
 }
 
-const importTools = async (newTools: Partial<Tool>[], queryRunner?: QueryRunner) => {
+const importTools = async (newTools: Partial<Tool>[], userId: string, queryRunner?: QueryRunner) => {
     try {
         const appServer = getRunningExpressApp()
         const repository = queryRunner ? queryRunner.manager.getRepository(Tool) : appServer.AppDataSource.getRepository(Tool)
@@ -114,6 +121,7 @@ const importTools = async (newTools: Partial<Tool>[], queryRunner?: QueryRunner)
                 newTool.id = undefined
                 newTool.name += ' (1)'
             }
+            newTool.userId = userId
             return newTool
         })
 
