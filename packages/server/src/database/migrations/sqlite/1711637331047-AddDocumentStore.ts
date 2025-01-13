@@ -5,6 +5,7 @@ export class AddDocumentStore1711637331047 implements MigrationInterface {
         await queryRunner.query(
             `CREATE TABLE IF NOT EXISTS "document_store" (
                 "id" varchar PRIMARY KEY NOT NULL, 
+                "userId" varchar NULL,
                 "name" varchar NOT NULL, 
                 "description" varchar, 
                 "status" varchar NOT NULL, 
@@ -16,6 +17,7 @@ export class AddDocumentStore1711637331047 implements MigrationInterface {
         await queryRunner.query(
             `CREATE TABLE IF NOT EXISTS "document_store_file_chunk" (
                 "id" varchar PRIMARY KEY NOT NULL, 
+                "userId" varchar NULL,
                 "docId" varchar NOT NULL, 
                 "storeId" varchar NOT NULL, 
                 "chunkNo" INTEGER NOT NULL, 

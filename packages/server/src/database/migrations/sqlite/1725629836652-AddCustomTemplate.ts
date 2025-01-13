@@ -4,7 +4,8 @@ export class AddCustomTemplate1725629836652 implements MigrationInterface {
     public async up(queryRunner: QueryRunner): Promise<void> {
         await queryRunner.query(
             `CREATE TABLE IF NOT EXISTS "custom_template" (
-                "id" varchar PRIMARY KEY NOT NULL, 
+                "id" varchar PRIMARY KEY NOT NULL,
+                "userId" varchar NULL, 
                 "name" varchar NOT NULL, 
                 "flowData" text NOT NULL, 
                 "description" varchar, 

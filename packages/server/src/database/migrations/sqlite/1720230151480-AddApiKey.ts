@@ -4,6 +4,7 @@ export class AddApiKey1720230151480 implements MigrationInterface {
     public async up(queryRunner: QueryRunner): Promise<void> {
         await queryRunner.query(
             `CREATE TABLE IF NOT EXISTS "apikey" ("id" varchar PRIMARY KEY NOT NULL, 
+                "userId" varchar NULL,    
                 "apiKey" varchar NOT NULL, 
                 "apiSecret" varchar NOT NULL, 
                 "keyName" varchar NOT NULL, 
