@@ -53,7 +53,7 @@ router.use('/auth', auth)
 router.use('/node-icon', nodeIconRouter)
 router.use('/node-load-method', nodeLoadMethodRouter)
 router.use('/components-credentials-icon', componentsCredentialsIconRouter)
-
+router.use('/ping', pingRouter)
 router.use(async (req, res, next) => {
     let token = req.headers.authorization!
 
@@ -99,7 +99,6 @@ router.use(async (req, res, next) => {
     }
 })
 router.use('/', userRouter)
-router.use('/ping', pingRouter)
 router.use('/apikey', apikeyRouter)
 router.use('/assistants', assistantsRouter)
 router.use('/attachments', attachmentsRouter)
