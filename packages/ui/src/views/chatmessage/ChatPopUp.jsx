@@ -139,7 +139,7 @@ export const ChatPopUp = ({ chatflowid, isAgentCanvas }) => {
                 variant='extended'
                 sx={{
                     position: 'absolute',
-                    right: 180,
+                    right: 235,
                     top: 20,
                     borderRadius: '8px',
                     padding: '.5rem 1.2rem',

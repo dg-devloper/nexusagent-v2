@@ -4,6 +4,12 @@ import { lazy } from 'react'
 import MainLayout from '@/layout/MainLayout'
 import Loadable from '@/ui-component/loading/Loadable'
 
+// chats routing
+const Chat = Loadable(lazy(() => import('@/views/chats')))
+
+// config routing
+const Config = Loadable(lazy(() => import('@/views/configs')))
+
 // chatflows routing
 const Chatflows = Loadable(lazy(() => import('@/views/chatflows')))
 
@@ -47,7 +53,11 @@ const MainRoutes = {
     children: [
         {
             path: '/',
-            element: <Chatflows />
+            element: <Chat />
+        },
+        {
+            path: '/configs',
+            element: <Config />
         },
         {
             path: '/chatflows',

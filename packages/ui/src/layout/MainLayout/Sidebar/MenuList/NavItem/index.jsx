@@ -87,11 +87,12 @@ const NavItem = ({ item, level, navType, onClick, onUploadFile }) => {
                 .toString()
                 .split('/')
                 .findIndex((id) => id === item.id)
+
             if (currentIndex > -1) {
                 dispatch({ type: MENU_OPEN, id: item.id })
             }
             if (!document.location.pathname.toString().split('/')[1]) {
-                itemHandler('chatflows')
+                itemHandler('chats')
             }
         }
 
@@ -123,7 +124,12 @@ const NavItem = ({ item, level, navType, onClick, onUploadFile }) => {
                     color: theme.palette['primary'].main
                 }
             }}
-            selected={customization.isOpen.findIndex((id) => id === item.id) > -1}
+            selected={
+                customization.isOpen.findIndex((id) => {
+                    // console.log('ID : ' + id)
+                    return id === item.id
+                }) > -1
+            }
             onClick={() => itemHandler(item.id)}
         >
             {item.id === 'loadChatflow' && <input type='file' hidden accept='.json' onChange={(e) => handleFileUpload(e)} />}

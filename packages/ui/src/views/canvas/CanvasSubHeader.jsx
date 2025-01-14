@@ -243,26 +243,24 @@ const CanvasSubHeader = ({ chatflow, isAgentCanvas, handleSaveFlow, handleDelete
             <Stack flexDirection='row' justifyContent='space-between' sx={{ position: 'absolute', right: 20, top: 20 }}>
                 <Box sx={{ display: 'flex', gap: '1rem' }}>
                     {chatflow?.id && (
-                        <ButtonBase title='API Endpoint' sx={{ borderRadius: '50%', mr: 2 }}>
-                            <Avatar
-                                variant='rounded'
-                                sx={{
-                                    ...theme.typography.commonAvatar,
-                                    ...theme.typography.mediumAvatar,
-                                    transition: 'all .2s ease-in-out',
-                                    background: theme.palette.canvasHeader.deployLight,
-                                    color: theme.palette.canvasHeader.deployDark,
-                                    '&:hover': {
-                                        background: theme.palette.canvasHeader.deployDark,
-                                        color: theme.palette.canvasHeader.deployLight
-                                    }
-                                }}
-                                color='inherit'
-                                onClick={onAPIDialogClick}
-                            >
-                                <IconCode stroke={1.5} size='1.3rem' />
-                            </Avatar>
-                        </ButtonBase>
+                        <StyledFab
+                            variant='extended'
+                            sx={{
+                                borderRadius: '8px',
+                                padding: '.5rem .5rem',
+                                display: 'flex',
+                                justifyContent: 'center',
+                                alignItems: 'center',
+                                gap: '.5rem'
+                            }}
+                            size='small'
+                            color='primary'
+                            aria-label='apiendpoint'
+                            title='API Endpoint'
+                            onClick={onAPIDialogClick}
+                        >
+                            <IconCode size={19} />
+                        </StyledFab>
                     )}
 
                     <StyledFab
@@ -305,6 +303,7 @@ const CanvasSubHeader = ({ chatflow, isAgentCanvas, handleSaveFlow, handleDelete
                     </ButtonBase>
                 </Box>
             </Stack>
+
             <Settings
                 chatflow={chatflow}
                 isSettingsOpen={isSettingsOpen}
