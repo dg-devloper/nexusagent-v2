@@ -23,11 +23,36 @@ const dashboard = {
     children: [
         {
             id: 'chats',
-            title: 'Chatbot',
-            type: 'item',
+            title: 'Chat',
+            type: 'collapse',
             url: '/',
             icon: icons.IconHierarchy,
-            breadcrumbs: true
+            breadcrumbs: true,
+            children: [
+                {
+                    id: 'chatflows',
+                    title: 'Chatflows',
+                    type: 'item',
+                    url: '/chatflows',
+                    icon: icons.IconHierarchy
+                },
+                {
+                    id: 'agentflows',
+                    title: 'Agentflows',
+                    type: 'item',
+                    url: '/agentflows',
+                    icon: icons.IconUsersGroup,
+                    breadcrumbs: true
+                },
+                {
+                    id: 'assistants',
+                    title: 'Assistants',
+                    type: 'item',
+                    url: '/assistants',
+                    icon: icons.IconRobot,
+                    breadcrumbs: true
+                }
+            ]
         },
         {
             id: 'configs',

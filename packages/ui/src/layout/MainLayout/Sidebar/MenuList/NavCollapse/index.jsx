@@ -33,7 +33,7 @@ const NavCollapse = ({ menu, level }) => {
             case 'collapse':
                 return <NavCollapse key={item.id} menu={item} level={level + 1} />
             case 'item':
-                return <NavItem key={item.id} item={item} level={level + 1} />
+                return <NavItem key={item.id} item={item} level={level + 1} navType='MENU' />
             default:
                 return (
                     <Typography key={item.id} variant='h6' color='error' align='center'>
@@ -65,12 +65,25 @@ const NavCollapse = ({ menu, level }) => {
                     alignItems: 'flex-start',
                     backgroundColor: level > 1 ? 'transparent !important' : 'inherit',
                     py: level > 1 ? 1 : 1.25,
-                    pl: `${level * 24}px`
+                    pl: `${level * 24}px`,
+                    color: theme.palette['primary'].light,
+                    '&.Mui-selected': {
+                        '.MuiListItemIcon-root': {
+                            color: theme.palette['primary'].main
+                        },
+                        color: theme.palette['primary'].main
+                    },
+                    '&:hover': {
+                        '.MuiListItemIcon-root': {
+                            color: theme.palette['primary'].main
+                        },
+                        color: theme.palette['primary'].main
+                    }
                 }}
                 selected={selected === menu.id}
                 onClick={handleClick}
             >
-                <ListItemIcon sx={{ my: 'auto', minWidth: !menu.icon ? 18 : 36 }}>{menuIcon}</ListItemIcon>
+                <ListItemIcon sx={{ my: 'auto', minWidth: !menu.icon ? 18 : 36, color: 'white' }}>{menuIcon}</ListItemIcon>
                 <ListItemText
                     primary={
                         <Typography variant={selected === menu.id ? 'h5' : 'body1'} color='inherit' sx={{ my: 'auto' }}>
@@ -96,17 +109,7 @@ const NavCollapse = ({ menu, level }) => {
                     component='div'
                     disablePadding
                     sx={{
-                        position: 'relative',
-                        '&:after': {
-                            content: "''",
-                            position: 'absolute',
-                            left: '32px',
-                            top: 0,
-                            height: '100%',
-                            width: '1px',
-                            opacity: 1,
-                            background: theme.palette.primary.light
-                        }
+                        position: 'relative'
                     }}
                 >
                     {menus}

@@ -53,7 +53,7 @@ const MainRoutes = {
     children: [
         {
             path: '/',
-            element: <Chat />
+            element: <Chatflows />
         },
         {
             path: '/configs',

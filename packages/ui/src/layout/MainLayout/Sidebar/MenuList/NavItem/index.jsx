@@ -88,6 +88,8 @@ const NavItem = ({ item, level, navType, onClick, onUploadFile }) => {
                 .split('/')
                 .findIndex((id) => id === item.id)
 
+            // console.log(item.id, currentIndex)
+
             if (currentIndex > -1) {
                 dispatch({ type: MENU_OPEN, id: item.id })
             }
@@ -99,6 +101,13 @@ const NavItem = ({ item, level, navType, onClick, onUploadFile }) => {
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [navType])
 
+    useEffect(() => {
+        // let aasd = customization.isOpen.find((id) => {
+        //     return id === item.id
+        // })
+        // console.log(item, aasd)
+    }, [])
+
     return (
         <ListItemButton
             {...listItemProps}
@@ -107,7 +116,7 @@ const NavItem = ({ item, level, navType, onClick, onUploadFile }) => {
                 borderRadius: `${customization.borderRadius}px`,
                 mb: 0.5,
                 alignItems: 'flex-start',
-                backgroundColor: level > 1 ? 'transparent !important' : 'inherit',
+                backgroundColor: 'inherit',
                 py: level > 1 ? 1 : 1.25,
                 pl: `${level * 24}px`,
                 color: theme.palette['primary'].light,
@@ -126,7 +135,6 @@ const NavItem = ({ item, level, navType, onClick, onUploadFile }) => {
             }}
             selected={
                 customization.isOpen.findIndex((id) => {
-                    // console.log('ID : ' + id)
                     return id === item.id
                 }) > -1
             }
