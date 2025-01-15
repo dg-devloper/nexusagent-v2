@@ -65,8 +65,8 @@ const HowToUseVariablesDialog = ({ show, onCancel }) => {
                     basicSetup={{ highlightActiveLine: false, highlightActiveLineGutter: false }}
                 />
                 <p>
-                    Read more from{' '}
-                    <a target='_blank' rel='noreferrer' href='https://docs.flowiseai.com/using-flowise/variables'>
+                    Read more from {/* https://docs.flowiseai.com/using-flowise/variables */}
+                    <a target='_blank' rel='noreferrer' href='www.google.com'>
                         docs
                     </a>
                 </p>

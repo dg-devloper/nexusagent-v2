@@ -16,8 +16,7 @@ export const toolAgentFlow = {
                         label: 'Session Id',
                         name: 'sessionId',
                         type: 'string',
-                        description:
-                            'If not specified, a random id will be used. Learn <a target="_blank" href="https://docs.flowiseai.com/memory#ui-and-embedded-chat">more</a>',
+                        description: 'If not specified, a random id will be used. Learn <a target="_blank" href="">more</a>',
                         default: '',
                         additionalParams: true,
                         optional: true,
@@ -177,8 +176,8 @@ export const toolAgentFlow = {
                         label: 'Allow Image Uploads',
                         name: 'allowImageUploads',
                         type: 'boolean',
-                        description:
-                            'Allow image input. Refer to the <a href="https://docs.flowiseai.com/using-flowise/uploads#image" target="_blank">docs</a> for more details.',
+                        description: 'Allow image input. Refer to the <a href="" target="_blank">docs</a> for more details.',
+                        // 'Allow image input. Refer to the <a href="https://docs.flowiseai.com/using-flowise/uploads#image" target="_blank">docs</a> for more details.',
                         default: false,
                         optional: true,
                         id: 'chatOpenAI_0-input-allowImageUploads-boolean'

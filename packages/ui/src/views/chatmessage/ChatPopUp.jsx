@@ -166,7 +166,7 @@ export const ChatPopUp = ({ chatflowid, isAgentCanvas }) => {
 
             {open && (
                 <StyledFab
-                    sx={{ position: 'absolute', right: 290, top: 18 }}
+                    sx={{ position: 'absolute', right: 340, top: 18 }}
                     onClick={clearChat}
                     size='small'
                     color='error'
@@ -178,7 +178,7 @@ export const ChatPopUp = ({ chatflowid, isAgentCanvas }) => {
             )}
             {open && (
                 <StyledFab
-                    sx={{ position: 'absolute', right: 340, top: 18 }}
+                    sx={{ position: 'absolute', right: 390, top: 18 }}
                     onClick={expandChat}
                     size='small'
                     color='primary'

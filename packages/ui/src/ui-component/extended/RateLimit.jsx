@@ -151,7 +151,8 @@ const RateLimit = () => {
                 <TooltipWithParser
                     style={{ marginLeft: 10 }}
                     title={
-                        'Visit <a target="_blank" href="https://docs.flowiseai.com/rate-limit">Rate Limit Setup Guide</a> to set up Rate Limit correctly in your hosting environment.'
+                        'Visit <a target="_blank" href="">Rate Limit Setup Guide</a> to set up Rate Limit correctly in your hosting environment.'
+                        // 'Visit <a target="_blank" href="https://docs.flowiseai.com/rate-limit">Rate Limit Setup Guide</a> to set up Rate Limit correctly in your hosting environment.'
                     }
                 />
             </Typography>

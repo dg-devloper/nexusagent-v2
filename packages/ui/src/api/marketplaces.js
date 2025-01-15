@@ -12,7 +12,6 @@ export default {
     getAllChatflowsMarketplaces,
     getAllToolsMarketplaces,
     getAllTemplatesFromMarketplaces,
-
     getAllCustomTemplates,
     saveAsCustomTemplate,
     deleteCustomTemplate

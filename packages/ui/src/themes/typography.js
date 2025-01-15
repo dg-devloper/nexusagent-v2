@@ -5,7 +5,17 @@
 
 export default function themeTypography(theme) {
     return {
-        fontFamily: theme?.customization?.fontFamily,
+        fontFamily: [
+            'Inter',
+            'ui-sans-serif',
+            'system-ui',
+            'sans-serif',
+            'Apple Color Emoji',
+            'Segoe UI Emoji',
+            'Segoe UI Symbol',
+            'Noto Color Emoji'
+        ].join(','),
+        // fontFamily: theme?.customization?.fontFamily,
         h6: {
             fontWeight: 500,
             color: theme.heading,
