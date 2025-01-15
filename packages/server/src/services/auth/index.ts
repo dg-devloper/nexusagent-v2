@@ -39,7 +39,14 @@ const loginUser = async (requestBody: any): Promise<any> => {
         if (!user || !(await bcrypt.compare(requestBody.password, user.password))) {
             throw new InternalFlowiseError(StatusCodes.UNAUTHORIZED, 'Invalid username or password')
         }
-        const token = jwt.sign({ userId: user.id }, process.env.JWT_SECRET!, { expiresIn: '1h' })
+
+        // Set durasi token menjadi 3 hari
+        const token = jwt.sign(
+            { userId: user.id },
+            process.env.JWT_SECRET!,
+            { expiresIn: '3d' } // Durasi token: 3 hari
+        )
+
         await appServer.telemetry.sendTelemetry('user_logged_in', {
             version: await getAppVersion(),
             userId: user.id,
