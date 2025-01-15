@@ -20,6 +20,8 @@ import { baseURL } from '@/store/constant'
 import { IconTrash, IconCopy, IconInfoCircle, IconAlertTriangle } from '@tabler/icons-react'
 import { flowContext } from '@/store/context/ReactFlowContext'
 import LlamaindexPNG from '@/assets/images/llamaindex.png'
+import { IconTransferIn } from '@tabler/icons-react'
+import { IconTransferOut } from '@tabler/icons-react'
 
 // ===========================|| CANVAS NODE ||=========================== //
 
@@ -200,13 +202,16 @@ const CanvasNode = ({ data }) => {
                         {(data.inputAnchors.length > 0 || data.inputParams.length > 0) && (
                             <>
                                 <Divider />
-                                <Box sx={{ background: theme.palette.asyncSelect.main, p: 1 }}>
+                                <Box sx={{ p: 1 }}>
                                     <Typography
                                         sx={{
+                                            display: 'flex',
+                                            alignItems: 'center',
                                             fontWeight: 500,
-                                            textAlign: 'center'
+                                            gap: '.5rem'
                                         }}
                                     >
+                                        <IconTransferIn color='green' />
                                         Inputs
                                     </Typography>
                                 </Box>
@@ -243,20 +248,33 @@ const CanvasNode = ({ data }) => {
                                             : 0
                                 }}
                             >
-                                <Button sx={{ borderRadius: 25, width: '90%', mb: 2 }} variant='outlined' onClick={onDialogClicked}>
+                                <Button
+                                    sx={{
+                                        borderRadius: 3,
+                                        width: '90%',
+                                        mb: 2,
+                                        backgroundColor: theme.palette.primary.main,
+                                        color: 'white'
+                                    }}
+                                    variant='outlined'
+                                    onClick={onDialogClicked}
+                                >
                                     Additional Parameters
                                 </Button>
                             </div>
                         )}
                         {data.outputAnchors.length > 0 && <Divider />}
                         {data.outputAnchors.length > 0 && (
-                            <Box sx={{ background: theme.palette.asyncSelect.main, p: 1 }}>
+                            <Box sx={{ p: 1 }}>
                                 <Typography
                                     sx={{
                                         fontWeight: 500,
-                                        textAlign: 'center'
+                                        display: 'flex',
+                                        alignItems: 'center',
+                                        gap: '.5rem'
                                     }}
                                 >
+                                    <IconTransferOut color='red' />
                                     Output
                                 </Typography>
                             </Box>
