@@ -6,18 +6,13 @@ import { ButtonBase } from '@mui/material'
 // project imports
 import config from '@/config'
 import Logo from '@/ui-component/extended/Logo'
-import PropTypes from 'prop-types'
 
 // ==============================|| MAIN LOGO ||============================== //
 
-const LogoSection = ({ type = 'white' }) => (
+const LogoSection = () => (
     <ButtonBase disableRipple component={Link} to={config.defaultPath}>
-        <Logo type={type} />
+        <Logo />
     </ButtonBase>
 )
-
-LogoSection.propTypes = {
-    type: PropTypes.string
-}
 
 export default LogoSection

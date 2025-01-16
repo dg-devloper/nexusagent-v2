@@ -46,7 +46,7 @@ import utilNodesPNG from '@/assets/images/utilNodes.png'
 // const
 import { baseURL } from '@/store/constant'
 import { SET_COMPONENT_NODES } from '@/store/actions'
-import { IconMacro } from '@tabler/icons-react'
+import LogoSection from '@/layout/MainLayout/LogoSection'
 
 // ==============================|| SIDEBAR DRAWER ||============================== //
 
@@ -317,10 +317,7 @@ const Sidebar = ({ drawerOpen, drawerToggle, window, nodesData, node, isAgentCan
                                 }}
                             >
                                 <Box sx={{ display: 'flex', p: 2, mx: 'auto', alignItems: 'center', gap: '1.5rem' }}>
-                                    <IconMacro color='#495057 ' />
-                                    <Typography variant='h2' sx={{ color: '#495057' }}>
-                                        Aira-Panel
-                                    </Typography>
+                                    <LogoSection type='blue' />
                                 </Box>
                             </Box>
                             <Box sx={{ p: 2 }}>
