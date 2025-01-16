@@ -524,26 +524,6 @@ const Canvas = () => {
     return (
         <>
             <Box sx={{ height: '100%' }}>
-                {/* <AppBar
-                    enableColorOnDark
-                    position='fixed'
-                    color='inherit'
-                    elevation={1}
-                    sx={{
-                        bgcolor: theme.palette.background.default
-                    }}
-                >
-                    <Toolbar>
-                        <CanvasHeader
-                            chatflow={chatflow}
-                            handleSaveFlow={handleSaveFlow}
-                            handleDeleteFlow={handleDeleteFlow}
-                            handleLoadFlow={handleLoadFlow}
-                            isAgentCanvas={isAgentCanvas}
-                        />
-                    </Toolbar>
-                </AppBar> */}
-
                 <Box sx={{ height: '100%', width: '100%', display: 'flex', marginTop: '70px' }}>
                     <Sidebar
                         drawerOpen={leftDrawerOpened}

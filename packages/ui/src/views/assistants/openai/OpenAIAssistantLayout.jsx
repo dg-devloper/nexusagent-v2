@@ -21,7 +21,6 @@ import useApi from '@/hooks/useApi'
 
 // icons
 import { IconPlus, IconFileUpload } from '@tabler/icons-react'
-import AssistantEmptySVG from '@/assets/images/assistant_empty.svg'
 import { gridSpacing } from '@/store/constant'
 
 // ==============================|| OpenAIAssistantLayout ||============================== //
@@ -163,13 +162,13 @@ const OpenAIAssistantLayout = () => {
                         )}
                         {!isLoading && (!getAllAssistantsApi.data || getAllAssistantsApi.data.length === 0) && (
                             <Stack sx={{ alignItems: 'center', justifyContent: 'center' }} flexDirection='column'>
-                                <Box sx={{ p: 2, height: 'auto' }}>
+                                {/* <Box sx={{ p: 2, height: 'auto' }}>
                                     <img
                                         style={{ objectFit: 'cover', height: '20vh', width: 'auto' }}
                                         src={AssistantEmptySVG}
                                         alt='AssistantEmptySVG'
                                     />
-                                </Box>
+                                </Box> */}
                                 <div>No OpenAI Assistants Added Yet</div>
                             </Stack>
                         )}

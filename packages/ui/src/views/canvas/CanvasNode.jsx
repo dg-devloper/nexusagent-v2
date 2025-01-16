@@ -254,7 +254,11 @@ const CanvasNode = ({ data }) => {
                                         width: '90%',
                                         mb: 2,
                                         backgroundColor: theme.palette.primary.main,
-                                        color: 'white'
+                                        color: 'white',
+                                        '&:hover': {
+                                            backgroundColor: theme.palette.primary.main,
+                                            backgroundImage: `linear-gradient(rgb(0 0 0/10%) 0 0)`
+                                        }
                                     }}
                                     variant='outlined'
                                     onClick={onDialogClicked}

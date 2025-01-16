@@ -41,14 +41,13 @@ import useNotifier from '@/utils/useNotifier'
 
 // Icons
 import { IconTrash, IconEdit, IconX, IconPlus } from '@tabler/icons-react'
-import CredentialEmptySVG from '@/assets/images/credential_empty.svg'
 
 // const
 import { baseURL } from '@/store/constant'
 import { SET_COMPONENT_CREDENTIALS } from '@/store/actions'
 import ErrorBoundary from '@/ErrorBoundary'
 import HeaderSection from '@/layout/MainLayout/HeaderSection'
-import { IconLock } from '@tabler/icons-react'
+import AppIcon from '@/menu-items/icon'
 
 const StyledTableCell = styled(TableCell)(({ theme }) => ({
     borderColor: theme.palette.grey[900] + 25,
@@ -231,9 +230,9 @@ const Credentials = () => {
                     <Stack flexDirection='column' sx={{ gap: 3 }}>
                         <HeaderSection
                             onSearchChange={onSearchChange}
-                            title='Credentials'
-                            subtitle={`Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s`}
-                            icon={<IconLock />}
+                            title={AppIcon.credential.headerTitle}
+                            subtitle={AppIcon.credential.description}
+                            icon={AppIcon.credential.icon}
                         >
                             <StyledButton
                                 variant='contained'
@@ -246,13 +245,13 @@ const Credentials = () => {
                         </HeaderSection>
                         {!isLoading && credentials.length <= 0 ? (
                             <Stack sx={{ alignItems: 'center', justifyContent: 'center' }} flexDirection='column'>
-                                <Box sx={{ p: 2, height: 'auto' }}>
+                                {/* <Box sx={{ p: 2, height: 'auto' }}>
                                     <img
                                         style={{ objectFit: 'cover', height: '16vh', width: 'auto' }}
                                         src={CredentialEmptySVG}
                                         alt='CredentialEmptySVG'
                                     />
-                                </Box>
+                                </Box> */}
                                 <div>No Credentials Yet</div>
                             </Stack>
                         ) : (

@@ -26,7 +26,6 @@ import { IconX } from '@tabler/icons-react'
 // project imports
 import MainCard from '@/ui-component/cards/MainCard'
 import ItemCard from '@/ui-component/cards/ItemCard'
-import WorkflowEmptySVG from '@/assets/images/workflow_empty.svg'
 import ToolDialog from '@/views/tools/ToolDialog'
 import { MarketplaceTable } from '@/ui-component/table/MarketplaceTable'
 import ErrorBoundary from '@/ErrorBoundary'
@@ -46,7 +45,7 @@ import { baseURL } from '@/store/constant'
 import { gridSpacing } from '@/store/constant'
 import useNotifier from '@/utils/useNotifier'
 import HeaderSection from '@/layout/MainLayout/HeaderSection'
-import { IconBuildingStore } from '@tabler/icons-react'
+import AppIcon from '@/menu-items/icon'
 
 const badges = ['POPULAR', 'NEW']
 const types = ['Chatflow', 'Agentflow', 'Tool']
@@ -415,9 +414,9 @@ const Marketplace = () => {
                     <Stack flexDirection='column'>
                         <HeaderSection
                             onSearchChange={onSearchChange}
-                            title='Marketplace'
-                            subtitle={`Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s`}
-                            icon={<IconBuildingStore />}
+                            title={AppIcon.marketplaces.headerTitle}
+                            subtitle={AppIcon.marketplaces.description}
+                            icon={AppIcon.marketplaces.icon}
                         >
                             <>
                                 <FormControl
@@ -645,13 +644,13 @@ const Marketplace = () => {
 
                             {!isLoading && (!getAllTemplatesMarketplacesApi.data || getAllTemplatesMarketplacesApi.data.length === 0) && (
                                 <Stack sx={{ alignItems: 'center', justifyContent: 'center' }} flexDirection='column'>
-                                    <Box sx={{ p: 2, height: 'auto' }}>
+                                    {/* <Box sx={{ p: 2, height: 'auto' }}>
                                         <img
                                             style={{ objectFit: 'cover', height: '25vh', width: 'auto' }}
                                             src={WorkflowEmptySVG}
                                             alt='WorkflowEmptySVG'
                                         />
-                                    </Box>
+                                    </Box> */}
                                     <div>No Marketplace Yet</div>
                                 </Stack>
                             )}
@@ -768,13 +767,13 @@ const Marketplace = () => {
                             )}
                             {!isLoading && (!getAllCustomTemplatesApi.data || getAllCustomTemplatesApi.data.length === 0) && (
                                 <Stack sx={{ alignItems: 'center', justifyContent: 'center' }} flexDirection='column'>
-                                    <Box sx={{ p: 2, height: 'auto' }}>
+                                    {/* <Box sx={{ p: 2, height: 'auto' }}>
                                         <img
                                             style={{ objectFit: 'cover', height: '25vh', width: 'auto' }}
                                             src={WorkflowEmptySVG}
                                             alt='WorkflowEmptySVG'
                                         />
-                                    </Box>
+                                    </Box> */}
                                     <div>No Saved Custom Templates</div>
                                 </Stack>
                             )}

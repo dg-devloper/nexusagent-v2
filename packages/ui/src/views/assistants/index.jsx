@@ -121,7 +121,7 @@ const Assistants = () => {
         <>
             <MainCard>
                 <Stack flexDirection='column' sx={{ gap: 3 }}>
-                    <ViewHeader title='Assistants' />
+                    <ViewHeader title='Flow Assistants' />
                     <FeatureCards />
                 </Stack>
             </MainCard>

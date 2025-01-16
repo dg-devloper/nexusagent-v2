@@ -9,7 +9,6 @@ import ViewHeader from '@/layout/MainLayout/ViewHeader'
 import MainCard from '@/ui-component/cards/MainCard'
 import ItemCard from '@/ui-component/cards/ItemCard'
 import { baseURL, gridSpacing } from '@/store/constant'
-import AssistantEmptySVG from '@/assets/images/assistant_empty.svg'
 import { StyledButton } from '@/ui-component/button/StyledButton'
 import AddCustomAssistantDialog from './AddCustomAssistantDialog'
 import ErrorBoundary from '@/ErrorBoundary'
@@ -133,13 +132,13 @@ const CustomAssistantLayout = () => {
                         )}
                         {!isLoading && (!getAllAssistantsApi.data || getAllAssistantsApi.data.length === 0) && (
                             <Stack sx={{ alignItems: 'center', justifyContent: 'center' }} flexDirection='column'>
-                                <Box sx={{ p: 2, height: 'auto' }}>
+                                {/* <Box sx={{ p: 2, height: 'auto' }}>
                                     <img
                                         style={{ objectFit: 'cover', height: '20vh', width: 'auto' }}
                                         src={AssistantEmptySVG}
                                         alt='AssistantEmptySVG'
                                     />
-                                </Box>
+                                </Box> */}
                                 <div>No Custom Assistants Added Yet</div>
                             </Stack>
                         )}

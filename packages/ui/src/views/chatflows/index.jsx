@@ -2,12 +2,10 @@ import { useEffect, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 
 // material-ui
-import { Box, Stack } from '@mui/material'
+import { Stack } from '@mui/material'
 
 // project imports
 import MainCard from '@/ui-component/cards/MainCard'
-import WorkflowEmptySVG from '@/assets/images/workflow_empty.svg'
-import LoginDialog from '@/ui-component/dialog/LoginDialog'
 import ConfirmDialog from '@/ui-component/dialog/ConfirmDialog'
 import { FlowListTable } from '@/ui-component/table/FlowListTable'
 import ErrorBoundary from '@/ErrorBoundary'
@@ -23,9 +21,9 @@ import { baseURL } from '@/store/constant'
 
 // icons
 import HeaderSection from '@/layout/MainLayout/HeaderSection'
-import { IconHierarchy } from '@tabler/icons-react'
 import { IconPlus } from '@tabler/icons-react'
 import { StyledButton } from '@/ui-component/button/StyledButton'
+import AppIcon from '@/menu-items/icon'
 
 // ==============================|| CHATFLOWS ||============================== //
 
@@ -36,17 +34,9 @@ const Chatflows = () => {
     const [error, setError] = useState(null)
     const [images, setImages] = useState({})
     const [search, setSearch] = useState('')
-    const [loginDialogOpen, setLoginDialogOpen] = useState(false)
-    const [loginDialogProps, setLoginDialogProps] = useState({})
 
     const getAllChatflowsApi = useApi(chatflowsApi.getAllChatflows)
     const [view, setView] = useState('list')
-
-    const handleChange = (event, nextView) => {
-        if (nextView === null) return
-        localStorage.setItem('flowDisplayStyle', nextView)
-        setView(nextView)
-    }
 
     const onSearchChange = (event) => {
         setSearch(event.target.value)
@@ -58,12 +48,6 @@ const Chatflows = () => {
             (data.category && data.category.toLowerCase().indexOf(search.toLowerCase()) > -1) ||
             data.id.toLowerCase().indexOf(search.toLowerCase()) > -1
         )
-    }
-
-    const onLoginClick = (username, password) => {
-        localStorage.setItem('username', username)
-        localStorage.setItem('password', password)
-        navigate(0)
     }
 
     const addNew = () => {
@@ -132,9 +116,9 @@ const Chatflows = () => {
                     <HeaderSection
                         onButtonClick={addNew}
                         onSearchChange={onSearchChange}
-                        title='Chatflows'
-                        subtitle={`Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s`}
-                        icon={<IconHierarchy />}
+                        title={AppIcon.chatflow.headerTitle}
+                        subtitle={AppIcon.chatflow.description}
+                        icon={AppIcon.chatflow.icon}
                     >
                         <StyledButton variant='contained' onClick={addNew} startIcon={<IconPlus />} sx={{ borderRadius: 2, height: 40 }}>
                             Add
@@ -153,20 +137,19 @@ const Chatflows = () => {
                     )}
                     {!isLoading && (!getAllChatflowsApi.data || getAllChatflowsApi.data.length === 0) && (
                         <Stack sx={{ alignItems: 'center', justifyContent: 'center' }} flexDirection='column'>
-                            <Box sx={{ p: 2, height: 'auto' }}>
+                            {/* <Box sx={{ p: 2, height: 'auto' }}>
                                 <img
                                     style={{ objectFit: 'cover', height: '25vh', width: 'auto' }}
                                     src={WorkflowEmptySVG}
                                     alt='WorkflowEmptySVG'
                                 />
-                            </Box>
+                            </Box> */}
                             <div>No Chatflows Yet</div>
                         </Stack>
                     )}
                 </Stack>
             )}
 
-            <LoginDialog show={loginDialogOpen} dialogProps={loginDialogProps} onConfirm={onLoginClick} />
             <ConfirmDialog />
         </MainCard>
     )

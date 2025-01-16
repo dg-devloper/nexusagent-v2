@@ -7,7 +7,6 @@ import { Box, Stack, ButtonGroup, Skeleton } from '@mui/material'
 import MainCard from '@/ui-component/cards/MainCard'
 import ItemCard from '@/ui-component/cards/ItemCard'
 import { gridSpacing } from '@/store/constant'
-import ToolEmptySVG from '@/assets/images/tools_empty.svg'
 import { StyledButton } from '@/ui-component/button/StyledButton'
 import ToolDialog from './ToolDialog'
 import { ToolsTable } from '@/ui-component/table/ToolsListTable'
@@ -22,7 +21,7 @@ import useApi from '@/hooks/useApi'
 import { IconPlus, IconFileUpload } from '@tabler/icons-react'
 import ErrorBoundary from '@/ErrorBoundary'
 import HeaderSection from '@/layout/MainLayout/HeaderSection'
-import { IconTool } from '@tabler/icons-react'
+import AppIcon from '@/menu-items/icon'
 
 // ==============================|| CHATFLOWS ||============================== //
 
@@ -139,9 +138,9 @@ const Tools = () => {
                     <Stack flexDirection='column' sx={{ gap: 3 }}>
                         <HeaderSection
                             onSearchChange={onSearchChange}
-                            title='Tools'
-                            subtitle={`Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s`}
-                            icon={<IconTool />}
+                            title={AppIcon.tools.headerTitle}
+                            subtitle={AppIcon.tools.description}
+                            icon={AppIcon.tools.icon}
                         >
                             <Box sx={{ display: 'flex', alignItems: 'center' }}>
                                 <StyledButton
@@ -194,13 +193,13 @@ const Tools = () => {
                         )}
                         {!isLoading && (!getAllToolsApi.data || getAllToolsApi.data.length === 0) && (
                             <Stack sx={{ alignItems: 'center', justifyContent: 'center' }} flexDirection='column'>
-                                <Box sx={{ p: 2, height: 'auto' }}>
+                                {/* <Box sx={{ p: 2, height: 'auto' }}>
                                     <img
                                         style={{ objectFit: 'cover', height: '20vh', width: 'auto' }}
                                         src={ToolEmptySVG}
                                         alt='ToolEmptySVG'
                                     />
-                                </Box>
+                                </Box> */}
                                 <div>No Tools Created Yet</div>
                             </Stack>
                         )}

@@ -55,10 +55,10 @@ import {
     IconEyeOff,
     IconFileUpload
 } from '@tabler/icons-react'
-import APIEmptySVG from '@/assets/images/api_empty.svg'
 import UploadJSONFileDialog from '@/views/apikey/UploadJSONFileDialog'
 import HeaderSection from '@/layout/MainLayout/HeaderSection'
-import { IconKey } from '@tabler/icons-react'
+
+import AppIcon from '@/menu-items/icon'
 
 // ==============================|| APIKey ||============================== //
 
@@ -370,9 +370,9 @@ const APIKey = () => {
                     <Stack flexDirection='column' sx={{ gap: 3 }}>
                         <HeaderSection
                             onSearchChange={onSearchChange}
-                            title='Api Keys'
-                            subtitle={`Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s`}
-                            icon={<IconKey />}
+                            title={AppIcon.apikey.headerTitle}
+                            subtitle={AppIcon.apikey.description}
+                            icon={AppIcon.apikey.icon}
                         >
                             <StyledButton
                                 variant='contained'
@@ -395,13 +395,13 @@ const APIKey = () => {
                         </HeaderSection>
                         {!isLoading && apiKeys.length <= 0 ? (
                             <Stack sx={{ alignItems: 'center', justifyContent: 'center' }} flexDirection='column'>
-                                <Box sx={{ p: 2, height: 'auto' }}>
+                                {/* <Box sx={{ p: 2, height: 'auto' }}>
                                     <img
                                         style={{ objectFit: 'cover', height: '20vh', width: 'auto' }}
                                         src={APIEmptySVG}
                                         alt='APIEmptySVG'
                                     />
-                                </Box>
+                                </Box> */}
                                 <div>No API Keys Yet</div>
                             </Stack>
                         ) : (

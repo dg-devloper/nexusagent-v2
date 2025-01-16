@@ -8,7 +8,6 @@ import { styled } from '@mui/material/styles'
 import { tableCellClasses } from '@mui/material/TableCell'
 import {
     Button,
-    Box,
     Skeleton,
     Stack,
     Table,
@@ -40,13 +39,13 @@ import useNotifier from '@/utils/useNotifier'
 
 // Icons
 import { IconTrash, IconEdit, IconX, IconPlus, IconVariable } from '@tabler/icons-react'
-import VariablesEmptySVG from '@/assets/images/variables_empty.svg'
 
 // const
 import AddEditVariableDialog from './AddEditVariableDialog'
 import HowToUseVariablesDialog from './HowToUseVariablesDialog'
 import ErrorBoundary from '@/ErrorBoundary'
 import HeaderSection from '@/layout/MainLayout/HeaderSection'
+import AppIcon from '@/menu-items/icon'
 
 const StyledTableCell = styled(TableCell)(({ theme }) => ({
     borderColor: theme.palette.grey[900] + 25,
@@ -202,9 +201,9 @@ const Variables = () => {
                     <Stack flexDirection='column' sx={{ gap: 3 }}>
                         <HeaderSection
                             onSearchChange={onSearchChange}
-                            title='Variables'
-                            subtitle={`Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s`}
-                            icon={<IconVariable />}
+                            title={AppIcon.variables.headerTitle}
+                            subtitle={AppIcon.variables.description}
+                            icon={AppIcon.variables.icon}
                         >
                             <StyledButton
                                 variant='contained'
@@ -225,13 +224,13 @@ const Variables = () => {
                         </HeaderSection>
                         {!isLoading && variables.length === 0 ? (
                             <Stack sx={{ alignItems: 'center', justifyContent: 'center' }} flexDirection='column'>
-                                <Box sx={{ p: 2, height: 'auto' }}>
+                                {/* <Box sx={{ p: 2, height: 'auto' }}>
                                     <img
                                         style={{ objectFit: 'cover', height: '20vh', width: 'auto' }}
                                         src={VariablesEmptySVG}
                                         alt='VariablesEmptySVG'
                                     />
-                                </Box>
+                                </Box> */}
                                 <div>No Variables Yet</div>
                             </Stack>
                         ) : (

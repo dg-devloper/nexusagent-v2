@@ -8,7 +8,6 @@ import { Box, Skeleton, Stack } from '@mui/material'
 import MainCard from '@/ui-component/cards/MainCard'
 import ItemCard from '@/ui-component/cards/ItemCard'
 import { gridSpacing } from '@/store/constant'
-import AgentsEmptySVG from '@/assets/images/agents_empty.svg'
 import ConfirmDialog from '@/ui-component/dialog/ConfirmDialog'
 import { FlowListTable } from '@/ui-component/table/FlowListTable'
 import ErrorBoundary from '@/ErrorBoundary'
@@ -24,9 +23,10 @@ import { baseURL } from '@/store/constant'
 
 // icons
 import HeaderSection from '@/layout/MainLayout/HeaderSection'
-import { IconUsersGroup } from '@tabler/icons-react'
 import { StyledButton } from '@/ui-component/button/StyledButton'
 import { IconPlus } from '@tabler/icons-react'
+
+import AppIcon from '@/menu-items/icon'
 
 // ==============================|| AGENTS ||============================== //
 
@@ -111,9 +111,9 @@ const Agentflows = () => {
                     <HeaderSection
                         onSearchChange={onSearchChange}
                         onButtonClick={addNew}
-                        title='Agenflows'
-                        subtitle={`Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s`}
-                        icon={<IconUsersGroup />}
+                        title={AppIcon.agentflows.headerTitle}
+                        subtitle={AppIcon.agentflows.description}
+                        icon={AppIcon.agentflows.icon}
                     >
                         <StyledButton variant='contained' onClick={addNew} startIcon={<IconPlus />} sx={{ borderRadius: 2, height: 40 }}>
                             Add
@@ -148,13 +148,13 @@ const Agentflows = () => {
                     )}
                     {!isLoading && (!getAllAgentflows.data || getAllAgentflows.data.length === 0) && (
                         <Stack sx={{ alignItems: 'center', justifyContent: 'center' }} flexDirection='column'>
-                            <Box sx={{ p: 2, height: 'auto' }}>
+                            {/* <Box sx={{ p: 2, height: 'auto' }}>
                                 <img
                                     style={{ objectFit: 'cover', height: '12vh', width: 'auto' }}
                                     src={AgentsEmptySVG}
                                     alt='AgentsEmptySVG'
                                 />
-                            </Box>
+                            </Box> */}
                             <div>No Agents Yet</div>
                         </Stack>
                     )}

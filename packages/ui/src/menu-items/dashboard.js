@@ -1,18 +1,8 @@
 // assets
-import {
-    IconUsersGroup,
-    IconHierarchy,
-    IconBuildingStore,
-    IconKey,
-    IconTool,
-    IconLock,
-    IconRobot,
-    IconVariable,
-    IconFiles
-} from '@tabler/icons-react'
+
+import AppIcon from './icon'
 
 // constant
-const icons = { IconUsersGroup, IconHierarchy, IconBuildingStore, IconKey, IconTool, IconLock, IconRobot, IconVariable, IconFiles }
 
 // ==============================|| DASHBOARD MENU ITEMS ||============================== //
 
@@ -23,53 +13,62 @@ const dashboard = {
     children: [
         {
             id: 'chats',
-            title: 'Chat',
+            title: 'Chatbot',
             type: 'collapse',
             url: '/',
-            icon: icons.IconHierarchy,
+            icon: AppIcon.chatbot.icon,
             breadcrumbs: true,
             children: [
                 {
                     id: 'chatflows',
-                    title: 'Chatflows',
+                    title: 'Agent Flow',
                     type: 'item',
                     url: '/chatflows',
-                    icon: icons.IconHierarchy
+                    icon: AppIcon.chatflow.icon
                 },
                 {
                     id: 'agentflows',
-                    title: 'Agentflows',
+                    title: 'Multi-Agent Flow',
                     type: 'item',
                     url: '/agentflows',
-                    icon: icons.IconUsersGroup,
+                    icon: AppIcon.agentflows.icon,
                     breadcrumbs: true
                 },
                 {
                     id: 'assistants',
-                    title: 'Assistants',
+                    title: 'Flow Assistant',
                     type: 'item',
                     url: '/assistants',
-                    icon: icons.IconRobot,
+                    icon: AppIcon.assistants.icon,
                     breadcrumbs: true
                 }
             ]
         },
         {
-            id: 'configs',
-            title: 'Config',
+            id: 'marketplaces',
+            title: 'Marketplace',
             type: 'item',
-            url: '/configs',
-            icon: icons.IconTool,
+            url: '/marketplaces',
+            icon: AppIcon.marketplaces.icon,
             breadcrumbs: true
         },
         {
-            id: 'marketplaces',
-            title: 'Marketplaces',
+            id: 'tools',
+            title: 'Integration',
             type: 'item',
-            url: '/marketplaces',
-            icon: icons.IconBuildingStore,
+            url: '/tools',
+            icon: AppIcon.tools.icon,
+            breadcrumbs: true
+        },
+        {
+            id: 'configs',
+            title: 'Setting',
+            type: 'item',
+            url: '/configs',
+            icon: AppIcon.config.icon,
             breadcrumbs: true
         }
+
         // {
         //     id: 'chatflows',
         //     title: 'Chatflows',

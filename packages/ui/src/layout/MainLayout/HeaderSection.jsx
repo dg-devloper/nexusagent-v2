@@ -1,10 +1,13 @@
 import PropTypes from 'prop-types'
-import { Box, Stack, Grid, Typography, OutlinedInput } from '@mui/material'
+import { Box, Stack, Grid, Typography, OutlinedInput, ListItemIcon } from '@mui/material'
 import { IconSearch } from '@tabler/icons-react'
 import { useTheme } from '@emotion/react'
 
 const HeaderSection = ({ children, onSearchChange, title, subtitle, icon }) => {
     const theme = useTheme()
+
+    const Icon = icon
+    const itemIcon = <Icon stroke={2} size='1.5rem' />
 
     return (
         <Box
@@ -29,7 +32,15 @@ const HeaderSection = ({ children, onSearchChange, title, subtitle, icon }) => {
                                 alignItems: 'center'
                             }}
                         >
-                            {icon}
+                            <ListItemIcon
+                                sx={{
+                                    color: theme.palette['primary'].light,
+                                    display: 'flex',
+                                    justifyContent: 'center'
+                                }}
+                            >
+                                {itemIcon}
+                            </ListItemIcon>
                         </Box>
                     </Grid>
                     <Grid>
@@ -89,7 +100,7 @@ HeaderSection.propTypes = {
     onSearchChange: PropTypes.func,
     onButtonClick: PropTypes.func,
     title: PropTypes.string,
-    icon: PropTypes.node,
+    icon: PropTypes.any,
     subtitle: PropTypes.string
 }
 

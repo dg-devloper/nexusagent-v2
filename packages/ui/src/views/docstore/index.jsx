@@ -20,12 +20,12 @@ import documentsApi from '@/api/documentstore'
 
 // icons
 import { IconPlus } from '@tabler/icons-react'
-import doc_store_empty from '@/assets/images/doc_store_empty.svg'
 
 // const
 import { baseURL, gridSpacing } from '@/store/constant'
 import HeaderSection from '@/layout/MainLayout/HeaderSection'
-import { IconFiles } from '@tabler/icons-react'
+// import { IconFiles } from '@tabler/icons-react'
+import AppIcon from '@/menu-items/icon'
 
 // ==============================|| DOCUMENTS ||============================== //
 
@@ -45,11 +45,11 @@ const Documents = () => {
     const [docStores, setDocStores] = useState([])
     const [view, setView] = useState('list')
 
-    const handleChange = (event, nextView) => {
-        if (nextView === null) return
-        localStorage.setItem('docStoreDisplayStyle', nextView)
-        setView(nextView)
-    }
+    // const handleChange = (event, nextView) => {
+    //     if (nextView === null) return
+    //     localStorage.setItem('docStoreDisplayStyle', nextView)
+    //     setView(nextView)
+    // }
 
     function filterDocStores(data) {
         return data.name.toLowerCase().indexOf(search.toLowerCase()) > -1
@@ -134,9 +134,9 @@ const Documents = () => {
                 <Stack flexDirection='column' sx={{ gap: 3 }}>
                     <HeaderSection
                         onSearchChange={onSearchChange}
-                        title='Document Store'
-                        subtitle={`Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s`}
-                        icon={<IconFiles />}
+                        title={AppIcon.documentStores.headerTitle}
+                        subtitle={AppIcon.documentStores.description}
+                        icon={AppIcon.documentStores.icon}
                     >
                         <StyledButton
                             variant='contained'
@@ -285,13 +285,13 @@ const Documents = () => {
                     )}
                     {!isLoading && (!docStores || docStores.length === 0) && (
                         <Stack sx={{ alignItems: 'center', justifyContent: 'center' }} flexDirection='column'>
-                            <Box sx={{ p: 2, height: 'auto' }}>
+                            {/* <Box sx={{ p: 2, height: 'auto' }}>
                                 <img
                                     style={{ objectFit: 'cover', height: '20vh', width: 'auto' }}
                                     src={doc_store_empty}
                                     alt='doc_store_empty'
                                 />
-                            </Box>
+                            </Box> */}
                             <div>No Document Stores Created Yet</div>
                         </Stack>
                     )}
