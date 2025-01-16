@@ -9,7 +9,12 @@ import {
     IconRobot,
     IconVariable,
     IconFiles,
-    IconFlower
+    IconFlower,
+    IconBasketStar,
+    IconBriefcaseFilled,
+    IconSettingsAutomation,
+    IconCloudLock,
+    IconWorldCog
 } from '@tabler/icons-react'
 
 const icons = {
@@ -22,7 +27,12 @@ const icons = {
     IconRobot,
     IconVariable,
     IconFiles,
-    IconFlower
+    IconFlower,
+    IconWorldCog,
+    IconBriefcaseFilled,
+    IconSettingsAutomation,
+    IconCloudLock,
+    IconBasketStar
 }
 
 const AppIcon = {
@@ -45,22 +55,22 @@ const AppIcon = {
         description: 'lorem'
     },
     marketplaces: {
-        icon: icons.IconBuildingStore,
+        icon: icons.IconBriefcaseFilled,
         headerTitle: 'Marketplace',
         description: `Discover and access a wide range of plugins, templates, and integrations to extend the functionality of Nexus Agent. The Marketplace provides tools and resources to enhance workflows, streamline processes, and integrate seamlessly with third-party services.`
     },
     tools: {
-        icon: icons.IconTool,
+        icon: icons.IconWorldCog,
         headerTitle: 'Integration Tool',
         description: `Discover and configure various tools to enhance your workflows. Integrate external functionalities, automate tasks, and expand the capabilities of your flows effortlessly`
     },
     config: {
-        icon: icons.IconTool,
+        icon: icons.IconSettingsAutomation,
         headerTitle: 'Setting',
         description: 'lorem'
     },
     credential: {
-        icon: icons.IconLock,
+        icon: icons.IconCloudLock,
         headerTitle: 'Credential',
         description: `Securely store and manage authentication details such as API keys and tokens. This menu ensures easy and safe integration with third-party services required for your workflows.`
     },
