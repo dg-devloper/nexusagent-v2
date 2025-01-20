@@ -40,7 +40,7 @@ import AboutDialog from '@/ui-component/dialog/AboutDialog'
 import Transitions from '@/ui-component/extended/Transitions'
 
 // assets
-import { IconFileExport, IconFileUpload, IconInfoCircle, IconLogout, IconX } from '@tabler/icons-react'
+import { IconFileExport, IconFileUpload, IconLogout, IconX } from '@tabler/icons-react'
 import './index.css'
 import ExportingGIF from '@/assets/images/Exporting.gif'
 
@@ -403,18 +403,6 @@ const ProfileSection = ({ username, handleLogout }) => {
                                                     <ListItemText primary={<Typography variant='body2'>Import</Typography>} />
                                                 </ListItemButton>
                                                 <input ref={inputRef} type='file' hidden onChange={fileChange} accept='.json' />
-                                                <ListItemButton
-                                                    sx={{ borderRadius: `${customization.borderRadius}px` }}
-                                                    onClick={() => {
-                                                        setOpen(false)
-                                                        setAboutDialogOpen(true)
-                                                    }}
-                                                >
-                                                    <ListItemIcon>
-                                                        <IconInfoCircle stroke={1.5} size='1.3rem' />
-                                                    </ListItemIcon>
-                                                    <ListItemText primary={<Typography variant='body2'>About</Typography>} />
-                                                </ListItemButton>
 
                                                 {localStorage.getItem('site') && (
                                                     <ListItemButton

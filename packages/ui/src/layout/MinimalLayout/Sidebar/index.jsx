@@ -316,7 +316,7 @@ const Sidebar = ({ drawerOpen, drawerToggle, window, nodesData, node, isAgentCan
                                     height: '40px'
                                 }}
                             >
-                                <Box sx={{ display: 'flex', p: 2, mx: 'auto', alignItems: 'center', gap: '1.5rem' }}>
+                                <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'center', p: 2 }}>
                                     <LogoSection type='blue' />
                                 </Box>
                             </Box>

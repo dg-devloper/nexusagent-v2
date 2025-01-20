@@ -26,7 +26,7 @@ const Sidebar = ({ drawerOpen, drawerToggle, window }) => {
                     height: '50px'
                 }}
             >
-                <Box sx={{ display: 'flex', p: 2, mx: 'auto', alignItems: 'center', gap: '1.5rem' }}>
+                <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'center', p: 2 }}>
                     {/* <IconMacro color='white ' />
                     <Typography variant='h2' sx={{ color: theme.palette.primary.light }}>
                         Aira-Panel
