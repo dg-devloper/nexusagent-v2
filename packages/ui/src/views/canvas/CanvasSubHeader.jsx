@@ -260,6 +260,7 @@ const CanvasSubHeader = ({ chatflow, isAgentCanvas, handleSaveFlow, handleDelete
                             onClick={onAPIDialogClick}
                         >
                             <IconCode size={19} />
+                            Integration
                         </StyledFab>
                     )}
 

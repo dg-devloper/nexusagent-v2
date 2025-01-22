@@ -14,8 +14,8 @@ const AuthContextProvider = ({ children }) => {
             if (response.data) {
                 setUser({
                     user: {
-                        id: response.data[0].id,
-                        name: response.data[0].name
+                        id: response.data.id,
+                        name: response.data.name
                     },
                     isAuthenticated: true
                 })

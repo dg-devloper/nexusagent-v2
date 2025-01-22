@@ -4,7 +4,7 @@ import PropTypes from 'prop-types'
 
 import { ClickAwayListener, Paper, Popper, Button } from '@mui/material'
 import { useTheme } from '@mui/material/styles'
-import { IconMessage, IconX, IconEraser, IconArrowsMaximize } from '@tabler/icons-react'
+import { IconX, IconEraser, IconArrowsMaximize, IconPlayerPlay } from '@tabler/icons-react'
 
 // project import
 import { StyledFab } from '@/ui-component/button/StyledFab'
@@ -139,7 +139,7 @@ export const ChatPopUp = ({ chatflowid, isAgentCanvas }) => {
                 variant='extended'
                 sx={{
                     position: 'absolute',
-                    right: 235,
+                    right: 315,
                     top: 20,
                     borderRadius: '8px',
                     padding: '.5rem 1.2rem',
@@ -160,13 +160,13 @@ export const ChatPopUp = ({ chatflowid, isAgentCanvas }) => {
                 title='Chat'
                 onClick={handleToggle}
             >
-                <IconMessage size={19} />
-                Chat
+                <IconPlayerPlay size={19} />
+                Run
             </StyledFab>
 
             {open && (
                 <StyledFab
-                    sx={{ position: 'absolute', right: 340, top: 18 }}
+                    sx={{ position: 'absolute', right: 420, top: 18 }}
                     onClick={clearChat}
                     size='small'
                     color='error'
@@ -178,7 +178,7 @@ export const ChatPopUp = ({ chatflowid, isAgentCanvas }) => {
             )}
             {open && (
                 <StyledFab
-                    sx={{ position: 'absolute', right: 390, top: 18 }}
+                    sx={{ position: 'absolute', right: 470, top: 18 }}
                     onClick={expandChat}
                     size='small'
                     color='primary'
