@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState, useCallback, useContext } from 'react'
-import ReactFlow, { addEdge, Controls, Background, useNodesState, useEdgesState } from 'reactflow'
+import ReactFlow, { addEdge, Controls, Background, useNodesState, useEdgesState, MarkerType } from 'reactflow'
 import 'reactflow/dist/style.css'
 
 import { useDispatch, useSelector } from 'react-redux'
@@ -54,9 +54,10 @@ import { usePrompt } from '@/utils/usePrompt'
 import { FLOWISE_CREDENTIAL_ID } from '@/store/constant'
 import CanvasSubHeader from './CanvasSubHeader'
 import Sidebar from '@/layout/MinimalLayout/Sidebar'
+import FilledLoadingEdge from './animation/FilledLoadingEdge'
 
 const nodeTypes = { customNode: CanvasNode, stickyNote: StickyNote }
-const edgeTypes = { buttonedge: ButtonEdge }
+const edgeTypes = { buttonedge: ButtonEdge, filledLoadingEdge: FilledLoadingEdge }
 
 // ==============================|| CANVAS ||============================== //
 
@@ -113,6 +114,11 @@ const Canvas = () => {
         const newEdge = {
             ...params,
             type: 'buttonedge',
+            markerEnd: {
+                type: MarkerType.Arrow,
+                width: 15,
+                height: 15
+            },
             id: `${params.source}-${params.sourceHandle}-${params.target}-${params.targetHandle}`
         }
 
