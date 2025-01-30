@@ -44,8 +44,14 @@ const ShowStoredChunks = Loadable(lazy(() => import('@/views/docstore/ShowStored
 const LoaderConfigPreviewChunks = Loadable(lazy(() => import('@/views/docstore/LoaderConfigPreviewChunks')))
 const VectorStoreConfigure = Loadable(lazy(() => import('@/views/docstore/VectorStoreConfigure')))
 const VectorStoreQuery = Loadable(lazy(() => import('@/views/docstore/VectorStoreQuery')))
+const LandingPage = Loadable(lazy(() => import('@/views/landingpage')))
 
 // ==============================|| MAIN ROUTING ||============================== //
+
+// const MainRoutes = {
+//     path: '/',
+//     element: <LandingPage />
+// }
 
 const MainRoutes = {
     path: '/',

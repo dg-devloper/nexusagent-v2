@@ -15,7 +15,7 @@ const dashboard = {
             id: 'chats',
             title: 'Chatbot',
             type: 'collapse',
-            url: '/',
+            url: '/dashboard',
             icon: AppIcon.chatbot.icon,
             breadcrumbs: true,
             children: [

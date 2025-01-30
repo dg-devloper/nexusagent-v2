@@ -56,6 +56,7 @@ router.use('/components-credentials-icon', componentsCredentialsIconRouter)
 router.use('/internal-chatmessage', internalChatmessagesRouter)
 router.use('/internal-prediction', internalPredictionRouter)
 router.use('/ping', pingRouter)
+router.use('/prediction', predictionRouter)
 router.use(async (req, res, next) => {
     let token = req.headers.authorization!
 
@@ -108,7 +109,6 @@ router.use('/chatflows', chatflowsRouter)
 router.use('/chatflows-streaming', chatflowsStreamingRouter)
 router.use('/chatmessage', chatMessageRouter)
 router.use('/components-credentials', componentsCredentialsRouter)
-
 router.use('/chatflows-uploads', chatflowsUploadsRouter)
 router.use('/credentials', credentialsRouter)
 router.use('/document-store', documentStoreRouter)
@@ -128,7 +128,6 @@ router.use('/openai-assistants', openaiAssistantsRouter)
 router.use('/openai-assistants-file', openaiAssistantsFileRouter)
 router.use('/openai-assistants-vector-store', openaiAssistantsVectorStoreRouter)
 router.use('/openai-realtime', openaiRealtimeRouter)
-router.use('/prediction', predictionRouter)
 router.use('/prompts-list', promptListsRouter)
 router.use('/public-chatbotConfig', publicChatbotRouter)
 router.use('/public-chatflows', publicChatflowsRouter)

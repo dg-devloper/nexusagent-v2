@@ -50,7 +50,7 @@ const HeaderSection = ({ children, onSearchChange, title, subtitle, icon }) => {
                     </Grid>
                 </Grid>
 
-                <Typography sx={{ widht: '100%', textAlign: 'center' }}>{subtitle}</Typography>
+                <Typography sx={{ width: '100%', textAlign: 'center' }}>{subtitle}</Typography>
 
                 <Box
                     sx={{
