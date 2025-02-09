@@ -28,7 +28,35 @@ const login = async (req: Request, res: Response, next: NextFunction) => {
     }
 }
 
+const verif = async (req: Request, res: Response, next: NextFunction) => {
+    try {
+        if (!req.body) {
+            throw new InternalFlowiseError(StatusCodes.PRECONDITION_FAILED, `Error: authController.login - body not provided!`)
+        }
+        const apiResponse = await authService.verifToken(req.body)
+
+        return res.json(apiResponse)
+    } catch (error) {
+        next(error)
+    }
+}
+
+const oauthGoogle = async (req: Request, res: Response, next: NextFunction) => {
+    try {
+        if (!req.body) {
+            throw new InternalFlowiseError(StatusCodes.PRECONDITION_FAILED, `Error: authController.login - body not provided!`)
+        }
+        const apiResponse = await authService.generateToken()
+
+        return res.json({ url: apiResponse })
+    } catch (error) {
+        next(error)
+    }
+}
+
 export default {
     register,
-    login
+    login,
+    verif,
+    oauthGoogle
 }

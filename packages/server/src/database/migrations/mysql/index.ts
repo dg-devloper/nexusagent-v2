@@ -29,6 +29,9 @@ import { AddCustomTemplate1725629836652 } from './1725629836652-AddCustomTemplat
 import { AddArtifactsToChatMessage1726156258465 } from './1726156258465-AddArtifactsToChatMessage'
 import { AddFollowUpPrompts1726666302024 } from './1726666302024-AddFollowUpPrompts'
 import { AddTypeToAssistant1733011290987 } from './1733011290987-AddTypeToAssistant'
+import { AddSomeColumnToUsers1738830671265 } from './1738830671265-AddSomeColumnToUsers'
+import { AddEmailVerifiedAtToUser1738842119976 } from './1738842119976-AddEmailVerifiedAtToUser'
+import { AddUserVerification1738845121323 } from './1738845121323-AddUserVerification'
 
 export const mysqlMigrations = [
     Init1693840429259,
@@ -61,5 +64,8 @@ export const mysqlMigrations = [
     AddCustomTemplate1725629836652,
     AddArtifactsToChatMessage1726156258465,
     AddFollowUpPrompts1726666302024,
-    AddTypeToAssistant1733011290987
+    AddTypeToAssistant1733011290987,
+    AddSomeColumnToUsers1738830671265,
+    AddEmailVerifiedAtToUser1738842119976,
+    AddUserVerification1738845121323
 ]

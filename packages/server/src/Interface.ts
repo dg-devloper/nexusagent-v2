@@ -74,9 +74,19 @@ export interface IUser {
     email: string
     password: string
     role: string
+    companyName?: string
+    roleType?: string
+    hearAboutUs?: string
     isActive: boolean
     expiredAt: Date
     updatedDate: Date
+    createdDate: Date
+}
+
+export interface IUserVerification {
+    id: string
+    userId: string
+    token: string
     createdDate: Date
 }
 

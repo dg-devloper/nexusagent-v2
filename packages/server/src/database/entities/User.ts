@@ -25,6 +25,18 @@ export class User implements IUser {
     @Column({ type: 'boolean' })
     isActive: boolean
 
+    @Column({ nullable: true, type: 'text' })
+    companyName?: string
+
+    @Column({ nullable: true, type: 'text' })
+    roleType?: string
+
+    @Column({ nullable: true, type: 'text' })
+    hearAboutUs?: string
+
+    @Column({ nullable: true, type: 'datetime' })
+    emailVerifiedAt?: Date
+
     @Column({ type: 'timestamp' })
     @CreateDateColumn()
     expiredAt: Date

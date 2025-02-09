@@ -7,21 +7,48 @@ import { getRunningExpressApp } from '../../utils/getRunningExpressApp'
 import { FLOWISE_METRIC_COUNTERS, FLOWISE_COUNTER_STATUS } from '../../Interface.Metrics'
 import bcrypt from 'bcryptjs'
 import jwt from 'jsonwebtoken'
+import { sendVerificationEmail } from '../../email'
+import { UserVerification } from '../../database/entities/UserVerification'
+import { google } from 'googleapis'
+
+function generateUniqueString(length = 16) {
+    const characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789'
+    let uniqueString = ''
+
+    for (let i = 0; i < length; i++) {
+        const randomIndex = Math.floor(Math.random() * characters.length)
+        uniqueString += characters[randomIndex]
+    }
+
+    // Add a timestamp to ensure uniqueness
+    const timestamp = Date.now().toString(36) // Convert timestamp to base-36 string
+    return uniqueString + timestamp
+}
 
 const registerUser = async (requestBody: any): Promise<any> => {
     try {
         const appServer = getRunningExpressApp()
-        const newUser = new User()
-        Object.assign(newUser, requestBody)
-        // newUser.password = await bcrypt.hash(newUser.password, 10)
+        let newUser = new User()
+
+        const hashPassword = bcrypt.hashSync(requestBody.password)
+
+        Object.assign(newUser, { ...requestBody, isActive: 1, role: 'CUSTOMER', password: hashPassword })
+
         const user = await appServer.AppDataSource.getRepository(User).create(newUser)
-        const dbResponse = await appServer.AppDataSource.getRepository(User).save(user)
-        await appServer.telemetry.sendTelemetry('user_registered', {
-            version: await getAppVersion(),
-            userId: dbResponse.id,
-            userName: dbResponse.name
+        newUser = await appServer.AppDataSource.getRepository(User).save(user)
+
+        // Send email
+        const token = generateUniqueString()
+        const newUserVerification = new UserVerification()
+        Object.assign(newUserVerification, {
+            userId: newUser.id,
+            token
         })
-        appServer.metricsProvider?.incrementCounter(FLOWISE_METRIC_COUNTERS.USER_REGISTERED, { status: FLOWISE_COUNTER_STATUS.SUCCESS })
+
+        const userVerification = await appServer.AppDataSource.getRepository(UserVerification).create(newUserVerification)
+        const dbResponse = await appServer.AppDataSource.getRepository(UserVerification).save(userVerification)
+        sendVerificationEmail(newUser.email, token, newUser.name)
+
         return dbResponse
     } catch (error) {
         throw new InternalFlowiseError(StatusCodes.INTERNAL_SERVER_ERROR, `Error: authService.registerUser - ${getErrorMessage(error)}`)
@@ -63,7 +90,68 @@ const loginUser = async (requestBody: any): Promise<any> => {
     }
 }
 
+const verifToken = async (requestBody: any): Promise<any> => {
+    try {
+        const appServer = getRunningExpressApp()
+
+        const userVerification = await appServer.AppDataSource.getRepository(UserVerification).findOneBy({
+            token: requestBody.token
+        })
+
+        if (!userVerification) {
+            throw new InternalFlowiseError(StatusCodes.NOT_FOUND, `Invalid Token`)
+        }
+
+        const user = await appServer.AppDataSource.getRepository(User).findOneBy({
+            id: userVerification.userId
+        })
+
+        if (!user) {
+            throw new InternalFlowiseError(StatusCodes.NOT_FOUND, `User not found`)
+        }
+
+        user.emailVerifiedAt = new Date()
+        const updateUser = await appServer.AppDataSource.getRepository(User).save(user)
+
+        if (!updateUser) {
+            throw new InternalFlowiseError(StatusCodes.NOT_FOUND, `Failed update user`)
+        }
+
+        const dbResponse = await appServer.AppDataSource.getRepository(UserVerification).delete({ token: requestBody.token })
+
+        return dbResponse
+    } catch (error) {
+        throw new InternalFlowiseError(StatusCodes.INTERNAL_SERVER_ERROR, `Error: authService.loginUser - ${getErrorMessage(error)}`)
+    }
+}
+
+const generateToken = async (): Promise<string> => {
+    try {
+        console.log(process.env.GOOGLE_REDIRECT_LINK)
+        const oauth2Client = new google.auth.OAuth2(
+            process.env.GOOGLE_CLIENT_ID,
+            process.env.GOOGLE_CLIENT_SECRET,
+            process.env.GOOGLE_REDIRECT_LINK
+        )
+
+        const scopes = ['https://www.googleapis.com/auth/drive.metadata.readonly', 'https://www.googleapis.com/auth/calendar.readonly']
+
+        // Generate a url that asks permissions for the Drive activity and Google Calendar scope
+        const authorizationUrl = oauth2Client.generateAuthUrl({
+            access_type: 'offline',
+            scope: scopes,
+            include_granted_scopes: true
+        })
+
+        return authorizationUrl
+    } catch (error) {
+        throw new InternalFlowiseError(StatusCodes.INTERNAL_SERVER_ERROR, `Error: authService.registerUser - ${getErrorMessage(error)}`)
+    }
+}
+
 export default {
     registerUser,
-    loginUser
+    loginUser,
+    verifToken,
+    generateToken
 }

@@ -11,7 +11,9 @@ import ForgotPassword from './ForgotPassword'
 import authApi from '@/api/auth'
 import { useAuth } from '@/hooks/useAuth'
 import { useNavigate } from 'react-router'
-
+import { Link } from 'react-router-dom'
+import { Divider } from '@mui/material'
+import GoogleButton from './GoogleButton'
 const Card = styled(MuiCard)(({ theme }) => ({
     display: 'flex',
     flexDirection: 'column',
@@ -169,24 +171,24 @@ export default function SignInCard() {
                     <Button type='submit' fullWidth variant='contained' onClick={validateInputs} sx={{ borderRadius: '16px' }}>
                         Sign in
                     </Button>
-                    {/* <Typography sx={{ textAlign: 'center' }}>
+                    <Typography sx={{ textAlign: 'center' }}>
                         Don&apos;t have an account?{' '}
                         <span>
-                            <Link href='/material-ui/getting-started/templates/sign-in/' variant='body2' sx={{ alignSelf: 'center' }}>
+                            <Link
+                                to={{
+                                    pathname: '/register'
+                                }}
+                                href='/material-ui/getting-started/templates/sign-in/'
+                                variant='body2'
+                                sx={{ alignSelf: 'center' }}
+                            >
                                 Sign up
                             </Link>
                         </span>
-                    </Typography> */}
+                    </Typography>
                 </Box>
-                {/* <Divider>or</Divider>
-            <Box sx={{ display: 'flex', flexDirection: 'column', gap: 2 }}>
-                <Button fullWidth variant='outlined' onClick={() => alert('Sign in with Google')} startIcon={<GoogleIcon />}>
-                    Sign in with Google
-                </Button>
-                <Button fullWidth variant='outlined' onClick={() => alert('Sign in with Facebook')} startIcon={<FacebookIcon />}>
-                    Sign in with Facebook
-                </Button>
-            </Box> */}
+                <Divider>or</Divider>
+                <GoogleButton />
             </Card>
         </Box>
     )
