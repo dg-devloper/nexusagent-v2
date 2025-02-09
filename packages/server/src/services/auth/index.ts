@@ -127,7 +127,6 @@ const verifToken = async (requestBody: any): Promise<any> => {
 
 const generateToken = async (): Promise<string> => {
     try {
-        console.log(process.env.GOOGLE_REDIRECT_LINK)
         const oauth2Client = new google.auth.OAuth2(
             process.env.GOOGLE_CLIENT_ID,
             process.env.GOOGLE_CLIENT_SECRET,
