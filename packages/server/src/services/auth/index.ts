@@ -11,6 +11,12 @@ import { sendVerificationEmail } from '../../email'
 import { UserVerification } from '../../database/entities/UserVerification'
 import { google } from 'googleapis'
 
+const oauth2Client = new google.auth.OAuth2(
+    process.env.GOOGLE_CLIENT_ID,
+    process.env.GOOGLE_CLIENT_SECRET,
+    process.env.GOOGLE_REDIRECT_LINK
+)
+
 function generateUniqueString(length = 16) {
     const characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789'
     let uniqueString = ''
@@ -31,7 +37,6 @@ const registerUser = async (requestBody: any): Promise<any> => {
         let newUser = new User()
 
         const hashPassword = bcrypt.hashSync(requestBody.password)
-
         Object.assign(newUser, { ...requestBody, isActive: 1, role: 'CUSTOMER', password: hashPassword })
 
         const user = await appServer.AppDataSource.getRepository(User).create(newUser)
@@ -46,25 +51,27 @@ const registerUser = async (requestBody: any): Promise<any> => {
         })
 
         const userVerification = await appServer.AppDataSource.getRepository(UserVerification).create(newUserVerification)
-        const dbResponse = await appServer.AppDataSource.getRepository(UserVerification).save(userVerification)
+        await appServer.AppDataSource.getRepository(UserVerification).save(userVerification)
         sendVerificationEmail(newUser.email, token, newUser.name)
 
-        return dbResponse
+        return newUser
     } catch (error) {
         throw new InternalFlowiseError(StatusCodes.INTERNAL_SERVER_ERROR, `Error: authService.registerUser - ${getErrorMessage(error)}`)
     }
 }
 
-const loginUser = async (requestBody: any): Promise<any> => {
+const loginUser = async (requestBody: any, user: User | null = null): Promise<any> => {
     try {
         const appServer = getRunningExpressApp()
 
-        const user = await appServer.AppDataSource.getRepository(User).findOneBy({
-            username: requestBody.username
-        })
+        if (!user) {
+            user = await appServer.AppDataSource.getRepository(User).findOneBy({
+                username: requestBody.username
+            })
 
-        if (!user || !(await bcrypt.compare(requestBody.password, user.password))) {
-            throw new InternalFlowiseError(StatusCodes.UNAUTHORIZED, 'Invalid username or password')
+            if (!user || !(await bcrypt.compare(requestBody.password, user.password))) {
+                throw new InternalFlowiseError(StatusCodes.UNAUTHORIZED, 'Invalid username or password')
+            }
         }
 
         // Set durasi token menjadi 3 hari
@@ -127,13 +134,7 @@ const verifToken = async (requestBody: any): Promise<any> => {
 
 const generateToken = async (): Promise<string> => {
     try {
-        const oauth2Client = new google.auth.OAuth2(
-            process.env.GOOGLE_CLIENT_ID,
-            process.env.GOOGLE_CLIENT_SECRET,
-            process.env.GOOGLE_REDIRECT_LINK
-        )
-
-        const scopes = ['https://www.googleapis.com/auth/drive.metadata.readonly', 'https://www.googleapis.com/auth/calendar.readonly']
+        const scopes = ['https://www.googleapis.com/auth/userinfo.email', 'https://www.googleapis.com/auth/userinfo.profile']
 
         // Generate a url that asks permissions for the Drive activity and Google Calendar scope
         const authorizationUrl = oauth2Client.generateAuthUrl({
@@ -148,9 +149,50 @@ const generateToken = async (): Promise<string> => {
     }
 }
 
+const verifCode = async (requestBody: any): Promise<any> => {
+    try {
+        const code = requestBody.code
+
+        const { tokens } = await oauth2Client.getToken(code)
+
+        oauth2Client.setCredentials(tokens)
+
+        const oauth2 = google.oauth2({
+            auth: oauth2Client,
+            version: 'v2'
+        })
+
+        const { data } = await oauth2.userinfo.get()
+
+        if (!data) {
+            throw new InternalFlowiseError(StatusCodes.NOT_FOUND, `No data provided`)
+        }
+
+        const appServer = getRunningExpressApp()
+
+        let user = await appServer.AppDataSource.getRepository(User).findOneBy({ email: data.email! })
+
+        if (!user) {
+            user = await registerUser({
+                email: data.email,
+                password: 'defaultpassword@@',
+                username: data.email,
+                name: data.name || 'nexust person'
+            })
+        }
+
+        return await loginUser({}, user)
+
+        // return authorizationUrl
+    } catch (error) {
+        throw new InternalFlowiseError(StatusCodes.INTERNAL_SERVER_ERROR, `Error: authService.registerUser - ${getErrorMessage(error)}`)
+    }
+}
+
 export default {
     registerUser,
     loginUser,
     verifToken,
-    generateToken
+    generateToken,
+    verifCode
 }

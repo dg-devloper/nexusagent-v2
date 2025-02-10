@@ -54,9 +54,23 @@ const oauthGoogle = async (req: Request, res: Response, next: NextFunction) => {
     }
 }
 
+const verifCode = async (req: Request, res: Response, next: NextFunction) => {
+    try {
+        if (!req.body) {
+            throw new InternalFlowiseError(StatusCodes.PRECONDITION_FAILED, `Error: authController.login - body not provided!`)
+        }
+        const apiResponse = await authService.verifCode(req.body)
+
+        return res.json(apiResponse)
+    } catch (error) {
+        next(error)
+    }
+}
+
 export default {
     register,
     login,
     verif,
-    oauthGoogle
+    oauthGoogle,
+    verifCode
 }

@@ -39,10 +39,11 @@ export default function SignInCard() {
     const [passwordErrorMessage, setPasswordErrorMessage] = React.useState('')
     const [open, setOpen] = React.useState(false)
     const [loginError, setLoginError] = React.useState(false)
+    const [accountExpired, setAccountExpired] = React.useState(false)
 
-    const handleClickOpen = () => {
-        setOpen(true)
-    }
+    // const handleClickOpen = () => {
+    //     setOpen(true)
+    // }
 
     const handleClose = () => {
         setOpen(false)
@@ -65,17 +66,22 @@ export default function SignInCard() {
             })
 
             if (response.data) {
-                setToken(response.data.token)
-                setUser({
-                    user: {
-                        id: response.data.user.id,
-                        name: response.data.user.name
-                    },
-                    isAuthenticated: true
-                })
-                localStorage.setItem('site', response.data.token)
+                const expiredAt = response.data.user.expiredAt
+                if (expiredAt && new Date(expiredAt).valueOf() < Date.now().valueOf()) {
+                    setAccountExpired(true)
+                } else {
+                    setToken(response.data.token)
+                    setUser({
+                        user: {
+                            id: response.data.user.id,
+                            name: response.data.user.name
+                        },
+                        isAuthenticated: true
+                    })
+                    localStorage.setItem('site', response.data.token)
 
-                navigate('/')
+                    navigate('/')
+                }
             }
         } catch (e) {
             setLoginError(true)
@@ -122,6 +128,12 @@ export default function SignInCard() {
                 {loginError && (
                     <Typography variant='span' sx={{ width: '100%', color: 'red' }}>
                         Invalid Credential
+                    </Typography>
+                )}
+
+                {accountExpired && (
+                    <Typography variant='span' sx={{ width: '100%', color: 'red' }}>
+                        Account has expired
                     </Typography>
                 )}
                 <Box
