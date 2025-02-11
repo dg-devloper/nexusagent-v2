@@ -66,22 +66,17 @@ export default function SignInCard() {
             })
 
             if (response.data) {
-                const expiredAt = response.data.user.expiredAt
-                if (expiredAt && new Date(expiredAt).valueOf() < Date.now().valueOf()) {
-                    setAccountExpired(true)
-                } else {
-                    setToken(response.data.token)
-                    setUser({
-                        user: {
-                            id: response.data.user.id,
-                            name: response.data.user.name
-                        },
-                        isAuthenticated: true
-                    })
-                    localStorage.setItem('site', response.data.token)
+                setToken(response.data.token)
+                setUser({
+                    user: {
+                        id: response.data.user.id,
+                        name: response.data.user.name
+                    },
+                    isAuthenticated: true
+                })
+                localStorage.setItem('site', response.data.token)
 
-                    navigate('/')
-                }
+                navigate('/')
             }
         } catch (e) {
             setLoginError(true)

@@ -87,11 +87,14 @@ router.use(async (req, res, next) => {
             })
         }
 
-        if (user.expiredAt && new Date(user.expiredAt).valueOf() < Date.now().valueOf()) {
-            return res.status(401).json({
-                message: 'User account expired'
-            })
+        if (user.role !== 'ADMIN') {
+            if (user.expiredAt && new Date(user.expiredAt).valueOf() < Date.now().valueOf()) {
+                return res.status(401).json({
+                    message: 'User account expired'
+                })
+            }
         }
+
         req.userId = userId
         // console.log(user)
         next()

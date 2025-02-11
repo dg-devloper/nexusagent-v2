@@ -3,12 +3,14 @@ import nodemailer from 'nodemailer'
 const frontEndUrl = process.env.FRONTEND_URL || 'http://localhost:8080'
 export const sendVerificationEmail = (email: string, token: string, name: string) => {
     // Looking to send emails in production? Check out our Email API/SMTP product!
+
     const transport = nodemailer.createTransport({
-        host: 'sandbox.smtp.mailtrap.io',
-        port: 2525,
+        host: 'smtp.gmail.com',
+        port: 465,
+        secure: true,
         auth: {
-            user: '65451582ed13f8',
-            pass: '63d9d6c964300d'
+            user: 'nexusagentapp1@gmail.com',
+            pass: 'reri dvwx fhoq lprt'
         }
     })
 
