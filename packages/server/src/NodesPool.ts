@@ -85,6 +85,8 @@ let NODE_FILTER = [
     'Supabase',
     'Upstash Vector'
 ]
+
+const CATEGORY_FILTER = ['Cache', 'Chain', 'Chat Models', 'Document Loaders', 'Embeddings']
 export class NodesPool {
     componentNodes: IComponentNodes = {}
     componentCredentials: IComponentCredentials = {}
@@ -143,8 +145,14 @@ export class NodesPool {
                             let conditionTwo = true
                             if (!isCommunityNodesAllowed && isAuthorPresent) conditionTwo = false
 
-                            if (conditionOne && conditionTwo && NODE_FILTER.includes(newNodeInstance.label)) {
-                                this.componentNodes[newNodeInstance.name] = newNodeInstance
+                            if (conditionOne && conditionTwo) {
+                                if (CATEGORY_FILTER.includes(newNodeInstance.category)) {
+                                    if (NODE_FILTER.includes(newNodeInstance.label)) {
+                                        this.componentNodes[newNodeInstance.name] = newNodeInstance
+                                    }
+                                } else {
+                                    this.componentNodes[newNodeInstance.name] = newNodeInstance
+                                }
                             }
                         }
                     } catch (err) {
