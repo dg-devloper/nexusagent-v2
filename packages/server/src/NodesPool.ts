@@ -7,6 +7,84 @@ import { ICommonObject } from 'flowise-components'
 import logger from './utils/logger'
 import { appConfig } from './AppConfig'
 
+let NODE_FILTER = [
+    'InMemory Cache',
+    'Conversation Chain',
+    'Conversational Retrieval QA Chain',
+    'Multi Prompt Chain',
+    'Sql Database Chain',
+    'VectorDB QA Chain',
+    'ChatAnthropic',
+    'ChatGoogleGenerativeAI',
+    'ChatGooglePaLM',
+    'ChatMistralAI',
+    'ChatOllama',
+    'ChatOpenAI',
+    'ChatOpenAI Custom',
+    'ChatDeepseek',
+    'API Loader',
+    'Csv File',
+    'Custom Document Loader',
+    'Document Store',
+    'Docx File',
+    'Figma',
+    'Folder with Files',
+    'Github',
+    'Json File',
+    'Json Lines File',
+    'Notion Database',
+    'PDF Files',
+    'Plain Text',
+    'S3 File Loader',
+    'Text File',
+    'Unstructured File Loader',
+    'VectorStore To Document',
+    'Google GenerativeAI Embeddings',
+    'MistralAI Embeddings',
+    'OpenAI Embeddings',
+    'OpenAI Embeddings Custom',
+    'GooglePaLM',
+    'OpenAI',
+    'Buffer Memory',
+    'Buffer Window Memory',
+    'MongoDB Atlas Chat Memory',
+    'OpenAI Moderation',
+    'Simple Prompt Moderation',
+    'CSV Output Parser',
+    'Structured Output Parser',
+    'Advanced Structured Output Parser',
+    'Chat Prompt Template',
+    'Few Shot Prompt Template',
+    'Prompt Template',
+    'Multi Query Retriever',
+    'Prompt Retriever',
+    'Vector Store Retriever',
+    'Character Text Splitter',
+    'Code Text Splitter',
+    'Html-To-Markdown Text Splitter',
+    'Markdown Text Splitter',
+    'Recursive Character Text Splitter',
+    'BraveSearch API',
+    'Calculator',
+    'Chain Tool',
+    'Chatflow Tool',
+    'Custom Tool',
+    'Google Custom Search',
+    'OpenAPI Toolkit',
+    'Read File',
+    'Request Get',
+    'Request Post',
+    'SearchApi',
+    'Write File',
+    'In-Memory Vector Store',
+    'MongoDB Atlas',
+    'Pinecone',
+    'Postgres',
+    'Qdrant',
+    'Redis',
+    'Supabase',
+    'Upstash Vector'
+]
 export class NodesPool {
     componentNodes: IComponentNodes = {}
     componentCredentials: IComponentCredentials = {}
@@ -65,7 +143,7 @@ export class NodesPool {
                             let conditionTwo = true
                             if (!isCommunityNodesAllowed && isAuthorPresent) conditionTwo = false
 
-                            if (conditionOne && conditionTwo) {
+                            if (conditionOne && conditionTwo && NODE_FILTER.includes(newNodeInstance.label)) {
                                 this.componentNodes[newNodeInstance.name] = newNodeInstance
                             }
                         }

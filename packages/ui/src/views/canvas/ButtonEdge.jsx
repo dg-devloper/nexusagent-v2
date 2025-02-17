@@ -23,6 +23,7 @@ const ButtonEdge = ({ id, sourceX, sourceY, targetX, targetY, sourcePosition, ta
 
     // Animation logic
     useEffect(() => {
+        console.log('Called')
         setProgress(0) // Reset progress when resetAnimation changes
         setTimeout(() => {
             const interval = setInterval(() => {
