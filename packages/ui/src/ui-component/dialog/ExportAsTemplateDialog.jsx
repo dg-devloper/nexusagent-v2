@@ -4,7 +4,7 @@ import { useEffect, useState } from 'react'
 import PropTypes from 'prop-types'
 
 // material-ui
-import { Box, Button, Dialog, DialogActions, DialogContent, DialogTitle, OutlinedInput, Typography } from '@mui/material'
+import { Box, Button, Dialog, DialogActions, DialogContent, DialogTitle, OutlinedInput, Typography, Stack, alpha } from '@mui/material'
 
 // store
 import {
@@ -16,13 +16,13 @@ import {
 import useNotifier from '@/utils/useNotifier'
 import { StyledButton } from '@/ui-component/button/StyledButton'
 import Chip from '@mui/material/Chip'
-import { IconX } from '@tabler/icons-react'
+import { IconX, IconTemplate, IconPlus } from '@tabler/icons-react'
 
 // API
 import marketplacesApi from '@/api/marketplaces'
 import useApi from '@/hooks/useApi'
 
-// Project imports
+const brandColor = '#2b63d9'
 
 const ExportAsTemplateDialog = ({ show, dialogProps, onCancel }) => {
     const portalElement = document.getElementById('portal')
@@ -175,15 +175,66 @@ const ExportAsTemplateDialog = ({ show, dialogProps, onCancel }) => {
             maxWidth='sm'
             aria-labelledby='alert-dialog-title'
             aria-describedby='alert-dialog-description'
+            PaperProps={{
+                sx: {
+                    borderRadius: 3,
+                    boxShadow: `0 8px 40px ${alpha(brandColor, 0.1)}`,
+                    overflow: 'hidden'
+                }
+            }}
         >
-            <DialogTitle sx={{ fontSize: '1rem' }} id='alert-dialog-title'>
-                {dialogProps.title || 'Export As Template'}
+            <DialogTitle 
+                sx={{ 
+                    fontSize: '1.25rem', 
+                    p: 3, 
+                    pb: 2,
+                    fontWeight: 600,
+                    color: 'rgb(51, 65, 85)',
+                    borderBottom: `1px solid ${alpha(brandColor, 0.1)}`
+                }} 
+                id='alert-dialog-title'
+            >
+                <Stack direction="row" alignItems="center" spacing={1.5}>
+                    <Box
+                        sx={{
+                            width: 40,
+                            height: 40,
+                            borderRadius: '12px',
+                            backgroundColor: alpha(brandColor, 0.05),
+                            border: `1px solid ${alpha(brandColor, 0.1)}`,
+                            display: 'flex',
+                            alignItems: 'center',
+                            justifyContent: 'center',
+                            transition: 'all 0.3s ease-in-out',
+                            '&:hover': {
+                                transform: 'translateY(-2px) scale(1.05)',
+                                boxShadow: `0 6px 16px ${alpha(brandColor, 0.12)}`,
+                                backgroundColor: alpha(brandColor, 0.08)
+                            }
+                        }}
+                    >
+                        <IconTemplate size={24} color={brandColor} />
+                    </Box>
+                    <Typography variant="h6" sx={{ fontWeight: 600 }}>
+                        {dialogProps.title || 'Export As Template'}
+                    </Typography>
+                </Stack>
             </DialogTitle>
-            <DialogContent>
-                <Box sx={{ pt: 2, pb: 2 }}>
-                    <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-start' }}>
-                        <Typography sx={{ mb: 1 }}>
-                            Name<span style={{ color: 'red' }}>&nbsp;*</span>
+            <DialogContent sx={{ p: 0 }}>
+                <Stack spacing={3} sx={{ p: 3 }}>
+                    <Box>
+                        <Typography 
+                            variant='subtitle2'
+                            sx={{
+                                color: 'rgb(100, 116, 139)',
+                                fontWeight: 600,
+                                fontSize: '0.75rem',
+                                textTransform: 'uppercase',
+                                letterSpacing: '0.05em',
+                                mb: 1
+                            }}
+                        >
+                            Name<span style={{ color: '#EF4444' }}>&nbsp;*</span>
                         </Typography>
                         <OutlinedInput
                             id={'name'}
@@ -191,16 +242,38 @@ const ExportAsTemplateDialog = ({ show, dialogProps, onCancel }) => {
                             fullWidth
                             value={name}
                             name='name'
-                            size='small'
                             onChange={(e) => {
                                 setName(e.target.value)
                             }}
+                            sx={{ 
+                                borderRadius: 2,
+                                '& .MuiOutlinedInput-notchedOutline': {
+                                    borderColor: alpha(brandColor, 0.2)
+                                },
+                                '&:hover .MuiOutlinedInput-notchedOutline': {
+                                    borderColor: alpha(brandColor, 0.3)
+                                },
+                                '&.Mui-focused .MuiOutlinedInput-notchedOutline': {
+                                    borderColor: brandColor
+                                }
+                            }}
                         />
-                    </div>
-                </Box>
-                <Box sx={{ pt: 2, pb: 2 }}>
-                    <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-start' }}>
-                        <Typography sx={{ mb: 1 }}>Description</Typography>
+                    </Box>
+                    
+                    <Box>
+                        <Typography 
+                            variant='subtitle2'
+                            sx={{
+                                color: 'rgb(100, 116, 139)',
+                                fontWeight: 600,
+                                fontSize: '0.75rem',
+                                textTransform: 'uppercase',
+                                letterSpacing: '0.05em',
+                                mb: 1
+                            }}
+                        >
+                            Description
+                        </Typography>
                         <OutlinedInput
                             id={'description'}
                             type={'string'}
@@ -209,60 +282,160 @@ const ExportAsTemplateDialog = ({ show, dialogProps, onCancel }) => {
                             rows={2}
                             value={description}
                             name='description'
-                            size='small'
                             onChange={(e) => {
                                 setDescription(e.target.value)
                             }}
+                            sx={{ 
+                                borderRadius: 2,
+                                '& .MuiOutlinedInput-notchedOutline': {
+                                    borderColor: alpha(brandColor, 0.2)
+                                },
+                                '&:hover .MuiOutlinedInput-notchedOutline': {
+                                    borderColor: alpha(brandColor, 0.3)
+                                },
+                                '&.Mui-focused .MuiOutlinedInput-notchedOutline': {
+                                    borderColor: brandColor
+                                }
+                            }}
                         />
-                    </div>
-                </Box>
-                <Box sx={{ pt: 2, pb: 2 }}>
-                    <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-start' }}>
-                        <Typography sx={{ mb: 1 }}>Badge</Typography>
+                    </Box>
+                    
+                    <Box>
+                        <Typography 
+                            variant='subtitle2'
+                            sx={{
+                                color: 'rgb(100, 116, 139)',
+                                fontWeight: 600,
+                                fontSize: '0.75rem',
+                                textTransform: 'uppercase',
+                                letterSpacing: '0.05em',
+                                mb: 1
+                            }}
+                        >
+                            Badge
+                        </Typography>
                         <OutlinedInput
                             id={'badge'}
                             type={'string'}
                             fullWidth
                             value={badge}
                             name='badge'
-                            size='small'
                             onChange={(e) => {
                                 setBadge(e.target.value)
                             }}
+                            sx={{ 
+                                borderRadius: 2,
+                                '& .MuiOutlinedInput-notchedOutline': {
+                                    borderColor: alpha(brandColor, 0.2)
+                                },
+                                '&:hover .MuiOutlinedInput-notchedOutline': {
+                                    borderColor: alpha(brandColor, 0.3)
+                                },
+                                '&.Mui-focused .MuiOutlinedInput-notchedOutline': {
+                                    borderColor: brandColor
+                                }
+                            }}
                         />
-                    </div>
-                </Box>
-                <Box sx={{ pt: 2, pb: 2 }}>
-                    <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-start' }}>
-                        <Typography sx={{ mb: 1 }}>Usecases</Typography>
+                    </Box>
+                    
+                    <Box>
+                        <Typography 
+                            variant='subtitle2'
+                            sx={{
+                                color: 'rgb(100, 116, 139)',
+                                fontWeight: 600,
+                                fontSize: '0.75rem',
+                                textTransform: 'uppercase',
+                                letterSpacing: '0.05em',
+                                mb: 1
+                            }}
+                        >
+                            Usecases
+                        </Typography>
                         {usecases.length > 0 && (
-                            <div style={{ marginBottom: 10 }}>
+                            <Box sx={{ mb: 2, display: 'flex', flexWrap: 'wrap', gap: 1 }}>
                                 {usecases.map((uc, index) => (
                                     <Chip
                                         key={index}
                                         label={uc}
                                         onDelete={() => handleUsecaseDelete(uc)}
-                                        style={{ marginRight: 5, marginBottom: 5 }}
+                                        sx={{
+                                            borderRadius: '8px',
+                                            backgroundColor: alpha(brandColor, 0.1),
+                                            color: brandColor,
+                                            border: `1px solid ${alpha(brandColor, 0.2)}`,
+                                            '& .MuiChip-deleteIcon': {
+                                                color: alpha(brandColor, 0.7),
+                                                '&:hover': {
+                                                    color: brandColor
+                                                }
+                                            }
+                                        }}
                                     />
                                 ))}
-                            </div>
+                            </Box>
                         )}
                         <OutlinedInput
                             fullWidth
                             value={usecaseInput}
                             onChange={handleUsecaseInputChange}
                             onKeyDown={handleUsecaseInputKeyDown}
-                            variant='outlined'
+                            placeholder="Type and press Enter to add"
+                            sx={{ 
+                                borderRadius: 2,
+                                '& .MuiOutlinedInput-notchedOutline': {
+                                    borderColor: alpha(brandColor, 0.2)
+                                },
+                                '&:hover .MuiOutlinedInput-notchedOutline': {
+                                    borderColor: alpha(brandColor, 0.3)
+                                },
+                                '&.Mui-focused .MuiOutlinedInput-notchedOutline': {
+                                    borderColor: brandColor
+                                }
+                            }}
                         />
-                        <Typography variant='body2' sx={{ fontStyle: 'italic', mt: 1 }} color='text.secondary'>
+                        <Typography 
+                            variant='body2' 
+                            sx={{ 
+                                fontStyle: 'italic', 
+                                mt: 1,
+                                color: 'rgb(100, 116, 139)',
+                                fontSize: '0.75rem'
+                            }}
+                        >
                             Type a usecase and press enter to add it to the list. You can add as many items as you want.
                         </Typography>
-                    </div>
-                </Box>
+                    </Box>
+                </Stack>
             </DialogContent>
-            <DialogActions>
-                <Button onClick={onCancel}>{dialogProps.cancelButtonName || 'Cancel'}</Button>
-                <StyledButton disabled={dialogProps.disabled} variant='contained' onClick={onConfirm}>
+            <DialogActions sx={{ p: 3, pt: 2, borderTop: `1px solid ${alpha(brandColor, 0.1)}` }}>
+                <Button 
+                    onClick={onCancel}
+                    sx={{
+                        borderRadius: 2,
+                        borderColor: alpha(brandColor, 0.3),
+                        color: brandColor,
+                        '&:hover': {
+                            borderColor: brandColor,
+                            backgroundColor: alpha(brandColor, 0.05)
+                        }
+                    }}
+                >
+                    {dialogProps.cancelButtonName || 'Cancel'}
+                </Button>
+                <StyledButton 
+                    disabled={dialogProps.disabled} 
+                    variant='contained' 
+                    onClick={onConfirm}
+                    startIcon={<IconPlus size={18} />}
+                    sx={{
+                        borderRadius: 2,
+                        backgroundColor: brandColor,
+                        '&:hover': {
+                            backgroundColor: alpha(brandColor, 0.9)
+                        }
+                    }}
+                >
                     {dialogProps.confirmButtonName || 'Save Template'}
                 </StyledButton>
             </DialogActions>

@@ -1,5 +1,5 @@
 /**
- * Color intention that you want to used in your theme
+ *  Color intention that you want to used in your theme
  * @param {JsonObject} theme Theme customization object
  */
 
@@ -90,12 +90,12 @@ export default function themePalette(theme) {
             main: theme.customization.isDarkMode ? theme.colors?.darkLevel2 : theme.colors?.grey200
         },
         canvasHeader: {
-            deployLight: theme.colors?.primaryLight,
-            deployDark: theme.colors?.primaryDark,
-            saveLight: theme.colors?.secondaryLight,
-            saveDark: theme.colors?.secondaryDark,
-            settingsLight: theme.colors?.grey300,
-            settingsDark: theme.colors?.grey700
+            deployLight: theme.colors?.primaryLight || '#E3F2FD',
+            deployDark: theme.colors?.primaryDark || '#1E88E5',
+            saveLight: theme.colors?.secondaryLight || '#EDE7F6',
+            saveDark: theme.colors?.secondaryDark || '#5E35B1',
+            settingsLight: theme.colors?.grey300 || '#E0E0E0',
+            settingsDark: theme.colors?.grey700 || '#616161'
         },
         codeEditor: {
             main: theme.customization.isDarkMode ? theme.colors?.darkPrimary800 : theme.colors?.primaryLight

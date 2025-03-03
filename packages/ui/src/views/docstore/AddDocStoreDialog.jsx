@@ -10,20 +10,88 @@ import {
 } from '@/store/actions'
 
 // Material
-import { Button, Dialog, DialogActions, DialogContent, DialogTitle, Box, Typography, OutlinedInput } from '@mui/material'
+import { 
+    Button, 
+    Dialog, 
+    DialogActions, 
+    DialogContent, 
+    DialogTitle, 
+    Box, 
+    Typography, 
+    OutlinedInput, 
+    Stack,
+    TextField,
+    InputLabel,
+    FormControl,
+    alpha
+} from '@mui/material'
+import { styled } from '@mui/material/styles'
 
 // Project imports
 import { StyledButton } from '@/ui-component/button/StyledButton'
 import ConfirmDialog from '@/ui-component/dialog/ConfirmDialog'
 
 // Icons
-import { IconX, IconFiles } from '@tabler/icons-react'
+import { IconX, IconFiles, IconEdit, IconPlus } from '@tabler/icons-react'
 
 // API
 import documentStoreApi from '@/api/documentstore'
 
 // utils
 import useNotifier from '@/utils/useNotifier'
+
+const brandColor = '#2b63d9'
+const buttonBlue = '#5379e0'
+
+const StyledDialog = styled(Dialog)(({ theme }) => ({
+    '& .MuiDialog-paper': {
+        borderRadius: 16,
+        boxShadow: `0 10px 40px ${alpha(brandColor, 0.2)}`,
+        overflow: 'hidden'
+    }
+}))
+
+const StyledDialogTitle = styled(DialogTitle)(({ theme }) => ({
+    background: `linear-gradient(135deg, ${brandColor} 0%, ${alpha(brandColor, 0.8)} 100%)`,
+    color: 'white',
+    padding: '16px 24px',
+    fontSize: '1.25rem',
+    fontWeight: 600,
+    position: 'relative',
+    '&:after': {
+        content: '""',
+        position: 'absolute',
+        bottom: 0,
+        left: 0,
+        right: 0,
+        height: '1px',
+        background: `linear-gradient(90deg, ${alpha('#fff', 0.2)} 0%, transparent 100%)`
+    }
+}))
+
+const StyledOutlinedInput = styled(OutlinedInput)(({ theme }) => ({
+    borderRadius: 8,
+    '&:hover .MuiOutlinedInput-notchedOutline': {
+        borderColor: alpha(brandColor, 0.5)
+    },
+    '&.Mui-focused .MuiOutlinedInput-notchedOutline': {
+        borderColor: brandColor,
+        borderWidth: '1px'
+    }
+}))
+
+const StyledTextField = styled(TextField)(({ theme }) => ({
+    '& .MuiOutlinedInput-root': {
+        borderRadius: 8,
+        '&:hover .MuiOutlinedInput-notchedOutline': {
+            borderColor: alpha(brandColor, 0.5)
+        },
+        '&.Mui-focused .MuiOutlinedInput-notchedOutline': {
+            borderColor: brandColor,
+            borderWidth: '1px'
+        }
+    }
+}))
 
 const AddDocStoreDialog = ({ show, dialogProps, onCancel, onConfirm }) => {
     const portalElement = document.getElementById('portal')
@@ -149,7 +217,7 @@ const AddDocStoreDialog = ({ show, dialogProps, onCancel, onConfirm }) => {
     }
 
     const component = show ? (
-        <Dialog
+        <StyledDialog
             fullWidth
             maxWidth='sm'
             open={show}
@@ -157,62 +225,99 @@ const AddDocStoreDialog = ({ show, dialogProps, onCancel, onConfirm }) => {
             aria-labelledby='alert-dialog-title'
             aria-describedby='alert-dialog-description'
         >
-            <DialogTitle style={{ fontSize: '1rem' }} id='alert-dialog-title'>
-                <div style={{ display: 'flex', flexDirection: 'row', alignItems: 'center' }}>
-                    <IconFiles style={{ marginRight: '10px' }} />
-                    {dialogProps.title}
-                </div>
-            </DialogTitle>
-            <DialogContent>
-                <Box sx={{ p: 2 }}>
-                    <div style={{ display: 'flex', flexDirection: 'row' }}>
-                        <Typography>
-                            Name<span style={{ color: 'red' }}>&nbsp;*</span>
+            <StyledDialogTitle id='alert-dialog-title'>
+                <Stack direction="row" spacing={2} alignItems="center">
+                    <Box
+                        sx={{
+                            backgroundColor: 'rgba(255, 255, 255, 0.15)',
+                            borderRadius: '12px',
+                            width: 40,
+                            height: 40,
+                            display: 'flex',
+                            justifyContent: 'center',
+                            alignItems: 'center',
+                            boxShadow: '0 4px 12px rgba(0,0,0,0.1)',
+                            border: '1px solid rgba(255, 255, 255, 0.2)'
+                        }}
+                    >
+                        {dialogType === 'ADD' ? (
+                            <IconPlus size={20} style={{ color: '#fff' }} />
+                        ) : (
+                            <IconEdit size={20} style={{ color: '#fff' }} />
+                        )}
+                    </Box>
+                    <Typography variant="h5" sx={{ color: 'white', fontWeight: 600 }}>
+                        {dialogProps.title}
+                    </Typography>
+                </Stack>
+            </StyledDialogTitle>
+            <DialogContent sx={{ p: 5, pt: 5 }}>
+                <Stack spacing={3}>
+                    <FormControl fullWidth variant="outlined">
+                        <Typography variant="subtitle1" sx={{ mb: 1, fontWeight: 500 }}>
+                            Name <span style={{ color: 'red' }}>*</span>
                         </Typography>
-
-                        <div style={{ flexGrow: 1 }}></div>
-                    </div>
-                    <OutlinedInput
-                        size='small'
-                        sx={{ mt: 1 }}
-                        type='string'
-                        fullWidth
-                        key='documentStoreName'
-                        onChange={(e) => setDocumentStoreName(e.target.value)}
-                        value={documentStoreName ?? ''}
-                    />
-                </Box>
-                <Box sx={{ p: 2 }}>
-                    <div style={{ display: 'flex', flexDirection: 'row' }}>
-                        <Typography>Description</Typography>
-
-                        <div style={{ flexGrow: 1 }}></div>
-                    </div>
-                    <OutlinedInput
-                        size='small'
-                        multiline={true}
-                        rows={7}
-                        sx={{ mt: 1 }}
-                        type='string'
-                        fullWidth
-                        key='documentStoreDesc'
-                        onChange={(e) => setDocumentStoreDesc(e.target.value)}
-                        value={documentStoreDesc ?? ''}
-                    />
-                </Box>
+                        <StyledTextField
+                            id="document-store-name"
+                            variant="outlined"
+                            fullWidth
+                            value={documentStoreName ?? ''}
+                            onChange={(e) => setDocumentStoreName(e.target.value)}
+                            required
+                            InputLabelProps={{
+                                shrink: false
+                            }}
+                        />
+                    </FormControl>
+                    
+                    <FormControl fullWidth variant="outlined">
+                        <Typography variant="subtitle1" sx={{ mb: 1, fontWeight: 500 }}>
+                            Description
+                        </Typography>
+                        <StyledTextField
+                            id="document-store-description"
+                            variant="outlined"
+                            fullWidth
+                            multiline
+                            rows={6}
+                            value={documentStoreDesc ?? ''}
+                            onChange={(e) => setDocumentStoreDesc(e.target.value)}
+                            InputLabelProps={{
+                                shrink: false
+                            }}
+                        />
+                    </FormControl>
+                </Stack>
             </DialogContent>
-            <DialogActions>
-                <Button onClick={() => onCancel()}>Cancel</Button>
+            <DialogActions sx={{ px: 3, py: 2, borderTop: `1px solid ${alpha('#000', 0.05)}` }}>
+                <Button 
+                    onClick={() => onCancel()}
+                    sx={{ 
+                        borderRadius: 2,
+                        textTransform: 'none',
+                        color: alpha(brandColor, 0.8)
+                    }}
+                >
+                    {dialogProps.cancelButtonName || 'Cancel'}
+                </Button>
                 <StyledButton
                     disabled={!documentStoreName}
                     variant='contained'
                     onClick={() => (dialogType === 'ADD' ? createDocumentStore() : updateDocumentStore())}
+                    sx={{ 
+                        borderRadius: 2,
+                        textTransform: 'none',
+                        backgroundColor: brandColor,
+                        '&:hover': {
+                            backgroundColor: alpha(brandColor, 0.9)
+                        }
+                    }}
                 >
                     {dialogProps.confirmButtonName}
                 </StyledButton>
             </DialogActions>
             <ConfirmDialog />
-        </Dialog>
+        </StyledDialog>
     ) : null
 
     return createPortal(component, portalElement)

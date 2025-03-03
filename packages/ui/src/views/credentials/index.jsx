@@ -4,12 +4,11 @@ import { enqueueSnackbar as enqueueSnackbarAction, closeSnackbar as closeSnackba
 import moment from 'moment'
 
 // material-ui
-import { styled } from '@mui/material/styles'
+import { styled, alpha, useTheme } from '@mui/material/styles'
 import { tableCellClasses } from '@mui/material/TableCell'
 import {
     Button,
     Box,
-    Skeleton,
     Stack,
     Table,
     TableBody,
@@ -19,7 +18,7 @@ import {
     TableRow,
     Paper,
     IconButton,
-    useTheme
+    Typography
 } from '@mui/material'
 
 // project imports
@@ -49,23 +48,46 @@ import ErrorBoundary from '@/ErrorBoundary'
 import HeaderSection from '@/layout/MainLayout/HeaderSection'
 import AppIcon from '@/menu-items/icon'
 
-const StyledTableCell = styled(TableCell)(({ theme }) => ({
-    borderColor: theme.palette.grey[900] + 25,
-    padding: '6px 16px',
+const brandColor = '#2b63d9'
 
+const StyledTableCell = styled(TableCell)(({ theme }) => ({
+    borderBottom: `1px solid ${alpha(brandColor, 0.1)}`,
+    padding: '20px 24px',
     [`&.${tableCellClasses.head}`]: {
-        color: theme.palette.grey[900]
+        background: `linear-gradient(180deg, ${alpha(brandColor, 0.05)} 0%, ${alpha(brandColor, 0.02)} 100%)`,
+        color: 'rgb(100, 116, 139)',
+        fontSize: '0.75rem',
+        fontWeight: 600,
+        textTransform: 'uppercase',
+        letterSpacing: '0.05em',
+        height: 64
     },
     [`&.${tableCellClasses.body}`]: {
-        fontSize: 14,
-        height: 64
+        fontSize: '0.875rem',
+        color: 'rgb(51, 65, 85)',
+        height: 72
     }
 }))
 
 const StyledTableRow = styled(TableRow)(() => ({
-    // hide last border
-    '&:last-child td, &:last-child th': {
-        border: 0
+    transition: 'all 0.3s ease-in-out',
+    position: 'relative',
+    '&:hover': {
+        backgroundColor: alpha(brandColor, 0.02),
+        transform: 'translateY(-1px)',
+        boxShadow: `0 4px 12px ${alpha(brandColor, 0.08)}`
+    },
+    '&:after': {
+        content: '""',
+        position: 'absolute',
+        left: 0,
+        right: 0,
+        bottom: 0,
+        height: '1px',
+        background: `linear-gradient(90deg, ${alpha(brandColor, 0.1)} 0%, ${alpha(brandColor, 0.05)} 100%)`
+    },
+    '&:last-child:after': {
+        display: 'none'
     }
 }))
 
@@ -230,146 +252,226 @@ const Credentials = () => {
                     <Stack flexDirection='column' sx={{ gap: 3 }}>
                         <HeaderSection
                             onSearchChange={onSearchChange}
-                            title={AppIcon.credential.headerTitle}
-                            subtitle={AppIcon.credential.description}
-                            icon={AppIcon.credential.icon}
+                            title={AppIcon.security.headerTitle}
+                            subtitle={AppIcon.security.description}
+                            icon={AppIcon.security.icon}
                         >
                             <StyledButton
                                 variant='contained'
-                                sx={{ borderRadius: 2, height: '100%' }}
                                 onClick={listCredential}
                                 startIcon={<IconPlus />}
+                                sx={{ 
+                                    borderRadius: 2, 
+                                    height: 40,
+                                    backgroundColor: '#1F64FF',
+                                    '&:hover': {
+                                        backgroundColor: '#1957E3'
+                                    }
+                                }}
                             >
                                 Add Credential
                             </StyledButton>
                         </HeaderSection>
                         {!isLoading && credentials.length <= 0 ? (
-                            <Stack sx={{ alignItems: 'center', justifyContent: 'center' }} flexDirection='column'>
-                                {/* <Box sx={{ p: 2, height: 'auto' }}>
-                                    <img
-                                        style={{ objectFit: 'cover', height: '16vh', width: 'auto' }}
-                                        src={CredentialEmptySVG}
-                                        alt='CredentialEmptySVG'
-                                    />
-                                </Box> */}
-                                <div>No Credentials Yet</div>
+                            <Stack 
+                                sx={{ 
+                                    alignItems: 'center', 
+                                    justifyContent: 'center',
+                                    py: 8
+                                }} 
+                                flexDirection='column'
+                                spacing={2}
+                            >
+                                <Typography
+                                    variant="h5"
+                                    sx={{
+                                        color: 'rgb(99, 115, 129)',
+                                        textAlign: 'center',
+                                        maxWidth: 300
+                                    }}
+                                >
+                                    No credentials yet. Add your first credential to get started!
+                                </Typography>
+                                <StyledButton
+                                    variant="contained"
+                                    onClick={listCredential}
+                                    startIcon={<IconPlus />}
+                                    sx={{
+                                        mt: 2,
+                                        borderRadius: 2,
+                                        height: 40,
+                                        backgroundColor: '#1F64FF',
+                                        '&:hover': {
+                                            backgroundColor: '#1957E3'
+                                        }
+                                    }}
+                                >
+                                    Add Credential
+                                </StyledButton>
                             </Stack>
                         ) : (
-                            <TableContainer
-                                sx={{ border: 1, borderColor: theme.palette.grey[900] + 25, borderRadius: 2 }}
-                                component={Paper}
+                            <TableContainer 
+                                component={Paper} 
+                                elevation={0}
+                                sx={{ 
+                                    border: `1px solid ${alpha(brandColor, 0.1)}`,
+                                    borderRadius: 4,
+                                    overflow: 'hidden',
+                                    background: `linear-gradient(180deg, ${alpha(brandColor, 0.02)} 0%, transparent 100%)`,
+                                    boxShadow: `0 8px 32px -4px ${alpha(brandColor, 0.08)}`
+                                }}
                             >
-                                <Table sx={{ minWidth: 650 }} aria-label='simple table'>
-                                    <TableHead
-                                        sx={{
-                                            backgroundColor: customization.isDarkMode
-                                                ? theme.palette.common.black
-                                                : theme.palette.grey[100],
-                                            height: 56
-                                        }}
-                                    >
+                                <Table>
+                                    <TableHead>
                                         <TableRow>
                                             <StyledTableCell>Name</StyledTableCell>
                                             <StyledTableCell>Last Updated</StyledTableCell>
                                             <StyledTableCell>Created</StyledTableCell>
-                                            <StyledTableCell> </StyledTableCell>
-                                            <StyledTableCell> </StyledTableCell>
+                                            <StyledTableCell align="right">Actions</StyledTableCell>
                                         </TableRow>
                                     </TableHead>
                                     <TableBody>
                                         {isLoading ? (
                                             <>
-                                                <StyledTableRow>
-                                                    <StyledTableCell>
-                                                        <Skeleton variant='text' />
-                                                    </StyledTableCell>
-                                                    <StyledTableCell>
-                                                        <Skeleton variant='text' />
-                                                    </StyledTableCell>
-                                                    <StyledTableCell>
-                                                        <Skeleton variant='text' />
-                                                    </StyledTableCell>
-                                                    <StyledTableCell>
-                                                        <Skeleton variant='text' />
-                                                    </StyledTableCell>
-                                                    <StyledTableCell>
-                                                        <Skeleton variant='text' />
-                                                    </StyledTableCell>
-                                                </StyledTableRow>
-                                                <StyledTableRow>
-                                                    <StyledTableCell>
-                                                        <Skeleton variant='text' />
-                                                    </StyledTableCell>
-                                                    <StyledTableCell>
-                                                        <Skeleton variant='text' />
-                                                    </StyledTableCell>
-                                                    <StyledTableCell>
-                                                        <Skeleton variant='text' />
-                                                    </StyledTableCell>
-                                                    <StyledTableCell>
-                                                        <Skeleton variant='text' />
-                                                    </StyledTableCell>
-                                                    <StyledTableCell>
-                                                        <Skeleton variant='text' />
-                                                    </StyledTableCell>
-                                                </StyledTableRow>
+                                                {[1, 2, 3].map((index) => (
+                                                    <StyledTableRow key={index}>
+                                                        <StyledTableCell colSpan={4}>
+                                                            <Box
+                                                                sx={{
+                                                                    height: 72,
+                                                                    borderRadius: 3,
+                                                                    background: `linear-gradient(90deg, ${alpha(brandColor, 0.04)} 0%, ${alpha(brandColor, 0.02)} 50%, ${alpha(brandColor, 0.04)} 100%)`,
+                                                                    backgroundSize: '200% 100%',
+                                                                    animation: 'pulse 2s ease-in-out infinite',
+                                                                    '@keyframes pulse': {
+                                                                        '0%': {
+                                                                            backgroundPosition: '0% 0%'
+                                                                        },
+                                                                        '100%': {
+                                                                            backgroundPosition: '-200% 0%'
+                                                                        }
+                                                                    }
+                                                                }}
+                                                            />
+                                                        </StyledTableCell>
+                                                    </StyledTableRow>
+                                                ))}
                                             </>
                                         ) : (
                                             <>
                                                 {credentials.filter(filterCredentials).map((credential, index) => (
-                                                    <StyledTableRow key={index} sx={{ '&:last-child td, &:last-child th': { border: 0 } }}>
-                                                        <StyledTableCell scope='row'>
+                                                    <StyledTableRow key={index}>
+                                                        <StyledTableCell>
                                                             <Box
                                                                 sx={{
                                                                     display: 'flex',
                                                                     flexDirection: 'row',
                                                                     alignItems: 'center',
-                                                                    gap: 1
+                                                                    gap: 2
                                                                 }}
                                                             >
                                                                 <Box
                                                                     sx={{
-                                                                        width: 35,
-                                                                        height: 35,
-                                                                        borderRadius: '50%',
-                                                                        backgroundColor: customization.isDarkMode
-                                                                            ? theme.palette.common.white
-                                                                            : theme.palette.grey[300] + 75
+                                                                        width: 40,
+                                                                        height: 40,
+                                                                        borderRadius: '12px',
+                                                                        backgroundColor: alpha(brandColor, 0.05),
+                                                                        border: `1px solid ${alpha(brandColor, 0.1)}`,
+                                                                        display: 'flex',
+                                                                        alignItems: 'center',
+                                                                        justifyContent: 'center',
+                                                                        transition: 'all 0.3s ease-in-out',
+                                                                        '&:hover': {
+                                                                            transform: 'translateY(-2px) scale(1.05)',
+                                                                            boxShadow: `0 6px 16px ${alpha(brandColor, 0.12)}`,
+                                                                            backgroundColor: alpha(brandColor, 0.08)
+                                                                        }
                                                                     }}
                                                                 >
                                                                     <img
                                                                         style={{
-                                                                            width: '100%',
-                                                                            height: '100%',
-                                                                            padding: 5,
+                                                                            width: '70%',
+                                                                            height: '70%',
                                                                             objectFit: 'contain'
                                                                         }}
                                                                         alt={credential.credentialName}
                                                                         src={`${baseURL}/api/v1/components-credentials-icon/${credential.credentialName}`}
                                                                     />
                                                                 </Box>
-                                                                {credential.name}
+                                                                <Typography
+                                                                    sx={{
+                                                                        color: 'rgb(51, 65, 85)',
+                                                                        fontWeight: 600,
+                                                                        fontSize: '0.875rem',
+                                                                        transition: 'all 0.2s ease-in-out',
+                                                                        '&:hover': {
+                                                                            color: brandColor
+                                                                        }
+                                                                    }}
+                                                                >
+                                                                    {credential.name}
+                                                                </Typography>
                                                             </Box>
                                                         </StyledTableCell>
                                                         <StyledTableCell>
-                                                            {moment(credential.updatedDate).format('MMMM Do, YYYY')}
-                                                        </StyledTableCell>
-                                                        <StyledTableCell>
-                                                            {moment(credential.createdDate).format('MMMM Do, YYYY')}
-                                                        </StyledTableCell>
-                                                        <StyledTableCell>
-                                                            <IconButton title='Edit' color='primary' onClick={() => edit(credential)}>
-                                                                <IconEdit />
-                                                            </IconButton>
-                                                        </StyledTableCell>
-                                                        <StyledTableCell>
-                                                            <IconButton
-                                                                title='Delete'
-                                                                color='error'
-                                                                onClick={() => deleteCredential(credential)}
+                                                            <Typography 
+                                                                sx={{ 
+                                                                    color: 'rgb(100, 116, 139)',
+                                                                    fontSize: '0.875rem',
+                                                                    fontWeight: 500
+                                                                }}
                                                             >
-                                                                <IconTrash />
-                                                            </IconButton>
+                                                                {moment(credential.updatedDate).format('MMM D, YYYY')}
+                                                            </Typography>
+                                                        </StyledTableCell>
+                                                        <StyledTableCell>
+                                                            <Typography 
+                                                                sx={{ 
+                                                                    color: 'rgb(100, 116, 139)',
+                                                                    fontSize: '0.875rem',
+                                                                    fontWeight: 500
+                                                                }}
+                                                            >
+                                                                {moment(credential.createdDate).format('MMM D, YYYY')}
+                                                            </Typography>
+                                                        </StyledTableCell>
+                                                        <StyledTableCell align="right">
+                                                            <Stack direction="row" spacing={1} justifyContent="flex-end">
+                                                                <IconButton 
+                                                                    title='Edit' 
+                                                                    onClick={() => edit(credential)}
+                                                                    sx={{
+                                                                        color: brandColor,
+                                                                        backgroundColor: alpha(brandColor, 0.05),
+                                                                        borderRadius: '10px',
+                                                                        transition: 'all 0.2s ease-in-out',
+                                                                        '&:hover': {
+                                                                            backgroundColor: alpha(brandColor, 0.1),
+                                                                            transform: 'translateY(-2px)',
+                                                                            boxShadow: `0 4px 12px ${alpha(brandColor, 0.15)}`
+                                                                        }
+                                                                    }}
+                                                                >
+                                                                    <IconEdit size={18} />
+                                                                </IconButton>
+                                                                <IconButton
+                                                                    title='Delete'
+                                                                    onClick={() => deleteCredential(credential)}
+                                                                    sx={{
+                                                                        color: '#EF4444',
+                                                                        backgroundColor: alpha('#EF4444', 0.05),
+                                                                        borderRadius: '10px',
+                                                                        transition: 'all 0.2s ease-in-out',
+                                                                        '&:hover': {
+                                                                            backgroundColor: alpha('#EF4444', 0.1),
+                                                                            transform: 'translateY(-2px)',
+                                                                            boxShadow: `0 4px 12px ${alpha('#EF4444', 0.15)}`
+                                                                        }
+                                                                    }}
+                                                                >
+                                                                    <IconTrash size={18} />
+                                                                </IconButton>
+                                                            </Stack>
                                                         </StyledTableCell>
                                                     </StyledTableRow>
                                                 ))}

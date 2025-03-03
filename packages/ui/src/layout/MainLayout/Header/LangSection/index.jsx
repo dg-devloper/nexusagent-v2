@@ -2,7 +2,7 @@ import * as React from 'react'
 import Popover from '@mui/material/Popover'
 import Button from '@mui/material/Button'
 import { Grid, List, ListItem, ListItemButton, ListItemText } from '@mui/material'
-import { useTheme } from '@emotion/react'
+import { useTheme } from '@mui/material/styles'
 import { IconChevronDown, IconChevronUp } from '@tabler/icons-react'
 
 import { LANGUAGES } from '@/constant/index'
@@ -26,21 +26,19 @@ export default function LangSection() {
         <div>
             <Button
                 aria-describedby={id}
-                variant='contained'
+                variant='text'
                 onClick={handleClick}
                 sx={{
                     padding: '.5rem .5rem',
                     borderRadius: '20px',
-                    backgroundColor: theme.palette['dark']['900'],
+                    color: 'rgb(33, 43, 54)',
+                    backgroundColor: 'rgba(145, 158, 171, 0.08)',
                     '&:hover': {
-                        backgroundColor: theme.palette['dark']['900']
+                        backgroundColor: 'rgba(145, 158, 171, 0.12)'
                     }
                 }}
             >
                 <Grid container sx={{ alignItems: 'center', gap: '.6rem', padding: '0 .5rem' }}>
-                    {/* <Grid item>
-                        <Avatar alt='Flag Logo' sx={{ width: 24, height: 24 }} />
-                    </Grid> */}
                     <Grid item>IDN</Grid>
                     <Grid item sx={{ display: 'flex' }}>
                         {anchorEl ? <IconChevronUp size={16} /> : <IconChevronDown size={16} />}
@@ -60,26 +58,38 @@ export default function LangSection() {
                     vertical: 'top',
                     horizontal: 'right'
                 }}
+                PaperProps={{
+                    sx: {
+                        mt: 1,
+                        boxShadow: '0px 2px 8px rgba(0, 0, 0, 0.15)',
+                        borderRadius: '8px'
+                    }
+                }}
             >
-                <List>
+                <List sx={{ p: 1 }}>
                     {LANGUAGES.map((lang) => (
-                        <ListItem key={lang.code}>
-                            <ListItemButton sx={{ padding: '.3rem 1rem', borderRadius: '6px' }}>
-                                <ListItemText>{lang.label}</ListItemText>
+                        <ListItem key={lang.code} disablePadding>
+                            <ListItemButton 
+                                sx={{ 
+                                    padding: '.5rem 1rem', 
+                                    borderRadius: '6px',
+                                    '&:hover': {
+                                        backgroundColor: 'rgba(145, 158, 171, 0.08)'
+                                    }
+                                }}
+                            >
+                                <ListItemText 
+                                    primary={lang.label}
+                                    sx={{
+                                        '& .MuiTypography-root': {
+                                            fontSize: '0.875rem',
+                                            color: 'rgb(33, 43, 54)'
+                                        }
+                                    }}
+                                />
                             </ListItemButton>
                         </ListItem>
                     ))}
-
-                    {/* <ListItem>
-                        <ListItemButton sx={{ padding: '.3rem 1rem', borderRadius: '6px' }}>
-                            <ListItemText>Indonesia</ListItemText>
-                        </ListItemButton>
-                    </ListItem>
-                    <ListItem>
-                        <ListItemButton sx={{ padding: '.3rem 1rem', borderRadius: '6px' }}>
-                            <ListItemText>Indonesia</ListItemText>
-                        </ListItemButton>
-                    </ListItem> */}
                 </List>
             </Popover>
         </div>

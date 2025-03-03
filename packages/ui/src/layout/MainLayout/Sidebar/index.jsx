@@ -1,92 +1,105 @@
 import PropTypes from 'prop-types'
-
-// material-ui
 import { useTheme } from '@mui/material/styles'
 import { Box, Drawer, useMediaQuery } from '@mui/material'
-
-// third-party
 import PerfectScrollbar from 'react-perfect-scrollbar'
 import { BrowserView, MobileView } from 'react-device-detect'
-
-// project imports
 import MenuList from './MenuList'
-import { drawerWidth, headerHeight } from '@/store/constant'
+import { drawerWidth } from '@/store/constant'
 import LogoSection from '../LogoSection'
 
-// ==============================|| SIDEBAR DRAWER ||============================== //
-
-const Sidebar = ({ drawerOpen, drawerToggle, window }) => {
+const Sidebar = ({ drawerOpen, drawerToggle }) => {
     const theme = useTheme()
     const matchUpMd = useMediaQuery(theme.breakpoints.up('md'))
 
     const drawer = (
         <>
-            <Box
-                sx={{
-                    height: '50px'
-                }}
-            >
-                <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'center', p: 2 }}>
-                    {/* <IconMacro color='white ' />
-                    <Typography variant='h2' sx={{ color: theme.palette.primary.light }}>
-                        Aira-Panel
-                    </Typography> */}
-
-                    <LogoSection />
-                </Box>
-            </Box>
             <BrowserView>
                 <PerfectScrollbar
-                    component='div'
+                    component="div"
                     style={{
-                        height: !matchUpMd ? 'calc(100vh - 56px)' : `calc(100vh - ${headerHeight}px)`,
-                        paddingLeft: '16px',
-                        paddingRight: '16px'
+                        height: '100vh',
+                        paddingLeft: drawerOpen ? '16px' : '12px',
+                        paddingRight: drawerOpen ? '16px' : '12px',
+                        paddingTop: '10px',
+                        paddingBottom: '20px'
                     }}
                 >
                     <MenuList />
                 </PerfectScrollbar>
             </BrowserView>
             <MobileView>
-                <Box sx={{ px: 2 }}>
+                <Box sx={{ px: 2, py: 2 }}>
                     <MenuList />
                 </Box>
             </MobileView>
         </>
     )
 
-    const container = window !== undefined ? () => window.document.body : undefined
-
     return (
         <Box
-            component='nav'
+            component="nav"
             sx={{
-                flexShrink: { md: 0 },
-                width: matchUpMd ? drawerWidth : 'auto'
+                flexShrink: 0,
+                width: matchUpMd ? drawerOpen ? drawerWidth : 72 : 'auto',
+                transition: theme.transitions.create('width', {
+                    easing: theme.transitions.easing.sharp,
+                    duration: theme.transitions.duration.enteringScreen
+                })
             }}
-            aria-label='mailbox folders'
         >
             <Drawer
-                container={container}
-                variant={matchUpMd ? 'persistent' : 'temporary'}
-                anchor='left'
+                variant={matchUpMd ? 'permanent' : 'temporary'}
+                anchor="left"
                 open={drawerOpen}
                 onClose={drawerToggle}
                 sx={{
                     '& .MuiDrawer-paper': {
-                        width: drawerWidth,
-                        background: theme.palette['primary'].main,
+                        width: matchUpMd ? drawerOpen ? drawerWidth : 72 : drawerWidth,
+                        background: '#fff',
                         color: theme.palette.text.primary,
+                        borderRight: '1px solid rgba(145, 158, 171, 0.12)',
+                        boxShadow: '0px 2px 8px rgba(0, 0, 0, 0.05)',
+                        transition: theme.transitions.create('width', {
+                            easing: theme.transitions.easing.sharp,
+                            duration: theme.transitions.duration.enteringScreen
+                        }),
+                        overflowX: 'hidden',
                         [theme.breakpoints.up('md')]: {
-                            top: `0px`
+                            position: 'fixed',
+                            height: 'calc(100% - 56px)',
+                            top: '56px',
+                            left: 0
                         },
-                        borderRight: drawerOpen ? '1px solid' : 'none',
-                        borderColor: drawerOpen ? theme.palette.primary[200] + 75 : 'transparent',
-                        zIndex: 1000
+                        '& .MuiListSubheader-root': {
+                            color: 'rgb(99, 115, 129)',
+                            lineHeight: '1.5rem',
+                            fontWeight: 700,
+                            fontSize: '0.75rem',
+                            padding: '24px 16px 8px',
+                            letterSpacing: '0.5px'
+                        },
+                        '& .MuiListItemButton-root': {
+                            minHeight: '44px',
+                            borderRadius: '8px',
+                            marginBottom: '4px',
+                            padding: '8px 12px',
+                            '&:hover': {
+                                backgroundColor: 'rgba(145, 158, 171, 0.08)'
+                            },
+                            '&.Mui-selected': {
+                                backgroundColor: 'rgba(25, 118, 210, 0.08)',
+                                '&:hover': {
+                                    backgroundColor: 'rgba(25, 118, 210, 0.12)'
+                                }
+                            }
+                        },
+                        '& .MuiListItemIcon-root': {
+                            minWidth: 36,
+                            color: 'rgb(99, 115, 129)'
+                        }
                     }
                 }}
                 ModalProps={{ keepMounted: true }}
-                color='inherit'
             >
                 {drawer}
             </Drawer>
@@ -96,8 +109,7 @@ const Sidebar = ({ drawerOpen, drawerToggle, window }) => {
 
 Sidebar.propTypes = {
     drawerOpen: PropTypes.bool,
-    drawerToggle: PropTypes.func,
-    window: PropTypes.object
+    drawerToggle: PropTypes.func
 }
 
 export default Sidebar

@@ -6,7 +6,7 @@ import { enqueueSnackbar as enqueueSnackbarAction, closeSnackbar as closeSnackba
 import parser from 'html-react-parser'
 
 // Material
-import { Button, Dialog, DialogActions, DialogContent, DialogTitle, Box, Stack, OutlinedInput, Typography } from '@mui/material'
+import { Button, Dialog, DialogActions, DialogContent, DialogTitle, Box, Stack, OutlinedInput, Typography, alpha } from '@mui/material'
 
 // Project imports
 import { StyledButton } from '@/ui-component/button/StyledButton'
@@ -14,7 +14,7 @@ import ConfirmDialog from '@/ui-component/dialog/ConfirmDialog'
 import CredentialInputHandler from './CredentialInputHandler'
 
 // Icons
-import { IconX } from '@tabler/icons-react'
+import { IconX, IconDeviceFloppy, IconPlus } from '@tabler/icons-react'
 
 // API
 import credentialsApi from '@/api/credentials'
@@ -29,6 +29,8 @@ import { initializeDefaultNodeData } from '@/utils/genericHelper'
 // const
 import { baseURL, REDACTED_CREDENTIAL_VALUE } from '@/store/constant'
 import { HIDE_CANVAS_DIALOG, SHOW_CANVAS_DIALOG } from '@/store/actions'
+
+const brandColor = '#2b63d9'
 
 const AddEditCredentialDialog = ({ show, dialogProps, onCancel, onConfirm, setError }) => {
     const portalElement = document.getElementById('portal')
@@ -214,59 +216,93 @@ const AddEditCredentialDialog = ({ show, dialogProps, onCancel, onConfirm, setEr
             onClose={onCancel}
             aria-labelledby='alert-dialog-title'
             aria-describedby='alert-dialog-description'
+            PaperProps={{
+                sx: {
+                    borderRadius: 3,
+                    boxShadow: `0 8px 40px ${alpha(brandColor, 0.1)}`,
+                    overflow: 'hidden'
+                }
+            }}
         >
-            <DialogTitle sx={{ fontSize: '1rem' }} id='alert-dialog-title'>
+            <DialogTitle 
+                sx={{ 
+                    fontSize: '1.25rem', 
+                    p: 3, 
+                    pb: 2,
+                    fontWeight: 600,
+                    color: 'rgb(51, 65, 85)',
+                    borderBottom: `1px solid ${alpha(brandColor, 0.1)}`
+                }} 
+                id='alert-dialog-title'
+            >
                 {componentCredential && componentCredential.label && (
-                    <div style={{ display: 'flex', flexDirection: 'row', alignItems: 'center' }}>
-                        <div
-                            style={{
+                    <Box sx={{ display: 'flex', flexDirection: 'row', alignItems: 'center', gap: 2 }}>
+                        <Box
+                            sx={{
                                 width: 50,
                                 height: 50,
-                                marginRight: 10,
-                                borderRadius: '50%',
-                                backgroundColor: 'white'
+                                borderRadius: '12px',
+                                backgroundColor: alpha(brandColor, 0.05),
+                                border: `1px solid ${alpha(brandColor, 0.1)}`,
+                                display: 'flex',
+                                alignItems: 'center',
+                                justifyContent: 'center'
                             }}
                         >
                             <img
                                 style={{
-                                    width: '100%',
-                                    height: '100%',
-                                    padding: 7,
-                                    borderRadius: '50%',
+                                    width: '70%',
+                                    height: '70%',
                                     objectFit: 'contain'
                                 }}
                                 alt={componentCredential.name}
                                 src={`${baseURL}/api/v1/components-credentials-icon/${componentCredential.name}`}
                             />
-                        </div>
-                        {componentCredential.label}
-                    </div>
-                )}
-            </DialogTitle>
-            <DialogContent>
-                {componentCredential && componentCredential.description && (
-                    <Box sx={{ pl: 2, pr: 2 }}>
-                        <div
-                            style={{
-                                display: 'flex',
-                                flexDirection: 'row',
-                                borderRadius: 10,
-                                background: 'rgb(254,252,191)',
-                                padding: 10,
-                                marginTop: 10,
-                                marginBottom: 10
+                        </Box>
+                        <Typography 
+                            sx={{ 
+                                color: 'rgb(51, 65, 85)',
+                                fontWeight: 600
                             }}
                         >
-                            <span style={{ color: 'rgb(116,66,16)' }}>{parser(componentCredential.description)}</span>
-                        </div>
+                            {componentCredential.label}
+                        </Typography>
+                    </Box>
+                )}
+            </DialogTitle>
+            <DialogContent sx={{ p: 0 }}>
+                {componentCredential && componentCredential.description && (
+                    <Box sx={{ px: 3, pt: 3 }}>
+                        <Box
+                            sx={{
+                                display: 'flex',
+                                flexDirection: 'row',
+                                borderRadius: 3,
+                                background: alpha('#FFC107', 0.1),
+                                border: `1px solid ${alpha('#FFC107', 0.2)}`,
+                                padding: 2,
+                                color: '#B45309'
+                            }}
+                        >
+                            {parser(componentCredential.description)}
+                        </Box>
                     </Box>
                 )}
                 {componentCredential && componentCredential.label && (
-                    <Box sx={{ p: 2 }}>
-                        <Stack sx={{ position: 'relative' }} direction='row'>
-                            <Typography variant='overline'>
+                    <Box sx={{ p: 3 }}>
+                        <Stack sx={{ position: 'relative', mb: 1 }} direction='row'>
+                            <Typography 
+                                variant='subtitle2'
+                                sx={{
+                                    color: 'rgb(100, 116, 139)',
+                                    fontWeight: 600,
+                                    fontSize: '0.75rem',
+                                    textTransform: 'uppercase',
+                                    letterSpacing: '0.05em'
+                                }}
+                            >
                                 Credential Name
-                                <span style={{ color: 'red' }}>&nbsp;*</span>
+                                <span style={{ color: '#EF4444' }}>&nbsp;*</span>
                             </Typography>
                         </Stack>
                         <OutlinedInput
@@ -277,6 +313,18 @@ const AddEditCredentialDialog = ({ show, dialogProps, onCancel, onConfirm, setEr
                             value={name}
                             name='name'
                             onChange={(e) => setName(e.target.value)}
+                            sx={{ 
+                                borderRadius: 2,
+                                '& .MuiOutlinedInput-notchedOutline': {
+                                    borderColor: alpha(brandColor, 0.2)
+                                },
+                                '&:hover .MuiOutlinedInput-notchedOutline': {
+                                    borderColor: alpha(brandColor, 0.3)
+                                },
+                                '&.Mui-focused .MuiOutlinedInput-notchedOutline': {
+                                    borderColor: brandColor
+                                }
+                            }}
                         />
                     </Box>
                 )}
@@ -286,11 +334,34 @@ const AddEditCredentialDialog = ({ show, dialogProps, onCancel, onConfirm, setEr
                         <CredentialInputHandler key={index} inputParam={inputParam} data={credentialData} />
                     ))}
             </DialogContent>
-            <DialogActions>
+            <DialogActions sx={{ p: 3, pt: 2, borderTop: `1px solid ${alpha(brandColor, 0.1)}` }}>
+                <Button
+                    variant="outlined"
+                    onClick={onCancel}
+                    sx={{
+                        borderRadius: 2,
+                        borderColor: alpha(brandColor, 0.3),
+                        color: brandColor,
+                        '&:hover': {
+                            borderColor: brandColor,
+                            backgroundColor: alpha(brandColor, 0.05)
+                        }
+                    }}
+                >
+                    Cancel
+                </Button>
                 <StyledButton
                     disabled={!name}
                     variant='contained'
                     onClick={() => (dialogProps.type === 'ADD' ? addNewCredential() : saveCredential())}
+                    startIcon={dialogProps.type === 'ADD' ? <IconPlus size={18} /> : <IconDeviceFloppy size={18} />}
+                    sx={{
+                        borderRadius: 2,
+                        backgroundColor: brandColor,
+                        '&:hover': {
+                            backgroundColor: alpha(brandColor, 0.9)
+                        }
+                    }}
                 >
                     {dialogProps.confirmButtonName}
                 </StyledButton>

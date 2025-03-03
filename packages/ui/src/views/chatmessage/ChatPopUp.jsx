@@ -135,38 +135,26 @@ export const ChatPopUp = ({ chatflowid, isAgentCanvas }) => {
 
     return (
         <>
-            <StyledFab
-                variant='extended'
-                sx={{
+            {/* Hidden button for reference but still part of document layout */}
+            <div
+                style={{ 
                     position: 'absolute',
-                    right: 315,
+                    right: 220,
                     top: 20,
-                    borderRadius: '8px',
-                    padding: '.5rem 1.2rem',
-                    display: 'flex',
-                    justifyContent: 'center',
-                    alignItems: 'center',
-                    gap: '.5rem',
-                    backgroundColor: 'white',
-                    color: theme.palette.primary.main,
-                    '&:hover': {
-                        backgroundColor: '#f5f5f5'
-                    }
+                    width: '1px',
+                    height: '1px',
+                    opacity: 0,
+                    pointerEvents: 'auto'
                 }}
                 ref={anchorRef}
-                size='small'
-                color='primary'
                 aria-label='chat'
                 title='Chat'
                 onClick={handleToggle}
-            >
-                <IconPlayerPlay size={19} />
-                Run
-            </StyledFab>
+            />
 
             {open && (
                 <StyledFab
-                    sx={{ position: 'absolute', right: 420, top: 18 }}
+                    sx={{ position: 'absolute', right: 320, top: 18 }}
                     onClick={clearChat}
                     size='small'
                     color='error'
@@ -178,7 +166,7 @@ export const ChatPopUp = ({ chatflowid, isAgentCanvas }) => {
             )}
             {open && (
                 <StyledFab
-                    sx={{ position: 'absolute', right: 470, top: 18 }}
+                    sx={{ position: 'absolute', right: 270, top: 18 }}
                     onClick={expandChat}
                     size='small'
                     color='primary'
@@ -189,7 +177,7 @@ export const ChatPopUp = ({ chatflowid, isAgentCanvas }) => {
                 </StyledFab>
             )}
             <Popper
-                placement='bottom-end'
+                placement='bottom-start'
                 open={open}
                 anchorEl={anchorRef.current}
                 role={undefined}
@@ -200,7 +188,7 @@ export const ChatPopUp = ({ chatflowid, isAgentCanvas }) => {
                         {
                             name: 'offset',
                             options: {
-                                offset: [40, 14]
+                                offset: [0, 50]
                             }
                         }
                     ]

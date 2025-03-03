@@ -20,7 +20,7 @@ import {
 } from '@mui/material'
 import { CopyBlock, atomOneDark } from 'react-code-blocks'
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore'
-import { useTheme } from '@mui/material/styles'
+import { useTheme, alpha } from '@mui/material/styles'
 
 // Project import
 import { Dropdown } from '@/ui-component/dropdown/Dropdown'
@@ -671,18 +671,56 @@ formData.append("openAIApiKey[openAIEmbeddings_0]", "sk-my-openai-2nd-key")`
             onClose={onCancel}
             aria-labelledby='alert-dialog-title'
             aria-describedby='alert-dialog-description'
+            PaperProps={{
+                sx: {
+                    borderRadius: 3,
+                    boxShadow: `0 0 2px 0 ${alpha(theme.palette.primary.main, 0.2)}, 0 12px 24px -4px ${alpha(theme.palette.primary.main, 0.12)}`
+                }
+            }}
         >
-            <DialogTitle sx={{ fontSize: '1rem' }} id='alert-dialog-title'>
+            <DialogTitle 
+                sx={{ 
+                    fontSize: '1.25rem',
+                    fontWeight: 600,
+                    p: 3,
+                    borderBottom: `1px solid ${alpha(theme.palette.primary.main, 0.1)}`
+                }} 
+                id='alert-dialog-title'
+            >
                 {dialogProps.title}
             </DialogTitle>
-            <DialogContent>
-                <div style={{ display: 'flex', flexDirection: 'row', alignItems: 'center' }}>
-                    <div style={{ flex: 80 }}>
-                        <Tabs value={value} onChange={handleChange} aria-label='tabs'>
+            <DialogContent sx={{ p: 3 }}>
+                <Box sx={{ display: 'flex', flexDirection: 'row', alignItems: 'center', mb: 3 }}>
+                    <Box sx={{ flex: 80 }}>
+                        <Tabs 
+                            value={value} 
+                            onChange={handleChange} 
+                            aria-label='tabs'
+                            sx={{
+                                '& .MuiTabs-indicator': {
+                                    backgroundColor: theme.palette.primary.main,
+                                    height: 3,
+                                    borderRadius: 1.5
+                                },
+                                '& .MuiTab-root': {
+                                    textTransform: 'none',
+                                    fontWeight: 500,
+                                    fontSize: '0.875rem',
+                                    minHeight: '48px',
+                                    transition: 'all 0.2s',
+                                    borderRadius: 2,
+                                    mx: 0.5,
+                                    '&.Mui-selected': {
+                                        color: theme.palette.primary.main,
+                                        backgroundColor: alpha(theme.palette.primary.main, 0.08)
+                                    }
+                                }
+                            }}
+                        >
                             {codes.map((codeLang, index) => (
                                 <Tab
                                     icon={
-                                        <img style={{ objectFit: 'cover', height: 15, width: 'auto' }} src={getSVG(codeLang)} alt='code' />
+                                        <img style={{ objectFit: 'cover', height: 18, width: 'auto', marginRight: '8px' }} src={getSVG(codeLang)} alt='code' />
                                     }
                                     iconPosition='start'
                                     key={index}
@@ -691,8 +729,8 @@ formData.append("openAIApiKey[openAIEmbeddings_0]", "sk-my-openai-2nd-key")`
                                 ></Tab>
                             ))}
                         </Tabs>
-                    </div>
-                    <div style={{ flex: 20 }}>
+                    </Box>
+                    <Box sx={{ flex: 20 }}>
                         <Dropdown
                             name='SelectKey'
                             disableClearable={true}
@@ -700,8 +738,8 @@ formData.append("openAIApiKey[openAIEmbeddings_0]", "sk-my-openai-2nd-key")`
                             onSelect={(newValue) => onApiKeySelected(newValue)}
                             value={dialogProps.chatflowApiKeyId ?? chatflowApiKeyId ?? 'Choose an API key'}
                         />
-                    </div>
-                </div>
+                    </Box>
+                </Box>
                 <div style={{ marginTop: 10 }}></div>
                 {codes.map((codeLang, index) => (
                     <TabPanel key={index} value={value} index={index}>

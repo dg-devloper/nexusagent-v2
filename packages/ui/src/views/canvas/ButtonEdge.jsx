@@ -21,28 +21,28 @@ const ButtonEdge = ({ id, sourceX, sourceY, targetX, targetY, sourcePosition, ta
 
     const [progress, setProgress] = useState(0)
 
-    // Animation logic
+    // Animation logic with slower timing
     useEffect(() => {
-        console.log('Called')
-        setProgress(0) // Reset progress when resetAnimation changes
-        setTimeout(() => {
+        setProgress(0) // Reset progress when animation starts
+        const startAnimation = () => {
             const interval = setInterval(() => {
                 setProgress((prev) => {
                     if (prev >= 100) {
                         clearInterval(interval)
                         return 100
                     }
-                    return prev + 1 // Increment progress
+                    return prev + 0.2 // Smaller increment for slower animation
                 })
-            }, 90) // Adjust speed of animation
+            }, 50) // Slower interval
 
-            return () => clearInterval(interval)
-        }, 0)
-        // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [false]) // Restart animation when resetAnimation changes
+            return interval
+        }
+
+        const interval = startAnimation()
+        return () => clearInterval(interval)
+    }, []) // Empty dependency array means this runs once on mount
 
     const { deleteEdge } = useContext(flowContext)
-
     const dispatch = useDispatch()
 
     const onEdgeClick = (evt, id) => {
@@ -53,7 +53,13 @@ const ButtonEdge = ({ id, sourceX, sourceY, targetX, targetY, sourcePosition, ta
 
     return (
         <>
-            <path id={id} style={style} className='react-flow__edge-path' d={edgePath} markerEnd={markerEnd} />
+            <path
+                id={id}
+                style={style}
+                className='react-flow__edge-path'
+                d={edgePath}
+                markerEnd={markerEnd}
+            />
             {data && data.label && (
                 <EdgeText
                     x={sourceX + 10}
@@ -80,35 +86,34 @@ const ButtonEdge = ({ id, sourceX, sourceY, targetX, targetY, sourcePosition, ta
                 </div>
             </foreignObject>
 
-            {/* Background Path (Default Color) */}
+            {/* Background Path (Dashed Gray) */}
             <path
                 id={`${id}-background`}
                 className='react-flow__edge-path'
                 d={edgePath}
                 style={{
                     ...style,
-                    stroke: 'gray', // Default background color
+                    stroke: '#808080', // Gray color
                     strokeWidth: 2, // Edge thickness
+                    strokeDasharray: '4, 8', // Spaced dashes (4px dash, 8px gap)
                     fill: 'none'
                 }}
-                markerEnd={markerEnd}
             />
 
-            {/* Foreground Path (Loading Color) */}
+            {/* Foreground Path (Animated Gray) */}
             <path
                 id={`${id}-foreground`}
                 className='react-flow__edge-path'
                 d={edgePath}
                 style={{
                     ...style,
-                    stroke: '#007bff', // Loading color
+                    stroke: '#808080', // Gray color to match background
                     strokeWidth: 2, // Edge thickness
-                    strokeDasharray: '100%', // Total length of the path
+                    strokeDasharray: '4, 8', // Match background dash pattern
                     strokeDashoffset: `${100 - progress}%`, // Animate the fill
                     fill: 'none',
-                    transition: 'stroke-dashoffset 0.1s ease' // Smooth transition
+                    transition: 'stroke-dashoffset 0.5s ease' // Slower transition
                 }}
-                markerEnd={markerEnd}
             />
         </>
     )

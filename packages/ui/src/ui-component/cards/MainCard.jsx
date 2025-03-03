@@ -30,7 +30,8 @@ const MainCard = forwardRef(function MainCard(
     },
     ref
 ) {
-    const otherProps = { ...others, border: others.border === false ? undefined : others.border }
+    const otherProps = { ...others }
+    delete otherProps.border // Remove border from props to avoid passing it to Card
     return (
         <Card
             ref={ref}

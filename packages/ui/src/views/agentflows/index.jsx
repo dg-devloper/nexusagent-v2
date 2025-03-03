@@ -111,9 +111,9 @@ const Agentflows = () => {
                     <HeaderSection
                         onSearchChange={onSearchChange}
                         onButtonClick={addNew}
-                        title={AppIcon.agentflows.headerTitle}
-                        subtitle={AppIcon.agentflows.description}
-                        icon={AppIcon.agentflows.icon}
+                        title={AppIcon.teamAgents.headerTitle}
+                        subtitle={AppIcon.teamAgents.description}
+                        icon={AppIcon.teamAgents.icon}
                     >
                         <StyledButton variant='contained' onClick={addNew} startIcon={<IconPlus />} sx={{ borderRadius: 2, height: 40 }}>
                             Add

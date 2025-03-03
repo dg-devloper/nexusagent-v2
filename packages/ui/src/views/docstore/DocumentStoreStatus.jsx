@@ -1,6 +1,9 @@
-import { useTheme } from '@mui/material'
+import { useTheme, Chip, Box, Typography } from '@mui/material'
 import { useSelector } from 'react-redux'
 import PropTypes from 'prop-types'
+import { alpha } from '@mui/material/styles'
+
+const brandColor = '#2b63d9'
 
 const DocumentStoreStatus = ({ status, isTableView }) => {
     const theme = useTheme()
@@ -10,87 +13,107 @@ const DocumentStoreStatus = ({ status, isTableView }) => {
         switch (status) {
             case 'STALE':
                 return customization.isDarkMode
-                    ? [theme.palette.grey[400], theme.palette.grey[600], theme.palette.grey[800]]
-                    : [theme.palette.grey[300], theme.palette.grey[500], theme.palette.grey[700]]
+                    ? [alpha(brandColor, 0.2), alpha(brandColor, 0.5), '#ffffff']
+                    : [alpha(brandColor, 0.1), alpha(brandColor, 0.4), '#333333']
             case 'EMPTY':
                 return customization.isDarkMode
-                    ? ['#4a148c', '#6a1b9a', '#ffffff'] // Deep Purple
-                    : [theme.palette.primary.main]
+                    ? [alpha(brandColor, 0.2), alpha(brandColor, 0.5), '#ffffff']
+                    : [alpha(brandColor, 0.1), alpha(brandColor, 0.4), '#333333']
             case 'SYNCING':
                 return customization.isDarkMode
-                    ? ['#ff6f00', '#ff8f00', '#ffffff'] // Amber
-                    : ['#fff8e1', '#ffe57f', '#ffc107']
+                    ? [alpha('#ffc107', 0.2), '#ffc107', '#ffffff']
+                    : [alpha('#ffc107', 0.1), '#ffc107', '#7A5800']
             case 'UPSERTING':
                 return customization.isDarkMode
-                    ? ['#01579b', '#0277bd', '#ffffff'] // Light Blue
-                    : ['#e1f5fe', '#4fc3f7', '#0288d1']
+                    ? [alpha(brandColor, 0.2), alpha(brandColor, 0.6), '#ffffff']
+                    : [alpha(brandColor, 0.1), alpha(brandColor, 0.6), '#333333']
             case 'SYNC':
                 return customization.isDarkMode
-                    ? ['#1b5e20', '#2e7d32', '#ffffff'] // Green
-                    : ['#e8f5e9', '#81c784', '#43a047']
+                    ? [alpha('#4caf50', 0.2), '#4caf50', '#ffffff']
+                    : [alpha('#4caf50', 0.1), '#4caf50', '#1B5E20']
             case 'UPSERTED':
                 return customization.isDarkMode
-                    ? ['#004d40', '#00695c', '#ffffff'] // Teal
-                    : ['#e0f2f1', '#4db6ac', '#00897b']
+                    ? [alpha('#00bcd4', 0.2), '#00bcd4', '#ffffff']
+                    : [alpha('#00bcd4', 0.1), '#00bcd4', '#006064']
             case 'NEW':
                 return customization.isDarkMode
-                    ? ['#0d47a1', '#1565c0', '#ffffff'] // Blue
-                    : ['#e3f2fd', '#64b5f6', '#1e88e5']
+                    ? [alpha(brandColor, 0.2), alpha(brandColor, 0.6), '#ffffff']
+                    : [alpha(brandColor, 0.1), alpha(brandColor, 0.6), '#333333']
             default:
                 return customization.isDarkMode
-                    ? [theme.palette.grey[300], theme.palette.grey[500], theme.palette.grey[700]]
-                    : [theme.palette.grey[200], theme.palette.grey[400], theme.palette.grey[600]]
+                    ? [alpha(brandColor, 0.2), alpha(brandColor, 0.5), '#ffffff']
+                    : [alpha(brandColor, 0.1), alpha(brandColor, 0.4), '#333333']
         }
     }
 
+    const getStatusLabel = (status) => {
+        switch (status) {
+            case 'STALE':
+                return 'Stale'
+            case 'EMPTY':
+                return 'Empty'
+            case 'SYNCING':
+                return 'Syncing'
+            case 'UPSERTING':
+                return 'Upserting'
+            case 'SYNC':
+                return 'Synced'
+            case 'UPSERTED':
+                return 'Upserted'
+            case 'NEW':
+                return 'New'
+            default:
+                return status
+        }
+    }
+
+    if (isTableView) {
+        return (
+            <Box
+                sx={{
+                    display: 'flex',
+                    width: '20px',
+                    height: '20px',
+                    borderRadius: '50%',
+                    backgroundColor: status === 'EMPTY' ? 'transparent' : getColor(status)[1],
+                    border: status === 'EMPTY' ? '3px solid' : 'none',
+                    borderColor: status === 'EMPTY' ? getColor(status)[1] : 'transparent',
+                    boxShadow: `0 0 10px ${alpha(getColor(status)[1], 0.5)}`
+                }}
+                title={getStatusLabel(status)}
+            />
+        )
+    }
+
     return (
-        <>
-            {!isTableView && (
-                <div
-                    style={{
-                        display: 'flex',
-                        flexDirection: 'row',
-                        alignContent: 'center',
-                        alignItems: 'center',
-                        background: status === 'EMPTY' ? 'transparent' : getColor(status)[0],
-                        border: status === 'EMPTY' ? '1px solid' : 'none',
-                        borderColor: status === 'EMPTY' ? getColor(status)[0] : 'transparent',
-                        borderRadius: '25px',
-                        paddingTop: '3px',
-                        paddingBottom: '3px',
-                        paddingLeft: '10px',
-                        paddingRight: '10px',
-                        width: 'fit-content'
-                    }}
-                >
-                    <div
-                        style={{
-                            width: '10px',
-                            height: '10px',
-                            borderRadius: '50%',
-                            backgroundColor: status === 'EMPTY' ? 'transparent' : getColor(status)[1],
-                            border: status === 'EMPTY' ? '3px solid' : 'none',
-                            borderColor: status === 'EMPTY' ? getColor(status)[1] : 'transparent'
-                        }}
-                    />
-                    <span style={{ fontSize: '0.7rem', color: getColor(status)[2], marginLeft: 5 }}>{status}</span>
-                </div>
-            )}
-            {isTableView && (
-                <div
-                    style={{
-                        display: 'flex',
-                        width: '20px',
-                        height: '20px',
+        <Chip
+            label={getStatusLabel(status)}
+            sx={{
+                backgroundColor: status === 'EMPTY' ? 'transparent' : alpha(getColor(status)[1], 0.2),
+                color: getColor(status)[2],
+                borderRadius: '8px',
+                border: `1px solid ${alpha(getColor(status)[1], 0.5)}`,
+                height: 28,
+                fontWeight: 500,
+                fontSize: '0.75rem',
+                '& .MuiChip-label': {
+                    px: 1.5,
+                    display: 'flex',
+                    alignItems: 'center',
+                    '&:before': {
+                        content: '""',
+                        display: 'inline-block',
+                        width: 8,
+                        height: 8,
                         borderRadius: '50%',
-                        backgroundColor: status === 'EMPTY' ? 'transparent' : getColor(status)[1],
-                        border: status === 'EMPTY' ? '3px solid' : 'none',
-                        borderColor: status === 'EMPTY' ? getColor(status)[1] : 'transparent'
-                    }}
-                    title={status}
-                ></div>
-            )}
-        </>
+                        backgroundColor: getColor(status)[1],
+                        marginRight: '6px',
+                        boxShadow: `0 0 6px ${alpha(getColor(status)[1], 0.8)}`
+                    }
+                }
+            }}
+            size="small"
+        />
     )
 }
 

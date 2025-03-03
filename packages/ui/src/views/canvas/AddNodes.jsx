@@ -71,7 +71,6 @@ const blacklistForChatflowCanvas = {
 
 const AddNodes = ({ nodesData, node, isAgentCanvas }) => {
     const theme = useTheme()
-
     const customization = useSelector((state) => state.customization)
     const dispatch = useDispatch()
 
@@ -395,6 +394,7 @@ const AddNodes = ({ nodesData, node, isAgentCanvas }) => {
                                                 ))}
                                             </Tabs>
                                         )}
+
                                         <Divider />
                                     </Box>
                                     <PerfectScrollbar

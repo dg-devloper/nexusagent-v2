@@ -1,7 +1,6 @@
 import { useEffect, useRef, useState, useCallback, useContext } from 'react'
-import ReactFlow, { addEdge, Controls, Background, useNodesState, useEdgesState, MarkerType } from 'reactflow'
+import ReactFlow, { addEdge, Controls, Background, MarkerType, applyNodeChanges, applyEdgeChanges } from 'reactflow'
 import 'reactflow/dist/style.css'
-
 import { useDispatch, useSelector } from 'react-redux'
 import { useNavigate, useLocation } from 'react-router-dom'
 import {
@@ -9,7 +8,8 @@ import {
     SET_DIRTY,
     SET_CHATFLOW,
     enqueueSnackbar as enqueueSnackbarAction,
-    closeSnackbar as closeSnackbarAction
+    closeSnackbar as closeSnackbarAction,
+    SET_MENU
 } from '@/store/actions'
 import { omit, cloneDeep } from 'lodash'
 
@@ -26,6 +26,9 @@ import ConfirmDialog from '@/ui-component/dialog/ConfirmDialog'
 import { ChatPopUp } from '@/views/chatmessage/ChatPopUp'
 import { VectorStorePopUp } from '@/views/vectorstore/VectorStorePopUp'
 import { flowContext } from '@/store/context/ReactFlowContext'
+import CanvasSubHeader from './CanvasSubHeader'
+import Sidebar from '@/layout/MinimalLayout/Sidebar'
+import FilledLoadingEdge from './animation/FilledLoadingEdge'
 
 // API
 import nodesApi from '@/api/nodes'
@@ -52,9 +55,6 @@ import { usePrompt } from '@/utils/usePrompt'
 
 // const
 import { FLOWISE_CREDENTIAL_ID } from '@/store/constant'
-import CanvasSubHeader from './CanvasSubHeader'
-import Sidebar from '@/layout/MinimalLayout/Sidebar'
-import FilledLoadingEdge from './animation/FilledLoadingEdge'
 
 const nodeTypes = { customNode: CanvasNode, stickyNote: StickyNote }
 const edgeTypes = { buttonedge: ButtonEdge, filledLoadingEdge: FilledLoadingEdge }
@@ -92,14 +92,52 @@ const Canvas = () => {
 
     // ==============================|| ReactFlow ||============================== //
 
-    const [nodes, setNodes, onNodesChange] = useNodesState()
-    const [edges, setEdges, onEdgesChange] = useEdgesState()
+    const [nodes, setNodes] = useState([])
+    const [edges, setEdges] = useState([])
 
     const [selectedNode, setSelectedNode] = useState(null)
     const [isUpsertButtonEnabled, setIsUpsertButtonEnabled] = useState(false)
     const [isSyncNodesButtonEnabled, setIsSyncNodesButtonEnabled] = useState(false)
 
     const reactFlowWrapper = useRef(null)
+
+    // Debounce flowData updates
+    const updateFlowDebounceRef = useRef(null)
+    const updateFlowData = useCallback((newNodes, newEdges) => {
+        if (updateFlowDebounceRef.current) {
+            clearTimeout(updateFlowDebounceRef.current)
+        }
+        updateFlowDebounceRef.current = setTimeout(() => {
+            dispatch({
+                type: SET_CHATFLOW,
+                chatflow: {
+                    ...canvas.chatflow,
+                    flowData: JSON.stringify({ nodes: newNodes, edges: newEdges })
+                }
+            })
+        }, 500)
+    }, [dispatch, canvas.chatflow])
+
+    // Update nodes and edges with flowData changes
+    const onNodesChange = useCallback((changes) => {
+        setNodes((nds) => {
+            const newNodes = applyNodeChanges(changes, nds)
+            if (newNodes !== nds) {
+                updateFlowData(newNodes, edges)
+            }
+            return newNodes
+        })
+    }, [edges, updateFlowData])
+
+    const onEdgesChange = useCallback((changes) => {
+        setEdges((eds) => {
+            const newEdges = applyEdgeChanges(changes, eds)
+            if (newEdges !== eds) {
+                updateFlowData(nodes, newEdges)
+            }
+            return newEdges
+        })
+    }, [nodes, updateFlowData])
 
     // ==============================|| Chatflow API ||============================== //
 
@@ -110,7 +148,7 @@ const Canvas = () => {
 
     // ==============================|| Events & Actions ||============================== //
 
-    const onConnect = (params) => {
+    const onConnect = useCallback((params) => {
         const newEdge = {
             ...params,
             type: 'buttonedge',
@@ -126,10 +164,9 @@ const Canvas = () => {
         const sourceNodeId = params.sourceHandle.split('-')[0]
         const targetInput = params.targetHandle.split('-')[2]
 
-        setNodes((nds) =>
-            nds.map((node) => {
+        setNodes((nds) => {
+            const newNodes = nds.map((node) => {
                 if (node.id === targetNodeId) {
-                    setTimeout(() => setDirty(), 0)
                     let value
                     const inputAnchor = node.data.inputAnchors.find((ancr) => ancr.name === targetInput)
                     const inputParam = node.data.inputParams.find((param) => param.name === targetInput)
@@ -157,10 +194,14 @@ const Canvas = () => {
                 }
                 return node
             })
-        )
+
+            updateFlowData(newNodes, [...edges, newEdge])
+            return newNodes
+        })
 
         setEdges((eds) => addEdge(newEdge, eds))
-    }
+        setDirty()
+    }, [edges, updateFlowData])
 
     const handleLoadFlow = (file) => {
         try {
@@ -169,103 +210,24 @@ const Canvas = () => {
 
             setNodes(nodes)
             setEdges(flowData.edges || [])
-            setTimeout(() => setDirty(), 0)
+            setDirty()
         } catch (e) {
             console.error(e)
         }
     }
 
-    const handleDeleteFlow = async () => {
-        const confirmPayload = {
-            title: `Delete`,
-            description: `Delete ${canvasTitle} ${chatflow.name}?`,
-            confirmButtonName: 'Delete',
-            cancelButtonName: 'Cancel'
-        }
-        const isConfirmed = await confirm(confirmPayload)
-
-        if (isConfirmed) {
-            try {
-                await chatflowsApi.deleteChatflow(chatflow.id)
-                localStorage.removeItem(`${chatflow.id}_INTERNAL`)
-                navigate(isAgentCanvas ? '/agentflows' : '/')
-            } catch (error) {
-                enqueueSnackbar({
-                    message: typeof error.response.data === 'object' ? error.response.data.message : error.response.data,
-                    options: {
-                        key: new Date().getTime() + Math.random(),
-                        variant: 'error',
-                        persist: true,
-                        action: (key) => (
-                            <Button style={{ color: 'white' }} onClick={() => closeSnackbar(key)}>
-                                <IconX />
-                            </Button>
-                        )
-                    }
-                })
-            }
-        }
-    }
-
-    const handleSaveFlow = (chatflowName) => {
-        if (reactFlowInstance) {
-            const nodes = reactFlowInstance.getNodes().map((node) => {
-                const nodeData = cloneDeep(node.data)
-                if (Object.prototype.hasOwnProperty.call(nodeData.inputs, FLOWISE_CREDENTIAL_ID)) {
-                    nodeData.credential = nodeData.inputs[FLOWISE_CREDENTIAL_ID]
-                    nodeData.inputs = omit(nodeData.inputs, [FLOWISE_CREDENTIAL_ID])
-                }
-                node.data = {
-                    ...nodeData,
-                    selected: false
-                }
-                return node
-            })
-
-            const rfInstanceObject = reactFlowInstance.toObject()
-            rfInstanceObject.nodes = nodes
-            const flowData = JSON.stringify(rfInstanceObject)
-
-            if (!chatflow.id) {
-                const newChatflowBody = {
-                    name: chatflowName,
-                    deployed: false,
-                    isPublic: false,
-                    flowData,
-                    type: isAgentCanvas ? 'MULTIAGENT' : 'CHATFLOW'
-                }
-                createNewChatflowApi.request(newChatflowBody)
-            } else {
-                const updateBody = {
-                    name: chatflowName,
-                    flowData
-                }
-                updateChatflowApi.request(chatflow.id, updateBody)
-            }
-        }
-    }
-
-    // eslint-disable-next-line
     const onNodeClick = useCallback((event, clickedNode) => {
         setSelectedNode(clickedNode)
         setNodes((nds) =>
-            nds.map((node) => {
-                if (node.id === clickedNode.id) {
-                    node.data = {
-                        ...node.data,
-                        selected: true
-                    }
-                } else {
-                    node.data = {
-                        ...node.data,
-                        selected: false
-                    }
+            nds.map((node) => ({
+                ...node,
+                data: {
+                    ...node.data,
+                    selected: node.id === clickedNode.id
                 }
-
-                return node
-            })
+            }))
         )
-    })
+    }, [])
 
     const onDragOver = useCallback((event) => {
         event.preventDefault()
@@ -300,28 +262,20 @@ const Canvas = () => {
             }
 
             setSelectedNode(newNode)
-            setNodes((nds) =>
-                nds.concat(newNode).map((node) => {
-                    if (node.id === newNode.id) {
-                        node.data = {
-                            ...node.data,
-                            selected: true
-                        }
-                    } else {
-                        node.data = {
-                            ...node.data,
-                            selected: false
-                        }
+            setNodes((nds) => {
+                const newNodes = nds.concat({
+                    ...newNode,
+                    data: {
+                        ...newNode.data,
+                        selected: true
                     }
-
-                    return node
                 })
-            )
-            setTimeout(() => setDirty(), 0)
+                updateFlowData(newNodes, edges)
+                return newNodes
+            })
+            setDirty()
         },
-
-        // eslint-disable-next-line
-        [reactFlowInstance]
+        [reactFlowInstance, edges, updateFlowData]
     )
 
     const syncNodes = () => {
@@ -480,7 +434,8 @@ const Canvas = () => {
             dispatch({
                 type: SET_CHATFLOW,
                 chatflow: {
-                    name: `Untitled ${canvasTitle}`
+                    name: `Untitled ${canvasTitle}`,
+                    flowData: JSON.stringify({ nodes: [], edges: [] })
                 }
             })
         }
@@ -489,6 +444,9 @@ const Canvas = () => {
 
         // Clear dirty state before leaving and remove any ongoing test triggers and webhooks
         return () => {
+            if (updateFlowDebounceRef.current) {
+                clearTimeout(updateFlowDebounceRef.current)
+            }
             setTimeout(() => dispatch({ type: REMOVE_DIRTY }), 0)
         }
 
@@ -530,7 +488,7 @@ const Canvas = () => {
     return (
         <>
             <Box sx={{ height: '100%' }}>
-                <Box sx={{ height: '100%', width: '100%', display: 'flex', marginTop: '70px' }}>
+                <Box sx={{ height: '100%', width: '100%', display: 'flex' }}>
                     <Sidebar
                         drawerOpen={leftDrawerOpened}
                         drawerToggle={handleLeftDrawerToggle}
@@ -555,6 +513,7 @@ const Canvas = () => {
                                 onConnect={onConnect}
                                 onInit={setReactFlowInstance}
                                 fitView
+                                fitViewOptions={{ padding: 0.5 }}
                                 deleteKeyCode={canvas.canvasDialogShow ? null : ['Delete']}
                                 minZoom={0.1}
                                 className='chatflow-canvas'
@@ -592,9 +551,6 @@ const Canvas = () => {
                                 {isUpsertButtonEnabled && <VectorStorePopUp chatflowid={chatflowId} />}
                                 <CanvasSubHeader
                                     chatflow={chatflow}
-                                    handleSaveFlow={handleSaveFlow}
-                                    handleDeleteFlow={handleDeleteFlow}
-                                    handleLoadFlow={handleLoadFlow}
                                     isAgentCanvas={isAgentCanvas}
                                 />
                                 <ChatPopUp isAgentCanvas={isAgentCanvas} chatflowid={chatflowId} />

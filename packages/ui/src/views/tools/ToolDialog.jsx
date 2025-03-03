@@ -5,7 +5,7 @@ import { useDispatch, useSelector } from 'react-redux'
 import { enqueueSnackbar as enqueueSnackbarAction, closeSnackbar as closeSnackbarAction } from '@/store/actions'
 import { cloneDeep } from 'lodash'
 
-import { Box, Button, Typography, Dialog, DialogActions, DialogContent, DialogTitle, Stack, OutlinedInput } from '@mui/material'
+import { Box, Button, Typography, Dialog, DialogActions, DialogContent, DialogTitle, Stack, OutlinedInput, alpha } from '@mui/material'
 import { StyledButton } from '@/ui-component/button/StyledButton'
 import { Grid } from '@/ui-component/grid/Grid'
 import { TooltipWithParser } from '@/ui-component/tooltip/TooltipWithParser'
@@ -16,7 +16,7 @@ import { CodeEditor } from '@/ui-component/editor/CodeEditor'
 import HowToUseFunctionDialog from './HowToUseFunctionDialog'
 
 // Icons
-import { IconX, IconFileDownload, IconPlus, IconTemplate } from '@tabler/icons-react'
+import { IconX, IconFileDownload, IconPlus, IconTemplate, IconDeviceFloppy, IconTrash, IconTool } from '@tabler/icons-react'
 
 // API
 import toolsApi from '@/api/tools'
@@ -30,6 +30,36 @@ import useNotifier from '@/utils/useNotifier'
 import { generateRandomGradient, formatDataGridRows } from '@/utils/genericHelper'
 import { HIDE_CANVAS_DIALOG, SHOW_CANVAS_DIALOG } from '@/store/actions'
 import ExportAsTemplateDialog from '@/ui-component/dialog/ExportAsTemplateDialog'
+
+const brandColor = '#2b63d9'
+
+const SectionTitle = ({ title, description }) => (
+    <Box sx={{ mb: 2 }}>
+        <Typography 
+            variant='subtitle2'
+            sx={{
+                color: 'rgb(100, 116, 139)',
+                fontWeight: 600,
+                fontSize: '0.75rem',
+                textTransform: 'uppercase',
+                letterSpacing: '0.05em',
+                mb: 1
+            }}
+        >
+            {title}
+        </Typography>
+        {description && (
+            <Typography 
+                sx={{ 
+                    color: 'rgb(100, 116, 139)',
+                    fontSize: '0.875rem'
+                }}
+            >
+                {description}
+            </Typography>
+        )}
+    </Box>
+)
 
 const exampleAPIFunc = `/*
 * You can use any libraries imported in Flowise
@@ -61,8 +91,6 @@ const ToolDialog = ({ show, dialogProps, onUseTemplate, onCancel, onConfirm, set
 
     const customization = useSelector((state) => state.customization)
     const dispatch = useDispatch()
-
-    // ==============================|| Snackbar ||============================== //
 
     useNotifier()
     const { confirm } = useConfirm()
@@ -240,7 +268,6 @@ const ToolDialog = ({ show, dialogProps, onUseTemplate, onCancel, onConfirm, set
                 delete toolData.createdDate
                 delete toolData.updatedDate
                 let dataStr = JSON.stringify(toolData, null, 2)
-                //let dataUri = 'data:application/json;charset=utf-8,' + encodeURIComponent(dataStr)
                 const blob = new Blob([dataStr], { type: 'application/json' })
                 const dataUri = URL.createObjectURL(blob)
 
@@ -417,40 +444,101 @@ const ToolDialog = ({ show, dialogProps, onUseTemplate, onCancel, onConfirm, set
             onClose={onCancel}
             aria-labelledby='alert-dialog-title'
             aria-describedby='alert-dialog-description'
+            PaperProps={{
+                sx: {
+                    borderRadius: 3,
+                    boxShadow: `0 8px 40px ${alpha(brandColor, 0.1)}`,
+                    overflow: 'hidden'
+                }
+            }}
         >
-            <DialogTitle sx={{ fontSize: '1rem', p: 3, pb: 0 }} id='alert-dialog-title'>
-                <Box sx={{ display: 'flex', flexDirection: 'row', justifyContent: 'space-between' }}>
-                    {dialogProps.title}
+            <DialogTitle 
+                sx={{ 
+                    p: 3, 
+                    borderBottom: `1px solid ${alpha(brandColor, 0.1)}` 
+                }} 
+                id='alert-dialog-title'
+            >
+                <Box sx={{ display: 'flex', flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center' }}>
+                    <Stack direction="row" alignItems="center" spacing={1.5}>
+                        <Box
+                            sx={{
+                                width: 40,
+                                height: 40,
+                                borderRadius: '12px',
+                                backgroundColor: alpha(brandColor, 0.05),
+                                border: `1px solid ${alpha(brandColor, 0.1)}`,
+                                display: 'flex',
+                                alignItems: 'center',
+                                justifyContent: 'center',
+                                transition: 'all 0.3s ease-in-out',
+                                '&:hover': {
+                                    transform: 'translateY(-2px) scale(1.05)',
+                                    boxShadow: `0 6px 16px ${alpha(brandColor, 0.12)}`,
+                                    backgroundColor: alpha(brandColor, 0.08)
+                                }
+                            }}
+                        >
+                            <IconTool size={24} color={brandColor} />
+                        </Box>
+                        <Typography 
+                            variant="h6" 
+                            sx={{ 
+                                color: 'rgb(51, 65, 85)',
+                                fontSize: '1.25rem',
+                                fontWeight: 600
+                            }}
+                        >
+                            {dialogProps.title}
+                        </Typography>
+                    </Stack>
                     <Box>
                         {dialogProps.type === 'EDIT' && (
-                            <>
+                            <Stack direction="row" spacing={1}>
                                 <Button
-                                    style={{ marginRight: '10px' }}
                                     variant='outlined'
-                                    onClick={() => onSaveAsTemplate()}
-                                    startIcon={<IconTemplate />}
-                                    color='secondary'
+                                    onClick={onSaveAsTemplate}
+                                    startIcon={<IconTemplate size={18} />}
+                                    sx={{
+                                        borderRadius: 2,
+                                        borderColor: alpha(brandColor, 0.3),
+                                        color: brandColor,
+                                        '&:hover': {
+                                            borderColor: brandColor,
+                                            backgroundColor: alpha(brandColor, 0.05)
+                                        }
+                                    }}
                                 >
                                     Save As Template
                                 </Button>
-                                <Button variant='outlined' onClick={() => exportTool()} startIcon={<IconFileDownload />}>
+                                <Button 
+                                    variant='outlined' 
+                                    onClick={exportTool} 
+                                    startIcon={<IconFileDownload size={18} />}
+                                    sx={{
+                                        borderRadius: 2,
+                                        borderColor: alpha(brandColor, 0.3),
+                                        color: brandColor,
+                                        '&:hover': {
+                                            borderColor: brandColor,
+                                            backgroundColor: alpha(brandColor, 0.05)
+                                        }
+                                    }}
+                                >
                                     Export
                                 </Button>
-                            </>
+                            </Stack>
                         )}
                     </Box>
                 </Box>
             </DialogTitle>
-            <DialogContent sx={{ display: 'flex', flexDirection: 'column', gap: 2, maxHeight: '75vh', position: 'relative', px: 3, pb: 3 }}>
-                <Box sx={{ display: 'flex', flexDirection: 'column', gap: 2, pt: 2 }}>
+            <DialogContent sx={{ p: 0 }}>
+                <Stack spacing={4} sx={{ p: 3 }}>
                     <Box>
-                        <Stack sx={{ position: 'relative', alignItems: 'center' }} direction='row'>
-                            <Typography variant='overline'>
-                                Tool Name
-                                <span style={{ color: 'red' }}>&nbsp;*</span>
-                            </Typography>
-                            <TooltipWithParser title={'Tool name must be small capital letter with underscore. Ex: my_tool'} />
-                        </Stack>
+                        <SectionTitle 
+                            title="Tool Name" 
+                            description="Tool name must be small capital letter with underscore. Ex: my_tool"
+                        />
                         <OutlinedInput
                             id='toolName'
                             type='string'
@@ -460,35 +548,57 @@ const ToolDialog = ({ show, dialogProps, onUseTemplate, onCancel, onConfirm, set
                             value={toolName}
                             name='toolName'
                             onChange={(e) => setToolName(e.target.value)}
+                            sx={{ 
+                                borderRadius: 2,
+                                '& .MuiOutlinedInput-notchedOutline': {
+                                    borderColor: alpha(brandColor, 0.2)
+                                },
+                                '&:hover .MuiOutlinedInput-notchedOutline': {
+                                    borderColor: alpha(brandColor, 0.3)
+                                },
+                                '&.Mui-focused .MuiOutlinedInput-notchedOutline': {
+                                    borderColor: brandColor
+                                }
+                            }}
                         />
                     </Box>
+
                     <Box>
-                        <Stack sx={{ position: 'relative', alignItems: 'center' }} direction='row'>
-                            <Typography variant='overline'>
-                                Tool description
-                                <span style={{ color: 'red' }}>&nbsp;*</span>
-                            </Typography>
-                            <TooltipWithParser
-                                title={'Description of what the tool does. This is for ChatGPT to determine when to use this tool.'}
-                            />
-                        </Stack>
+                        <SectionTitle 
+                            title="Tool Description" 
+                            description="Description of what the tool does. This is for ChatGPT to determine when to use this tool."
+                        />
                         <OutlinedInput
                             id='toolDesc'
                             type='string'
                             fullWidth
                             disabled={dialogProps.type === 'TEMPLATE'}
-                            placeholder='Description of what the tool does. This is for ChatGPT to determine when to use this tool.'
+                            placeholder='Description of what the tool does...'
                             multiline={true}
                             rows={3}
                             value={toolDesc}
                             name='toolDesc'
                             onChange={(e) => setToolDesc(e.target.value)}
+                            sx={{ 
+                                borderRadius: 2,
+                                '& .MuiOutlinedInput-notchedOutline': {
+                                    borderColor: alpha(brandColor, 0.2)
+                                },
+                                '&:hover .MuiOutlinedInput-notchedOutline': {
+                                    borderColor: alpha(brandColor, 0.3)
+                                },
+                                '&.Mui-focused .MuiOutlinedInput-notchedOutline': {
+                                    borderColor: brandColor
+                                }
+                            }}
                         />
                     </Box>
+
                     <Box>
-                        <Stack sx={{ position: 'relative' }} direction='row'>
-                            <Typography variant='overline'>Tool Icon Source</Typography>
-                        </Stack>
+                        <SectionTitle 
+                            title="Tool Icon Source" 
+                            description="URL to the tool's icon image"
+                        />
                         <OutlinedInput
                             id='toolIcon'
                             type='string'
@@ -498,71 +608,176 @@ const ToolDialog = ({ show, dialogProps, onUseTemplate, onCancel, onConfirm, set
                             value={toolIcon}
                             name='toolIcon'
                             onChange={(e) => setToolIcon(e.target.value)}
+                            sx={{ 
+                                borderRadius: 2,
+                                '& .MuiOutlinedInput-notchedOutline': {
+                                    borderColor: alpha(brandColor, 0.2)
+                                },
+                                '&:hover .MuiOutlinedInput-notchedOutline': {
+                                    borderColor: alpha(brandColor, 0.3)
+                                },
+                                '&.Mui-focused .MuiOutlinedInput-notchedOutline': {
+                                    borderColor: brandColor
+                                }
+                            }}
                         />
                     </Box>
+
                     <Box>
-                        <Stack sx={{ position: 'relative', justifyContent: 'space-between' }} direction='row'>
-                            <Stack sx={{ position: 'relative', alignItems: 'center' }} direction='row'>
-                                <Typography variant='overline'>Input Schema</Typography>
-                                <TooltipWithParser title={'What is the input format in JSON?'} />
-                            </Stack>
+                        <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', mb: 2 }}>
+                            <SectionTitle 
+                                title="Input Schema" 
+                                description="What is the input format in JSON?"
+                            />
                             {dialogProps.type !== 'TEMPLATE' && (
-                                <Button variant='outlined' onClick={addNewRow} startIcon={<IconPlus />}>
+                                <Button 
+                                    variant='outlined' 
+                                    onClick={addNewRow} 
+                                    startIcon={<IconPlus size={18} />}
+                                    sx={{
+                                        borderRadius: 2,
+                                        borderColor: alpha(brandColor, 0.3),
+                                        color: brandColor,
+                                        '&:hover': {
+                                            borderColor: brandColor,
+                                            backgroundColor: alpha(brandColor, 0.05)
+                                        }
+                                    }}
+                                >
                                     Add Item
                                 </Button>
                             )}
-                        </Stack>
-                        <Grid columns={columns} rows={toolSchema} disabled={dialogProps.type === 'TEMPLATE'} onRowUpdate={onRowUpdate} />
+                        </Box>
+                        <Box 
+                            sx={{ 
+                                border: `1px solid ${alpha(brandColor, 0.1)}`,
+                                borderRadius: 3,
+                                overflow: 'hidden'
+                            }}
+                        >
+                            <Grid columns={columns} rows={toolSchema} disabled={dialogProps.type === 'TEMPLATE'} onRowUpdate={onRowUpdate} />
+                        </Box>
                     </Box>
+
                     <Box>
-                        <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
-                            <Stack sx={{ position: 'relative', alignItems: 'center' }} direction='row'>
-                                <Typography variant='overline'>Javascript Function</Typography>
-                                {/* <TooltipWithParser title='Function to execute when tool is being used. You can use properties specified in Input Schema as variables. For example, if the property is <code>userid</code>, you can use as <code>$userid</code>. Return value must be a string. You can also override the code from API by following this <a target="_blank" href="https://docs.flowiseai.com/tools/custom-tool#override-function-from-api">guide</a>' /> */}
-                                <TooltipWithParser title='Function to execute when tool is being used. You can use properties specified in Input Schema as variables. For example, if the property is <code>userid</code>, you can use as <code>$userid</code>. Return value must be a string. You can also override the code from API by following this <a target="_blank" href="">guide</a>' />
-                            </Stack>
-                            <Stack direction='row'>
+                        <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', mb: 2 }}>
+                            <SectionTitle 
+                                title="Javascript Function" 
+                                description="Function to execute when tool is being used"
+                            />
+                            <Stack direction='row' spacing={1}>
                                 <Button
-                                    style={{ marginBottom: 10, marginRight: 10 }}
-                                    color='secondary'
                                     variant='text'
                                     onClick={() => setShowHowToDialog(true)}
+                                    sx={{
+                                        color: alpha(brandColor, 0.8),
+                                        '&:hover': {
+                                            backgroundColor: alpha(brandColor, 0.05),
+                                            color: brandColor
+                                        }
+                                    }}
                                 >
                                     How to use Function
                                 </Button>
                                 {dialogProps.type !== 'TEMPLATE' && (
-                                    <Button style={{ marginBottom: 10 }} variant='outlined' onClick={() => setToolFunc(exampleAPIFunc)}>
+                                    <Button 
+                                        variant='outlined' 
+                                        onClick={() => setToolFunc(exampleAPIFunc)}
+                                        sx={{
+                                            borderRadius: 2,
+                                            borderColor: alpha(brandColor, 0.3),
+                                            color: brandColor,
+                                            '&:hover': {
+                                                borderColor: brandColor,
+                                                backgroundColor: alpha(brandColor, 0.05)
+                                            }
+                                        }}
+                                    >
                                         See Example
                                     </Button>
                                 )}
                             </Stack>
                         </Box>
-                        <CodeEditor
-                            disabled={dialogProps.type === 'TEMPLATE'}
-                            value={toolFunc}
-                            theme={customization.isDarkMode ? 'dark' : 'light'}
-                            lang={'js'}
-                            onValueChange={(code) => setToolFunc(code)}
-                        />
+                        <Box 
+                            sx={{ 
+                                border: `1px solid ${alpha(brandColor, 0.1)}`,
+                                borderRadius: 3,
+                                overflow: 'hidden'
+                            }}
+                        >
+                            <CodeEditor
+                                disabled={dialogProps.type === 'TEMPLATE'}
+                                value={toolFunc}
+                                theme={customization.isDarkMode ? 'dark' : 'light'}
+                                lang={'js'}
+                                onValueChange={(code) => setToolFunc(code)}
+                            />
+                        </Box>
                     </Box>
-                </Box>
+                </Stack>
             </DialogContent>
-            <DialogActions sx={{ p: 3 }}>
+            <DialogActions sx={{ p: 3, pt: 2, borderTop: `1px solid ${alpha(brandColor, 0.1)}` }}>
                 {dialogProps.type === 'EDIT' && (
-                    <StyledButton color='error' variant='contained' onClick={() => deleteTool()}>
+                    <Button 
+                        color='error' 
+                        variant='contained'
+                        startIcon={<IconTrash size={18} />}
+                        onClick={() => deleteTool()}
+                        sx={{
+                            borderRadius: 2,
+                            backgroundColor: '#EF4444',
+                            '&:hover': {
+                                backgroundColor: '#DC2626'
+                            }
+                        }}
+                    >
                         Delete
-                    </StyledButton>
+                    </Button>
                 )}
-                {dialogProps.type === 'TEMPLATE' && (
-                    <StyledButton color='secondary' variant='contained' onClick={useToolTemplate}>
+                <Box sx={{ flexGrow: 1 }} />
+                <Button 
+                    variant="outlined"
+                    onClick={onCancel}
+                    sx={{
+                        borderRadius: 2,
+                        borderColor: alpha(brandColor, 0.3),
+                        color: brandColor,
+                        '&:hover': {
+                            borderColor: brandColor,
+                            backgroundColor: alpha(brandColor, 0.05)
+                        }
+                    }}
+                >
+                    Cancel
+                </Button>
+                {dialogProps.type === 'TEMPLATE' ? (
+                    <StyledButton 
+                        color='secondary' 
+                        variant='contained'
+                        onClick={useToolTemplate}
+                        sx={{
+                            borderRadius: 2,
+                            backgroundColor: brandColor,
+                            '&:hover': {
+                                backgroundColor: alpha(brandColor, 0.9)
+                            }
+                        }}
+                    >
                         Use Template
                     </StyledButton>
-                )}
-                {dialogProps.type !== 'TEMPLATE' && (
+                ) : (
                     <StyledButton
                         disabled={!(toolName && toolDesc)}
                         variant='contained'
+                        startIcon={dialogProps.type === 'ADD' || dialogProps.type === 'IMPORT' ? <IconPlus size={18} /> : <IconDeviceFloppy size={18} />}
                         onClick={() => (dialogProps.type === 'ADD' || dialogProps.type === 'IMPORT' ? addNewTool() : saveTool())}
+                        sx={{
+                            borderRadius: 2,
+                            backgroundColor: brandColor,
+                            '&:hover': {
+                                backgroundColor: alpha(brandColor, 0.9)
+                            }
+                        }}
                     >
                         {dialogProps.confirmButtonName}
                     </StyledButton>
@@ -576,7 +791,6 @@ const ToolDialog = ({ show, dialogProps, onUseTemplate, onCancel, onConfirm, set
                     onCancel={() => setExportAsTemplateDialogOpen(false)}
                 />
             )}
-
             <HowToUseFunctionDialog show={showHowToDialog} onCancel={() => setShowHowToDialog(false)} />
         </Dialog>
     ) : null

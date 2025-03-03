@@ -8,7 +8,8 @@ import {
     IconDatabaseExport,
     IconAdjustmentsHorizontal,
     IconUsers,
-    IconTemplate
+    IconTemplate,
+    IconHistory
 } from '@tabler/icons-react'
 
 // constant
@@ -21,7 +22,8 @@ const icons = {
     IconDatabaseExport,
     IconAdjustmentsHorizontal,
     IconUsers,
-    IconTemplate
+    IconTemplate,
+    IconHistory
 }
 
 // ==============================|| SETTINGS MENU ITEMS ||============================== //
@@ -46,6 +48,13 @@ const agent_settings = {
             icon: icons.IconUsers
         },
         {
+            id: 'upsertHistory',
+            title: 'Upsert History',
+            type: 'item',
+            url: '',
+            icon: icons.IconHistory
+        },
+        {
             id: 'chatflowConfiguration',
             title: 'Configuration',
             type: 'item',
@@ -61,28 +70,28 @@ const agent_settings = {
         },
         {
             id: 'duplicateChatflow',
-            title: 'Duplicate Agents',
+            title: 'Duplicate Chatflow',
             type: 'item',
             url: '',
             icon: icons.IconCopy
         },
         {
             id: 'loadChatflow',
-            title: 'Load Agents',
+            title: 'Load Chatflow',
             type: 'item',
             url: '',
             icon: icons.IconFileUpload
         },
         {
             id: 'exportChatflow',
-            title: 'Export Agents',
+            title: 'Export Chatflow',
             type: 'item',
             url: '',
             icon: icons.IconFileExport
         },
         {
             id: 'deleteChatflow',
-            title: 'Delete Agents',
+            title: 'Delete Chatflow',
             type: 'item',
             url: '',
             icon: icons.IconTrash

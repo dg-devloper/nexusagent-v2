@@ -21,7 +21,9 @@ import {
     Divider,
     Button,
     Skeleton,
-    IconButton
+    IconButton,
+    Grid,
+    Card
 } from '@mui/material'
 import { alpha, styled, useTheme } from '@mui/material/styles'
 import { tableCellClasses } from '@mui/material/TableCell'
@@ -48,7 +50,18 @@ import { getFileName } from '@/utils/genericHelper'
 import useConfirm from '@/hooks/useConfirm'
 
 // icons
-import { IconPlus, IconRefresh, IconX, IconVectorBezier2 } from '@tabler/icons-react'
+import { 
+    IconPlus, 
+    IconRefresh, 
+    IconX, 
+    IconVectorBezier2, 
+    IconFiles, 
+    IconDatabase, 
+    IconFileText, 
+    IconInfoCircle,
+    IconChartBar,
+    IconCloudUpload
+} from '@tabler/icons-react'
 import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown'
 import FileDeleteIcon from '@mui/icons-material/Delete'
 import FileEditIcon from '@mui/icons-material/Edit'
@@ -63,23 +76,47 @@ import { closeSnackbar as closeSnackbarAction, enqueueSnackbar as enqueueSnackba
 
 // ==============================|| DOCUMENTS ||============================== //
 
-const StyledTableCell = styled(TableCell)(({ theme }) => ({
-    borderColor: theme.palette.grey[900] + 25,
-    padding: '6px 16px',
+const brandColor = '#2b63d9'
+const buttonBlue = '#5379e0'
 
+const StyledTableCell = styled(TableCell)(({ theme }) => ({
+    borderBottom: `1px solid ${alpha(brandColor, 0.1)}`,
+    padding: '20px 24px',
     [`&.${tableCellClasses.head}`]: {
-        color: theme.palette.grey[900]
+        background: `linear-gradient(180deg, ${alpha(brandColor, 0.05)} 0%, ${alpha(brandColor, 0.02)} 100%)`,
+        color: 'rgb(100, 116, 139)',
+        fontSize: '0.75rem',
+        fontWeight: 600,
+        textTransform: 'uppercase',
+        letterSpacing: '0.05em',
+        height: 64
     },
     [`&.${tableCellClasses.body}`]: {
-        fontSize: 14,
-        height: 64
+        fontSize: '0.875rem',
+        color: 'rgb(51, 65, 85)',
+        height: 72
     }
 }))
 
 const StyledTableRow = styled(TableRow)(() => ({
-    // hide last border
-    '&:last-child td, &:last-child th': {
-        border: 0
+    transition: 'all 0.3s ease-in-out',
+    position: 'relative',
+    '&:hover': {
+        backgroundColor: alpha(brandColor, 0.02),
+        transform: 'translateY(-1px)',
+        boxShadow: `0 4px 12px ${alpha(brandColor, 0.08)}`
+    },
+    '&:after': {
+        content: '""',
+        position: 'absolute',
+        left: 0,
+        right: 0,
+        bottom: 0,
+        height: '1px',
+        background: `linear-gradient(90deg, ${alpha(brandColor, 0.1)} 0%, ${alpha(brandColor, 0.05)} 100%)`
+    },
+    '&:last-child:after': {
+        display: 'none'
     }
 }))
 
@@ -98,22 +135,26 @@ const StyledMenu = styled((props) => (
     />
 ))(({ theme }) => ({
     '& .MuiPaper-root': {
-        borderRadius: 6,
+        borderRadius: 16,
         marginTop: theme.spacing(1),
         minWidth: 180,
-        boxShadow:
-            'rgb(255, 255, 255) 0px 0px 0px 0px, rgba(0, 0, 0, 0.05) 0px 0px 0px 1px, rgba(0, 0, 0, 0.1) 0px 10px 15px -3px, rgba(0, 0, 0, 0.05) 0px 4px 6px -2px',
+        boxShadow: `0 10px 30px ${alpha(brandColor, 0.15)}`,
         '& .MuiMenu-list': {
-            padding: '4px 0'
+            padding: '8px'
         },
         '& .MuiMenuItem-root': {
+            borderRadius: 8,
+            margin: '4px 0',
             '& .MuiSvgIcon-root': {
                 fontSize: 18,
-                color: theme.palette.text.secondary,
+                color: alpha(brandColor, 0.8),
                 marginRight: theme.spacing(1.5)
             },
+            '&:hover': {
+                backgroundColor: alpha(brandColor, 0.05)
+            },
             '&:active': {
-                backgroundColor: alpha(theme.palette.primary.main, theme.palette.action.selectedOpacity)
+                backgroundColor: alpha(brandColor, 0.1)
             }
         }
     }
@@ -404,7 +445,6 @@ const DocumentStoreDetails = () => {
     useEffect(() => {
         setLoading(getSpecificDocumentStore.loading)
     }, [getSpecificDocumentStore.loading])
-
     return (
         <>
             <MainCard>
@@ -412,95 +452,313 @@ const DocumentStoreDetails = () => {
                     <ErrorBoundary error={error} />
                 ) : (
                     <Stack flexDirection='column' sx={{ gap: 3 }}>
-                        <ViewHeader
-                            isBackButton={true}
-                            isEditButton={true}
-                            search={false}
-                            title={documentStore?.name}
-                            description={documentStore?.description}
-                            onBack={() => navigate('/document-stores')}
-                            onEdit={() => onEditClicked()}
+                        <Box
+                            sx={{
+                                borderRadius: '24px',
+                                background: `linear-gradient(135deg, ${brandColor} 0%, ${alpha(brandColor, 0.8)} 100%)`,
+                                padding: '3rem',
+                                position: 'relative',
+                                overflow: 'hidden',
+                                boxShadow: `0 10px 40px -10px ${alpha(brandColor, 0.4)}`,
+                                '&:before': {
+                                    content: '""',
+                                    position: 'absolute',
+                                    top: 0,
+                                    left: 0,
+                                    width: '100%',
+                                    height: '100%',
+                                    background: `radial-gradient(circle at top left, ${alpha('#fff', 0.12)} 0%, transparent 50%)`,
+                                    pointerEvents: 'none'
+                                },
+                                '&:after': {
+                                    content: '""',
+                                    position: 'absolute',
+                                    top: '20%',
+                                    right: '10%',
+                                    width: '300px',
+                                    height: '300px',
+                                    background: `radial-gradient(circle, ${alpha('#fff', 0.08)} 0%, transparent 50%)`,
+                                    pointerEvents: 'none'
+                                }
+                            }}
                         >
-                            {(documentStore?.status === 'STALE' || documentStore?.status === 'UPSERTING') && (
-                                <IconButton onClick={onConfirm} size='small' color='primary' title='Refresh Document Store'>
-                                    <IconRefresh />
-                                </IconButton>
-                            )}
-                            <StyledButton
-                                variant='contained'
-                                sx={{ ml: 2, minWidth: 200, borderRadius: 2, height: '100%', color: 'white' }}
-                                startIcon={<IconPlus />}
-                                onClick={listLoaders}
-                            >
-                                Add Document Loader
-                            </StyledButton>
-                            <Button
-                                id='document-store-header-action-button'
-                                aria-controls={open ? 'document-store-header-menu' : undefined}
-                                aria-haspopup='true'
-                                aria-expanded={open ? 'true' : undefined}
-                                variant='outlined'
-                                disableElevation
-                                color='secondary'
-                                onClick={handleClick}
-                                sx={{ minWidth: 150, borderColor: theme.palette['primary'].main, color: theme.palette['primary'].main }}
-                                endIcon={<KeyboardArrowDownIcon />}
-                            >
-                                More Actions
-                            </Button>
-                            <StyledMenu
-                                id='document-store-header-menu'
-                                MenuListProps={{
-                                    'aria-labelledby': 'document-store-header-menu-button'
-                                }}
-                                anchorEl={anchorEl}
-                                open={open}
-                                onClose={handleClose}
-                            >
-                                <MenuItem
-                                    disabled={documentStore?.totalChunks <= 0 || documentStore?.status === 'UPSERTING'}
-                                    onClick={() => showStoredChunks('all')}
-                                    disableRipple
+                            <Stack spacing={4} sx={{ position: 'relative', zIndex: 1 }}>
+                                <Grid container spacing={3}>
+                                    <Grid item xs={12} md={7}>
+                                        <Stack direction="row" spacing={3} alignItems="center">
+                                            <Box
+                                                sx={{
+                                                    backgroundColor: 'rgba(255, 255, 255, 0.1)',
+                                                    backdropFilter: 'blur(8px)',
+                                                    color: 'white',
+                                                    padding: '16px',
+                                                    borderRadius: '16px',
+                                                    display: 'flex',
+                                                    justifyContent: 'center',
+                                                    alignItems: 'center',
+                                                    boxShadow: '0 4px 12px rgba(0,0,0,0.1)',
+                                                    border: '1px solid rgba(255, 255, 255, 0.2)',
+                                                    transform: 'rotate(-5deg)'
+                                                }}
+                                            >
+                                                <IconFiles stroke={2} size='1.5rem' style={{ color: '#fff' }} />
+                                            </Box>
+                                            <Stack spacing={1}>
+                                                <Typography 
+                                                    variant='h3' 
+                                                    sx={{ 
+                                                        color: '#fff',
+                                                        fontWeight: 700,
+                                                        textShadow: '0 2px 4px rgba(0,0,0,0.1)',
+                                                        letterSpacing: '-0.02em'
+                                                    }}
+                                                >
+                                                    {documentStore?.name || 'Document Store'}
+                                                </Typography>
+                                                <Typography 
+                                                    sx={{ 
+                                                        color: 'rgba(255, 255, 255, 0.9)',
+                                                        fontSize: '1rem',
+                                                        lineHeight: 1.6
+                                                    }}
+                                                >
+                                                    {documentStore?.description || 'Loading document store details...'}
+                                                </Typography>
+                                            </Stack>
+                                        </Stack>
+
+                                        <Stack direction="row" spacing={2} sx={{ mt: 3 }}>
+                                            <Chip 
+                                                icon={<IconFileText size={16} />} 
+                                                label={`${documentStore?.loaders?.length || 0} Document Loaders`}
+                                                sx={{
+                                                    backgroundColor: 'rgba(255, 255, 255, 0.15)',
+                                                    color: 'white',
+                                                    borderRadius: '8px',
+                                                    border: '1px solid rgba(255, 255, 255, 0.2)',
+                                                    '& .MuiChip-icon': {
+                                                        color: 'white'
+                                                    }
+                                                }}
+                                            />
+                                            <Chip 
+                                                icon={<IconDatabase size={16} />} 
+                                                label={`${documentStore?.totalChunks || 0} Chunks`}
+                                                sx={{
+                                                    backgroundColor: 'rgba(255, 255, 255, 0.15)',
+                                                    color: 'white',
+                                                    borderRadius: '8px',
+                                                    border: '1px solid rgba(255, 255, 255, 0.2)',
+                                                    '& .MuiChip-icon': {
+                                                        color: 'white'
+                                                    }
+                                                }}
+                                            />
+                                            <DocumentStoreStatus status={documentStore?.status} />
+                                        </Stack>
+                                    </Grid>
+                                    <Grid item xs={12} md={5}>
+                                        <Box
+                                            sx={{
+                                                backgroundColor: 'rgba(255, 255, 255, 0.1)',
+                                                backdropFilter: 'blur(8px)',
+                                                borderRadius: '16px',
+                                                padding: '20px',
+                                                border: '1px solid rgba(255, 255, 255, 0.2)',
+                                                height: '100%'
+                                            }}
+                                        >
+                                            <Stack spacing={2}>
+                                                <Stack direction="row" spacing={1.5} alignItems="center">
+                                                    <IconInfoCircle size={20} style={{ color: 'white' }} />
+                                                    <Typography sx={{ color: 'white', fontWeight: 600 }}>
+                                                        Document Store Actions
+                                                    </Typography>
+                                                </Stack>
+                                                <Stack spacing={2}>
+                                                    <Button
+                                                        variant="contained"
+                                                        startIcon={<IconPlus size={18} />}
+                                                        onClick={listLoaders}
+                                                        sx={{
+                                                            backgroundColor: 'rgba(255, 255, 255, 0.15)',
+                                                            color: 'white',
+                                                            borderRadius: '10px',
+                                                            textTransform: 'none',
+                                                            '&:hover': {
+                                                                backgroundColor: 'rgba(255, 255, 255, 0.25)'
+                                                            }
+                                                        }}
+                                                    >
+                                                        Add Document Loader
+                                                    </Button>
+                                                    <Button
+                                                        variant="contained"
+                                                        startIcon={<FileChunksIcon style={{ fontSize: 18 }} />}
+                                                        onClick={() => showStoredChunks('all')}
+                                                        disabled={documentStore?.totalChunks <= 0 || documentStore?.status === 'UPSERTING'}
+                                                        sx={{
+                                                            backgroundColor: 'rgba(255, 255, 255, 0.15)',
+                                                            color: 'white',
+                                                            borderRadius: '10px',
+                                                            textTransform: 'none',
+                                                            '&:hover': {
+                                                                backgroundColor: 'rgba(255, 255, 255, 0.25)'
+                                                            },
+                                                            '&.Mui-disabled': {
+                                                                backgroundColor: 'rgba(255, 255, 255, 0.05)',
+                                                                color: 'rgba(255, 255, 255, 0.5)'
+                                                            }
+                                                        }}
+                                                    >
+                                                        View & Edit Chunks
+                                                    </Button>
+                                                    <Button
+                                                        variant="contained"
+                                                        startIcon={<SearchIcon style={{ fontSize: 18 }} />}
+                                                        onClick={() => showVectorStoreQuery(documentStore.id)}
+                                                        disabled={documentStore?.totalChunks <= 0 || documentStore?.status !== 'UPSERTED'}
+                                                        sx={{
+                                                            backgroundColor: 'rgba(255, 255, 255, 0.15)',
+                                                            color: 'white',
+                                                            borderRadius: '10px',
+                                                            textTransform: 'none',
+                                                            '&:hover': {
+                                                                backgroundColor: 'rgba(255, 255, 255, 0.25)'
+                                                            },
+                                                            '&.Mui-disabled': {
+                                                                backgroundColor: 'rgba(255, 255, 255, 0.05)',
+                                                                color: 'rgba(255, 255, 255, 0.5)'
+                                                            }
+                                                        }}
+                                                    >
+                                                        Retrieval Query
+                                                    </Button>
+                                                </Stack>
+                                            </Stack>
+                                        </Box>
+                                    </Grid>
+                                </Grid>
+
+                                <Box
+                                    sx={{
+                                        display: 'flex',
+                                        gap: '1rem',
+                                        flexWrap: 'wrap',
+                                        alignItems: 'center',
+                                        justifyContent: 'space-between'
+                                    }}
                                 >
-                                    <FileChunksIcon />
-                                    View & Edit Chunks
-                                </MenuItem>
-                                <MenuItem
-                                    disabled={documentStore?.totalChunks <= 0 || documentStore?.status === 'UPSERTING'}
-                                    onClick={() => showVectorStore(documentStore.id)}
-                                    disableRipple
-                                >
-                                    <NoteAddIcon />
-                                    Upsert All Chunks
-                                </MenuItem>
-                                <MenuItem
-                                    disabled={documentStore?.totalChunks <= 0 || documentStore?.status !== 'UPSERTED'}
-                                    onClick={() => showVectorStoreQuery(documentStore.id)}
-                                    disableRipple
-                                >
-                                    <SearchIcon />
-                                    Retrieval Query
-                                </MenuItem>
-                                <MenuItem
-                                    disabled={documentStore?.totalChunks <= 0 || documentStore?.status !== 'UPSERTED'}
-                                    onClick={() => onStoreRefresh(documentStore.id)}
-                                    disableRipple
-                                    title='Re-process all loaders and upsert all chunks'
-                                >
-                                    <RefreshIcon />
-                                    Refresh
-                                </MenuItem>
-                                <Divider sx={{ my: 0.5 }} />
-                                <MenuItem
-                                    onClick={() => onStoreDelete(documentStore.vectorStoreConfig, documentStore.recordManagerConfig)}
-                                    disableRipple
-                                >
-                                    <FileDeleteIcon />
-                                    Delete
-                                </MenuItem>
-                            </StyledMenu>
-                        </ViewHeader>
-                        <DocumentStoreStatus status={documentStore?.status} />
+                                    <Stack direction="row" spacing={2}>
+                                        <Button
+                                            variant="contained"
+                                            startIcon={<IconRefresh size={18} />}
+                                            onClick={() => navigate('/document-stores')}
+                                            sx={{
+                                                backgroundColor: 'rgba(255, 255, 255, 0.15)',
+                                                color: 'white',
+                                                borderRadius: '10px',
+                                                textTransform: 'none',
+                                                '&:hover': {
+                                                    backgroundColor: 'rgba(255, 255, 255, 0.25)'
+                                                }
+                                            }}
+                                        >
+                                            Back to Document Stores
+                                        </Button>
+                                        <Button
+                                            variant="contained"
+                                            startIcon={<FileEditIcon style={{ fontSize: 18 }} />}
+                                            onClick={() => onEditClicked()}
+                                            sx={{
+                                                backgroundColor: 'rgba(255, 255, 255, 0.15)',
+                                                color: 'white',
+                                                borderRadius: '10px',
+                                                textTransform: 'none',
+                                                '&:hover': {
+                                                    backgroundColor: 'rgba(255, 255, 255, 0.25)'
+                                                }
+                                            }}
+                                        >
+                                            Edit Store
+                                        </Button>
+                                    </Stack>
+
+                                    <Button
+                                        id='document-store-header-action-button'
+                                        aria-controls={open ? 'document-store-header-menu' : undefined}
+                                        aria-haspopup='true'
+                                        aria-expanded={open ? 'true' : undefined}
+                                        variant='contained'
+                                        disableElevation
+                                        onClick={handleClick}
+                                        sx={{ 
+                                            backgroundColor: buttonBlue,
+                                            color: 'white',
+                                            borderRadius: '10px',
+                                            textTransform: 'none',
+                                            '&:hover': {
+                                                backgroundColor: alpha(buttonBlue, 0.9)
+                                            }
+                                        }}
+                                        endIcon={<KeyboardArrowDownIcon />}
+                                    >
+                                        More Actions
+                                    </Button>
+                                    <StyledMenu
+                                        id='document-store-header-menu'
+                                        MenuListProps={{
+                                            'aria-labelledby': 'document-store-header-menu-button'
+                                        }}
+                                        anchorEl={anchorEl}
+                                        open={open}
+                                        onClose={handleClose}
+                                    >
+                                        <MenuItem
+                                            disabled={documentStore?.totalChunks <= 0 || documentStore?.status === 'UPSERTING'}
+                                            onClick={() => showStoredChunks('all')}
+                                            disableRipple
+                                        >
+                                            <FileChunksIcon />
+                                            View & Edit Chunks
+                                        </MenuItem>
+                                        <MenuItem
+                                            disabled={documentStore?.totalChunks <= 0 || documentStore?.status === 'UPSERTING'}
+                                            onClick={() => showVectorStore(documentStore.id)}
+                                            disableRipple
+                                        >
+                                            <IconCloudUpload size={18} />
+                                            Upsert All Chunks
+                                        </MenuItem>
+                                        <MenuItem
+                                            disabled={documentStore?.totalChunks <= 0 || documentStore?.status !== 'UPSERTED'}
+                                            onClick={() => showVectorStoreQuery(documentStore.id)}
+                                            disableRipple
+                                        >
+                                            <SearchIcon />
+                                            Retrieval Query
+                                        </MenuItem>
+                                        <MenuItem
+                                            disabled={documentStore?.totalChunks <= 0 || documentStore?.status !== 'UPSERTED'}
+                                            onClick={() => onStoreRefresh(documentStore.id)}
+                                            disableRipple
+                                            title='Re-process all loaders and upsert all chunks'
+                                        >
+                                            <RefreshIcon />
+                                            Refresh
+                                        </MenuItem>
+                                        <Divider sx={{ my: 0.5 }} />
+                                        <MenuItem
+                                            onClick={() => onStoreDelete(documentStore.vectorStoreConfig, documentStore.recordManagerConfig)}
+                                            disableRipple
+                                        >
+                                            <FileDeleteIcon />
+                                            Delete
+                                        </MenuItem>
+                                    </StyledMenu>
+                                </Box>
+                            </Stack>
+                        </Box>
                         {getSpecificDocumentStore.data?.whereUsed?.length > 0 && (
                             <Stack flexDirection='row' sx={{ gap: 2, alignItems: 'center', flexWrap: 'wrap' }}>
                                 <div

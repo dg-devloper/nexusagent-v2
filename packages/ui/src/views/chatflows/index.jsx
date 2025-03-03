@@ -2,34 +2,31 @@ import { useEffect, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 
 // material-ui
-import { Stack } from '@mui/material'
+import { Stack, Typography } from '@mui/material'
 
 // project imports
 import MainCard from '@/ui-component/cards/MainCard'
 import ConfirmDialog from '@/ui-component/dialog/ConfirmDialog'
 import { FlowListTable } from '@/ui-component/table/FlowListTable'
 import ErrorBoundary from '@/ErrorBoundary'
+import HeaderSection from '@/layout/MainLayout/HeaderSection'
 
 // API
 import chatflowsApi from '@/api/chatflows'
+import client from '@/api/client'
 
 // Hooks
 import useApi from '@/hooks/useApi'
-
 // const
 import { baseURL } from '@/store/constant'
 
 // icons
-import HeaderSection from '@/layout/MainLayout/HeaderSection'
 import { IconPlus } from '@tabler/icons-react'
 import { StyledButton } from '@/ui-component/button/StyledButton'
 import AppIcon from '@/menu-items/icon'
 
-// ==============================|| CHATFLOWS ||============================== //
-
 const Chatflows = () => {
     const navigate = useNavigate()
-
     const [isLoading, setLoading] = useState(true)
     const [error, setError] = useState(null)
     const [images, setImages] = useState({})
@@ -54,25 +51,35 @@ const Chatflows = () => {
         navigate('/canvas')
     }
 
-    // const goToCanvas = (selectedChatflow) => {
-    //     navigate(`/canvas/${selectedChatflow.id}`)
-    // }
+    const processFlowImages = (flow) => {
+        try {
+            const flowDataStr = flow.flowData
+            const flowData = JSON.parse(flowDataStr)
+            const nodes = flowData.nodes || []
+            const flowImages = []
+            for (const node of nodes) {
+                if (node.data?.name) {
+                    const imageSrc = `${client.defaults.baseURL}/node-icon/${node.data.name}`
+                    if (!flowImages.includes(imageSrc)) {
+                        flowImages.push(imageSrc)
+                    }
+                }
+            }
+            return flowImages
+        } catch (err) {
+            console.error('Error processing flow images:', err)
+            return []
+        }
+    }
 
     useEffect(() => {
         getAllChatflowsApi.request()
-
-        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [])
 
     useEffect(() => {
         if (getAllChatflowsApi.error) {
             if (getAllChatflowsApi.error?.response?.status === 401) {
-                // setLoginDialogProps({
-                //     title: 'Login',
-                //     confirmButtonName: 'Login'
-                // })
-                // setLoginDialogOpen(true)
-                // navigate('/login')
+                // Handle unauthorized
             } else {
                 setError(getAllChatflowsApi.error)
             }
@@ -86,21 +93,11 @@ const Chatflows = () => {
     useEffect(() => {
         if (getAllChatflowsApi.data) {
             try {
-                const chatflows = getAllChatflowsApi.data
-                const images = {}
-                for (let i = 0; i < chatflows.length; i += 1) {
-                    const flowDataStr = chatflows[i].flowData
-                    const flowData = JSON.parse(flowDataStr)
-                    const nodes = flowData.nodes || []
-                    images[chatflows[i].id] = []
-                    for (let j = 0; j < nodes.length; j += 1) {
-                        const imageSrc = `${baseURL}/api/v1/node-icon/${nodes[j].data.name}`
-                        if (!images[chatflows[i].id].includes(imageSrc)) {
-                            images[chatflows[i].id].push(imageSrc)
-                        }
-                    }
+                const newImages = {}
+                for (const flow of getAllChatflowsApi.data) {
+                    newImages[flow.id] = processFlowImages(flow)
                 }
-                setImages(images)
+                setImages(newImages)
             } catch (e) {
                 console.error(e)
             }
@@ -116,11 +113,23 @@ const Chatflows = () => {
                     <HeaderSection
                         onButtonClick={addNew}
                         onSearchChange={onSearchChange}
-                        title={AppIcon.chatflow.headerTitle}
-                        subtitle={AppIcon.chatflow.description}
-                        icon={AppIcon.chatflow.icon}
+                        title={AppIcon.flowStudio.headerTitle}
+                        subtitle={AppIcon.flowStudio.description}
+                        icon={AppIcon.flowStudio.icon}
                     >
-                        <StyledButton variant='contained' onClick={addNew} startIcon={<IconPlus />} sx={{ borderRadius: 2, height: 40 }}>
+                        <StyledButton 
+                            variant='contained' 
+                            onClick={addNew} 
+                            startIcon={<IconPlus />} 
+                            sx={{ 
+                                borderRadius: 2, 
+                                height: 40,
+                                backgroundColor: '#1F64FF',
+                                '&:hover': {
+                                    backgroundColor: '#1957E3'
+                                }
+                            }}
+                        >
                             Add
                         </StyledButton>
                     </HeaderSection>
@@ -135,16 +144,43 @@ const Chatflows = () => {
                             setError={setError}
                         />
                     )}
+                    
                     {!isLoading && (!getAllChatflowsApi.data || getAllChatflowsApi.data.length === 0) && (
-                        <Stack sx={{ alignItems: 'center', justifyContent: 'center' }} flexDirection='column'>
-                            {/* <Box sx={{ p: 2, height: 'auto' }}>
-                                <img
-                                    style={{ objectFit: 'cover', height: '25vh', width: 'auto' }}
-                                    src={WorkflowEmptySVG}
-                                    alt='WorkflowEmptySVG'
-                                />
-                            </Box> */}
-                            <div>No Chatflows Yet</div>
+                        <Stack 
+                            sx={{ 
+                                alignItems: 'center', 
+                                justifyContent: 'center',
+                                py: 8
+                            }} 
+                            flexDirection='column'
+                            spacing={2}
+                        >
+                            <Typography
+                                variant="h5"
+                                sx={{
+                                    color: 'rgb(99, 115, 129)',
+                                    textAlign: 'center',
+                                    maxWidth: 300
+                                }}
+                            >
+                                No flows yet. Create your first flow to get started!
+                            </Typography>
+                            <StyledButton
+                                variant="contained"
+                                onClick={addNew}
+                                startIcon={<IconPlus />}
+                                sx={{
+                                    mt: 2,
+                                    borderRadius: 2,
+                                    height: 40,
+                                    backgroundColor: '#1F64FF',
+                                    '&:hover': {
+                                        backgroundColor: '#1957E3'
+                                    }
+                                }}
+                            >
+                                Create Flow
+                            </StyledButton>
                         </Stack>
                     )}
                 </Stack>

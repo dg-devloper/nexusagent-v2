@@ -16,35 +16,20 @@ import themeTypography from './typography'
 export const theme = (customization) => {
     const color = colors
 
-    const themeOption = customization.isDarkMode
-        ? {
-              colors: color,
-              heading: color.paper,
-              paper: color.darkPrimaryLight,
-              backgroundDefault: color.darkPaper,
-              background: color.darkPrimaryLight,
-              darkTextPrimary: color.paper,
-              darkTextSecondary: color.paper,
-              textDark: color.paper,
-              menuSelected: color.darkSecondaryDark,
-              menuSelectedBack: color.darkSecondaryLight,
-              divider: color.darkPaper,
-              customization
-          }
-        : {
-              colors: color,
-              heading: color.grey900,
-              paper: color.paper,
-              backgroundDefault: color.paper,
-              background: color.primaryLight,
-              darkTextPrimary: color.grey700,
-              darkTextSecondary: color.grey500,
-              textDark: color.grey900,
-              menuSelected: color.secondaryDark,
-              menuSelectedBack: color.secondaryLight,
-              divider: color.grey200,
-              customization
-          }
+    const themeOption = {
+        colors: color,
+        heading: 'rgb(33, 43, 54)',
+        paper: '#fff',
+        backgroundDefault: '#f9fafb',
+        background: '#fff',
+        darkTextPrimary: 'rgb(33, 43, 54)',
+        darkTextSecondary: 'rgb(99, 115, 129)',
+        textDark: 'rgb(33, 43, 54)',
+        menuSelected: 'rgb(25, 118, 210)',
+        menuSelectedBack: 'rgba(25, 118, 210, 0.08)',
+        divider: 'rgba(145, 158, 171, 0.12)',
+        customization
+    }
 
     const themeOptions = {
         direction: 'ltr',
@@ -58,11 +43,54 @@ export const theme = (customization) => {
                 }
             }
         },
-        typography: themeTypography(themeOption)
+        typography: themeTypography(themeOption),
+        components: {
+            MuiListItemButton: {
+                styleOverrides: {
+                    root: {
+                        borderRadius: 8,
+                        paddingTop: 8,
+                        paddingBottom: 8,
+                        '&.Mui-selected': {
+                            backgroundColor: 'rgba(25, 118, 210, 0.08)',
+                            '&:hover': {
+                                backgroundColor: 'rgba(25, 118, 210, 0.12)'
+                            }
+                        }
+                    }
+                }
+            },
+            MuiListItemIcon: {
+                styleOverrides: {
+                    root: {
+                        minWidth: 36,
+                        color: 'rgb(99, 115, 129)'
+                    }
+                }
+            },
+            MuiChip: {
+                styleOverrides: {
+                    root: {
+                        height: 20,
+                        padding: '0 6px',
+                        fontSize: '0.75rem',
+                        fontWeight: 600,
+                        borderRadius: 6
+                    }
+                }
+            }
+        }
     }
 
-    const themes = createTheme(themeOptions)
-    themes.components = componentStyleOverrides(themeOption)
+    const themes = createTheme({
+        ...themeOptions,
+        colors: themeOption.colors // Add colors to the theme object directly
+    })
+
+    themes.components = {
+        ...themes.components,
+        ...componentStyleOverrides(themeOption)
+    }
 
     return themes
 }

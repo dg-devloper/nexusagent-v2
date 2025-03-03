@@ -4,8 +4,17 @@ import { lazy } from 'react'
 import MainLayout from '@/layout/MainLayout'
 import Loadable from '@/ui-component/loading/Loadable'
 
+// home routing
+const Home = Loadable(lazy(() => import('@/views/home')))
+
+// coming soon page
+const ComingSoon = Loadable(lazy(() => import('@/views/comingsoon')))
+
 // chats routing
 const Chat = Loadable(lazy(() => import('@/views/chats')))
+
+// chat prediction routing
+const ChatPrediction = Loadable(lazy(() => import('@/views/chat')))
 
 // config routing
 const Config = Loadable(lazy(() => import('@/views/configs')))
@@ -48,19 +57,22 @@ const LandingPage = Loadable(lazy(() => import('@/views/landingpage')))
 
 // ==============================|| MAIN ROUTING ||============================== //
 
-// const MainRoutes = {
-//     path: '/',
-//     element: <LandingPage />
-// }
-
 const MainRoutes = {
     path: '/',
     element: <MainLayout />,
     children: [
         {
             path: '/',
-            element: <Chatflows />
+            element: <Home />
         },
+        {
+            path: '/chat/:predictionId',
+            element: <ChatPrediction />
+        },
+        // {
+        //     path: '/chat-ai/:predictionId',
+        //     element: <ChatPrediction />
+        // },
         {
             path: '/configs',
             element: <Config />
@@ -136,6 +148,34 @@ const MainRoutes = {
         {
             path: '/document-stores/query/:id',
             element: <VectorStoreQuery />
+        },
+        
+        // Route untuk halaman yang belum tersedia
+        {
+            path: '/members',
+            element: <ComingSoon />
+        },
+        {
+            path: '/roles',
+            element: <ComingSoon />
+        },
+        {
+            path: '/profile',
+            element: <ComingSoon />
+        },
+        {
+            path: '/docs',
+            element: <ComingSoon />
+        },
+        {
+            path: '/support',
+            element: <ComingSoon />
+        },
+        
+        // Wildcard route untuk menangkap semua route yang tidak terdaftar
+        {
+            path: '*',
+            element: <ComingSoon />
         }
     ]
 }

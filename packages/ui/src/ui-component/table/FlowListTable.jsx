@@ -2,12 +2,9 @@ import { useState } from 'react'
 import PropTypes from 'prop-types'
 import { useSelector } from 'react-redux'
 import moment from 'moment'
-import { styled } from '@mui/material/styles'
+import { styled, alpha, useTheme } from '@mui/material/styles'
 import {
     Box,
-    Chip,
-    Paper,
-    Skeleton,
     Stack,
     Table,
     TableBody,
@@ -15,263 +12,279 @@ import {
     TableContainer,
     TableHead,
     TableRow,
-    TableSortLabel,
-    Tooltip,
     Typography,
-    useTheme
+    Tooltip,
+    Paper,
+    Chip
 } from '@mui/material'
 import { tableCellClasses } from '@mui/material/TableCell'
 import FlowListMenu from '../button/FlowListMenu'
 import { Link } from 'react-router-dom'
+import { IconDotsCircleHorizontal } from '@tabler/icons-react'
+
+const brandColor = '#2b63d9'
 
 const StyledTableCell = styled(TableCell)(({ theme }) => ({
-    borderColor: theme.palette.grey[900] + 25,
-
+    borderBottom: `1px solid ${alpha(brandColor, 0.1)}`,
+    padding: '20px 24px',
     [`&.${tableCellClasses.head}`]: {
-        color: theme.palette.grey[900]
+        background: `linear-gradient(180deg, ${alpha(brandColor, 0.05)} 0%, ${alpha(brandColor, 0.02)} 100%)`,
+        color: 'rgb(100, 116, 139)',
+        fontSize: '0.75rem',
+        fontWeight: 600,
+        textTransform: 'uppercase',
+        letterSpacing: '0.05em',
+        height: 64
     },
     [`&.${tableCellClasses.body}`]: {
-        fontSize: 14,
-        height: 64
+        fontSize: '0.875rem',
+        color: 'rgb(51, 65, 85)',
+        height: 72
     }
 }))
 
 const StyledTableRow = styled(TableRow)(() => ({
-    // hide last border
-    '&:last-child td, &:last-child th': {
-        border: 0
+    transition: 'all 0.3s ease-in-out',
+    position: 'relative',
+    '&:hover': {
+        backgroundColor: alpha(brandColor, 0.02),
+        transform: 'translateY(-1px)',
+        boxShadow: `0 4px 12px ${alpha(brandColor, 0.08)}`
+    },
+    '&:after': {
+        content: '""',
+        position: 'absolute',
+        left: 0,
+        right: 0,
+        bottom: 0,
+        height: '1px',
+        background: `linear-gradient(90deg, ${alpha(brandColor, 0.1)} 0%, ${alpha(brandColor, 0.05)} 100%)`
+    },
+    '&:last-child:after': {
+        display: 'none'
     }
 }))
 
-const getLocalStorageKeyName = (name, isAgentCanvas) => {
-    return (isAgentCanvas ? 'agentcanvas' : 'chatflowcanvas') + '_' + name
-}
+const TypeChip = styled(Chip)(({ flowtype }) => ({
+    height: 28,
+    borderRadius: '8px',
+    fontSize: '0.75rem',
+    fontWeight: 600,
+    backgroundColor: 
+        flowtype === 'chatflow' ? alpha('#10B981', 0.1) :
+        flowtype === 'agentflow' ? alpha('#6366F1', 0.1) :
+        alpha('#F59E0B', 0.1),
+    color: 
+        flowtype === 'chatflow' ? '#059669' :
+        flowtype === 'agentflow' ? '#4F46E5' :
+        '#D97706',
+    border: `1px solid ${
+        flowtype === 'chatflow' ? alpha('#10B981', 0.2) :
+        flowtype === 'agentflow' ? alpha('#6366F1', 0.2) :
+        alpha('#F59E0B', 0.2)
+    }`,
+    transition: 'all 0.2s ease-in-out',
+    '&:hover': {
+        transform: 'translateY(-1px)',
+        boxShadow: `0 4px 8px ${alpha(
+            flowtype === 'chatflow' ? '#10B981' :
+            flowtype === 'agentflow' ? '#6366F1' :
+            '#F59E0B',
+            0.15
+        )}`
+    }
+}))
 
 export const FlowListTable = ({ data, images, isLoading, filterFunction, updateFlowsApi, setError, isAgentCanvas }) => {
     const theme = useTheme()
     const customization = useSelector((state) => state.customization)
 
-    const localStorageKeyOrder = getLocalStorageKeyName('order', isAgentCanvas)
-    const localStorageKeyOrderBy = getLocalStorageKeyName('orderBy', isAgentCanvas)
-
-    const [order, setOrder] = useState(localStorage.getItem(localStorageKeyOrder) || 'desc')
-    const [orderBy, setOrderBy] = useState(localStorage.getItem(localStorageKeyOrderBy) || 'updatedDate')
-
-    const handleRequestSort = (property) => {
-        const isAsc = orderBy === property && order === 'asc'
-        const newOrder = isAsc ? 'desc' : 'asc'
-        setOrder(newOrder)
-        setOrderBy(property)
-        localStorage.setItem(localStorageKeyOrder, newOrder)
-        localStorage.setItem(localStorageKeyOrderBy, property)
+    const getFlowType = (flow) => {
+        if (isAgentCanvas) return 'agentflow'
+        return 'chatflow'
     }
 
-    const sortedData = data
-        ? [...data].sort((a, b) => {
-              if (orderBy === 'name') {
-                  return order === 'asc' ? (a.name || '').localeCompare(b.name || '') : (b.name || '').localeCompare(a.name || '')
-              } else if (orderBy === 'updatedDate') {
-                  return order === 'asc'
-                      ? new Date(a.updatedDate) - new Date(b.updatedDate)
-                      : new Date(b.updatedDate) - new Date(a.updatedDate)
-              }
-              return 0
-          })
-        : []
+    const getTypeLabel = (type) => {
+        switch (type) {
+            case 'chatflow':
+                return 'Chatflow'
+            case 'agentflow':
+                return 'Multiagent'
+            case 'assistant':
+                return 'Assistant'
+            default:
+                return type
+        }
+    }
+
+    const renderNodeIcons = (rowImages) => {
+        if (!rowImages || rowImages.length === 0) return null
+
+        const displayImages = rowImages.slice(0, 5)
+        const remainingCount = rowImages.length - 5
+
+        return (
+            <Stack direction="row" spacing={1.5} alignItems="center">
+                {displayImages.map((img, index) => (
+                    <Tooltip key={index} title={`Node ${index + 1}`}>
+                        <Box
+                            component="img"
+                            src={img}
+                            sx={{
+                                width: 32,
+                                height: 32,
+                                padding: '6px',
+                                borderRadius: '12px',
+                                backgroundColor: alpha(brandColor, 0.05),
+                                border: `1px solid ${alpha(brandColor, 0.1)}`,
+                                transition: 'all 0.3s ease-in-out',
+                                objectFit: 'contain',
+                                '&:hover': {
+                                    transform: 'translateY(-2px) scale(1.05)',
+                                    boxShadow: `0 6px 16px ${alpha(brandColor, 0.12)}`,
+                                    backgroundColor: alpha(brandColor, 0.08)
+                                }
+                            }}
+                        />
+                    </Tooltip>
+                ))}
+                {remainingCount > 0 && (
+                    <Tooltip title={`${remainingCount} more node${remainingCount > 1 ? 's' : ''}`}>
+                        <Box
+                            sx={{
+                                width: 32,
+                                height: 32,
+                                borderRadius: '12px',
+                                backgroundColor: alpha(brandColor, 0.05),
+                                border: `1px solid ${alpha(brandColor, 0.1)}`,
+                                display: 'flex',
+                                alignItems: 'center',
+                                justifyContent: 'center',
+                                color: brandColor,
+                                transition: 'all 0.3s ease-in-out',
+                                '&:hover': {
+                                    transform: 'translateY(-2px)',
+                                    boxShadow: `0 6px 16px ${alpha(brandColor, 0.12)}`,
+                                    backgroundColor: alpha(brandColor, 0.08)
+                                }
+                            }}
+                        >
+                            <IconDotsCircleHorizontal size={18} />
+                        </Box>
+                    </Tooltip>
+                )}
+            </Stack>
+        )
+    }
+
+    if (isLoading) {
+        return (
+            <Stack spacing={1.5}>
+                {[1, 2, 3].map((index) => (
+                    <Box
+                        key={index}
+                        sx={{
+                            height: 72,
+                            borderRadius: 3,
+                            background: `linear-gradient(90deg, ${alpha(brandColor, 0.04)} 0%, ${alpha(brandColor, 0.02)} 50%, ${alpha(brandColor, 0.04)} 100%)`,
+                            backgroundSize: '200% 100%',
+                            animation: 'pulse 2s ease-in-out infinite',
+                            '@keyframes pulse': {
+                                '0%': {
+                                    backgroundPosition: '0% 0%'
+                                },
+                                '100%': {
+                                    backgroundPosition: '-200% 0%'
+                                }
+                            }
+                        }}
+                    />
+                ))}
+            </Stack>
+        )
+    }
 
     return (
-        <>
-            <TableContainer sx={{ border: 1, borderColor: theme.palette.grey[900] + 25, borderRadius: 2 }} component={Paper}>
-                <Table sx={{ minWidth: 650 }} size='small' aria-label='a dense table'>
-                    <TableHead
-                        sx={{
-                            backgroundColor: customization.isDarkMode ? theme.palette.common.black : theme.palette.grey[100],
-                            height: 56
-                        }}
-                    >
-                        <TableRow>
-                            <StyledTableCell component='th' scope='row' style={{ width: '20%' }} key='0'>
-                                <TableSortLabel active={orderBy === 'name'} direction={order} onClick={() => handleRequestSort('name')}>
-                                    Name
-                                </TableSortLabel>
-                            </StyledTableCell>
-                            <StyledTableCell style={{ width: '25%' }} key='1'>
-                                Category
-                            </StyledTableCell>
-                            <StyledTableCell style={{ width: '30%' }} key='2'>
-                                Nodes
-                            </StyledTableCell>
-                            <StyledTableCell style={{ width: '15%' }} key='3'>
-                                <TableSortLabel
-                                    active={orderBy === 'updatedDate'}
-                                    direction={order}
-                                    onClick={() => handleRequestSort('updatedDate')}
-                                >
-                                    Last Modified Date
-                                </TableSortLabel>
-                            </StyledTableCell>
-                            <StyledTableCell style={{ width: '10%' }} key='4'>
-                                Actions
-                            </StyledTableCell>
-                        </TableRow>
-                    </TableHead>
-                    <TableBody>
-                        {isLoading ? (
-                            <>
-                                <StyledTableRow>
-                                    <StyledTableCell>
-                                        <Skeleton variant='text' />
-                                    </StyledTableCell>
-                                    <StyledTableCell>
-                                        <Skeleton variant='text' />
-                                    </StyledTableCell>
-                                    <StyledTableCell>
-                                        <Skeleton variant='text' />
-                                    </StyledTableCell>
-                                    <StyledTableCell>
-                                        <Skeleton variant='text' />
-                                    </StyledTableCell>
-                                    <StyledTableCell>
-                                        <Skeleton variant='text' />
-                                    </StyledTableCell>
-                                </StyledTableRow>
-                                <StyledTableRow>
-                                    <StyledTableCell>
-                                        <Skeleton variant='text' />
-                                    </StyledTableCell>
-                                    <StyledTableCell>
-                                        <Skeleton variant='text' />
-                                    </StyledTableCell>
-                                    <StyledTableCell>
-                                        <Skeleton variant='text' />
-                                    </StyledTableCell>
-                                    <StyledTableCell>
-                                        <Skeleton variant='text' />
-                                    </StyledTableCell>
-                                    <StyledTableCell>
-                                        <Skeleton variant='text' />
-                                    </StyledTableCell>
-                                </StyledTableRow>
-                            </>
-                        ) : (
-                            <>
-                                {sortedData.filter(filterFunction).map((row, index) => (
-                                    <StyledTableRow key={index}>
-                                        <StyledTableCell key='0'>
-                                            <Tooltip title={row.templateName || row.name}>
-                                                <Typography
-                                                    sx={{
-                                                        display: '-webkit-box',
-                                                        fontSize: 14,
-                                                        fontWeight: 500,
-                                                        WebkitLineClamp: 2,
-                                                        WebkitBoxOrient: 'vertical',
-                                                        textOverflow: 'ellipsis',
-                                                        overflow: 'hidden'
-                                                    }}
-                                                >
-                                                    <Link
-                                                        to={`/${isAgentCanvas ? 'agentcanvas' : 'canvas'}/${row.id}`}
-                                                        style={{ color: '#2196f3', textDecoration: 'none' }}
-                                                    >
-                                                        {row.templateName || row.name}
-                                                    </Link>
-                                                </Typography>
-                                            </Tooltip>
-                                        </StyledTableCell>
-                                        <StyledTableCell key='1'>
-                                            <div
-                                                style={{
-                                                    display: 'flex',
-                                                    flexDirection: 'row',
-                                                    flexWrap: 'wrap',
-                                                    marginTop: 5
-                                                }}
-                                            >
-                                                &nbsp;
-                                                {row.category &&
-                                                    row.category
-                                                        .split(';')
-                                                        .map((tag, index) => (
-                                                            <Chip key={index} label={tag} style={{ marginRight: 5, marginBottom: 5 }} />
-                                                        ))}
-                                            </div>
-                                        </StyledTableCell>
-                                        <StyledTableCell key='2'>
-                                            {images[row.id] && (
-                                                <Box
-                                                    sx={{
-                                                        display: 'flex',
-                                                        alignItems: 'center',
-                                                        justifyContent: 'start',
-                                                        gap: 1
-                                                    }}
-                                                >
-                                                    {images[row.id]
-                                                        .slice(0, images[row.id].length > 5 ? 5 : images[row.id].length)
-                                                        .map((img) => (
-                                                            <Box
-                                                                key={img}
-                                                                sx={{
-                                                                    width: 30,
-                                                                    height: 30,
-                                                                    borderRadius: '50%',
-                                                                    backgroundColor: customization.isDarkMode
-                                                                        ? theme.palette.common.white
-                                                                        : theme.palette.grey[300] + 75
-                                                                }}
-                                                            >
-                                                                <img
-                                                                    style={{
-                                                                        width: '100%',
-                                                                        height: '100%',
-                                                                        padding: 5,
-                                                                        objectFit: 'contain'
-                                                                    }}
-                                                                    alt=''
-                                                                    src={img}
-                                                                />
-                                                            </Box>
-                                                        ))}
-                                                    {images[row.id].length > 5 && (
-                                                        <Typography
-                                                            sx={{
-                                                                alignItems: 'center',
-                                                                display: 'flex',
-                                                                fontSize: '.9rem',
-                                                                fontWeight: 200
-                                                            }}
-                                                        >
-                                                            + {images[row.id].length - 5} More
-                                                        </Typography>
-                                                    )}
-                                                </Box>
-                                            )}
-                                        </StyledTableCell>
-                                        <StyledTableCell key='3'>{moment(row.updatedDate).format('MMMM Do, YYYY')}</StyledTableCell>
-                                        <StyledTableCell key='4'>
-                                            <Stack
-                                                direction={{ xs: 'column', sm: 'row' }}
-                                                spacing={1}
-                                                justifyContent='center'
-                                                alignItems='center'
-                                            >
-                                                <FlowListMenu
-                                                    isAgentCanvas={isAgentCanvas}
-                                                    chatflow={row}
-                                                    setError={setError}
-                                                    updateFlowsApi={updateFlowsApi}
-                                                />
-                                            </Stack>
-                                        </StyledTableCell>
-                                    </StyledTableRow>
-                                ))}
-                            </>
-                        )}
-                    </TableBody>
-                </Table>
-            </TableContainer>
-        </>
+        <TableContainer 
+            component={Paper} 
+            elevation={0}
+            sx={{ 
+                border: `1px solid ${alpha(brandColor, 0.1)}`,
+                borderRadius: 4,
+                overflow: 'hidden',
+                background: `linear-gradient(180deg, ${alpha(brandColor, 0.02)} 0%, transparent 100%)`,
+                boxShadow: `0 8px 32px -4px ${alpha(brandColor, 0.08)}`
+            }}
+        >
+            <Table>
+                <TableHead>
+                    <TableRow>
+                        <StyledTableCell>Name</StyledTableCell>
+                        <StyledTableCell>Type</StyledTableCell>
+                        <StyledTableCell>Nodes</StyledTableCell>
+                        <StyledTableCell>Last Modified</StyledTableCell>
+                        <StyledTableCell align="right">Actions</StyledTableCell>
+                    </TableRow>
+                </TableHead>
+                <TableBody>
+                    {(data || []).filter(filterFunction || (() => true)).map((row) => {
+                        const flowType = getFlowType(row)
+                        return (
+                            <StyledTableRow key={row.id}>
+                                <StyledTableCell>
+                                    <Typography
+                                        component={Link}
+                                        to={`/${isAgentCanvas ? 'agentcanvas' : 'canvas'}/${row.id}`}
+                                        sx={{
+                                            color: 'rgb(51, 65, 85)',
+                                            textDecoration: 'none',
+                                            fontWeight: 600,
+                                            fontSize: '0.875rem',
+                                            transition: 'all 0.2s ease-in-out',
+                                            '&:hover': {
+                                                color: brandColor,
+                                                transform: 'translateX(4px)'
+                                            }
+                                        }}
+                                    >
+                                        {row.name}
+                                    </Typography>
+                                </StyledTableCell>
+                                <StyledTableCell>
+                                    <TypeChip
+                                        label={getTypeLabel(flowType)}
+                                        flowtype={flowType}
+                                        size="small"
+                                    />
+                                </StyledTableCell>
+                                <StyledTableCell>
+                                    {renderNodeIcons(images[row.id])}
+                                </StyledTableCell>
+                                <StyledTableCell>
+                                    <Typography 
+                                        sx={{ 
+                                            color: 'rgb(100, 116, 139)',
+                                            fontSize: '0.875rem',
+                                            fontWeight: 500
+                                        }}
+                                    >
+                                        {moment(row.updatedDate).format('MMM D, YYYY')}
+                                    </Typography>
+                                </StyledTableCell>
+                                <StyledTableCell align="right">
+                                    <FlowListMenu
+                                        isAgentCanvas={isAgentCanvas}
+                                        chatflow={row}
+                                        setError={setError}
+                                        updateFlowsApi={updateFlowsApi}
+                                    />
+                                </StyledTableCell>
+                            </StyledTableRow>
+                        )
+                    })}
+                </TableBody>
+            </Table>
+        </TableContainer>
     )
 }
 
@@ -284,3 +297,5 @@ FlowListTable.propTypes = {
     setError: PropTypes.func,
     isAgentCanvas: PropTypes.bool
 }
+
+export default FlowListTable

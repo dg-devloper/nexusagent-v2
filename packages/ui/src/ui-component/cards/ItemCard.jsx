@@ -2,141 +2,198 @@ import PropTypes from 'prop-types'
 import { useSelector } from 'react-redux'
 
 // material-ui
-import { styled } from '@mui/material/styles'
-import { Box, Grid, Typography, useTheme } from '@mui/material'
+import { styled, alpha } from '@mui/material/styles'
+import { Box, Button, Grid, Typography, useTheme } from '@mui/material'
 
 // project imports
 import MainCard from '@/ui-component/cards/MainCard'
 
+// icons
+import { IconTool, IconEdit } from '@tabler/icons-react'
+
+const brandColor = '#2b63d9'
+
 const CardWrapper = styled(MainCard)(({ theme }) => ({
-    background: theme.palette.card.main,
-    color: theme.darkTextPrimary,
-    overflow: 'auto',
+    background: `linear-gradient(135deg, ${alpha(brandColor, 0.03)} 0%, ${theme.palette.background.paper} 100%)`,
+    color: theme.palette.text.primary,
+    overflow: 'hidden',
     position: 'relative',
-    boxShadow: '0 2px 14px 0 rgb(32 40 45 / 8%)',
+    boxShadow: `0 8px 32px -4px ${alpha(brandColor, 0.08)}`,
     cursor: 'pointer',
+    '&:before': {
+        content: '""',
+        position: 'absolute',
+        top: 0,
+        left: 0,
+        right: 0,
+        height: '100%',
+        background: `radial-gradient(circle at top right, ${alpha(brandColor, 0.12)}, transparent 70%)`,
+        opacity: 0,
+        transition: 'opacity 0.3s ease-in-out'
+    },
     '&:hover': {
-        background: theme.palette.card.hover,
-        boxShadow: '0 2px 14px 0 rgb(32 40 45 / 20%)'
+        transform: 'translateY(-4px)',
+        boxShadow: `0 12px 48px ${alpha(brandColor, 0.16)}`,
+        '&:before': {
+            opacity: 1
+        },
+        '& .card-icon': {
+            transform: 'scale(1.1) rotate(5deg)',
+            boxShadow: `0 8px 24px ${alpha(brandColor, 0.24)}`
+        },
+        '& .edit-button': {
+            transform: 'translateY(-2px)',
+            backgroundColor: brandColor,
+            color: '#fff'
+        }
     },
     height: '100%',
-    minHeight: '160px',
+    minHeight: '200px',
     maxHeight: '300px',
     width: '100%',
     overflowWrap: 'break-word',
-    whiteSpace: 'pre-line'
+    whiteSpace: 'pre-line',
+    transition: 'all 0.3s ease-in-out',
+    border: `1px solid ${alpha(brandColor, 0.1)}`,
+    borderRadius: '16px'
 }))
-
-// ===========================|| CONTRACT CARD ||=========================== //
 
 const ItemCard = ({ data, images, onClick }) => {
     const theme = useTheme()
     const customization = useSelector((state) => state.customization)
 
     return (
-        <CardWrapper content={false} onClick={onClick} sx={{ border: 1, borderColor: theme.palette.grey[900] + 25, borderRadius: 2 }}>
-            <Box sx={{ height: '100%', p: 2.25 }}>
-                <Grid container justifyContent='space-between' direction='column' sx={{ height: '100%', gap: 3 }}>
-                    <Box display='flex' flexDirection='column' sx={{ width: '100%' }}>
-                        <div
-                            style={{
-                                width: '100%',
+        <CardWrapper content={false} onClick={onClick}>
+            <Box sx={{ height: '100%', p: 3, position: 'relative' }}>
+                <Grid container direction='column' sx={{ height: '100%' }}>
+                    <Box display='flex' flexDirection='column' sx={{ width: '100%', position: 'relative', zIndex: 1 }}>
+                        <Box
+                            className="card-icon"
+                            sx={{
+                                width: 48,
+                                height: 48,
                                 display: 'flex',
-                                flexDirection: 'row',
                                 alignItems: 'center',
-                                overflow: 'hidden'
+                                justifyContent: 'center',
+                                borderRadius: '14px',
+                                backgroundColor: alpha(brandColor, 0.1),
+                                border: `1px solid ${alpha(brandColor, 0.2)}`,
+                                mb: 2,
+                                transition: 'all 0.3s ease-in-out',
+                                backgroundImage: data.iconSrc ? `url(${data.iconSrc})` : 'none',
+                                backgroundSize: 'contain',
+                                backgroundRepeat: 'no-repeat',
+                                backgroundPosition: 'center center'
                             }}
                         >
-                            {data.iconSrc && (
-                                <div
-                                    style={{
-                                        width: 35,
-                                        height: 35,
-                                        display: 'flex',
-                                        flexShrink: 0,
-                                        marginRight: 10,
-                                        borderRadius: '50%',
-                                        backgroundImage: `url(${data.iconSrc})`,
-                                        backgroundSize: 'contain',
-                                        backgroundRepeat: 'no-repeat',
-                                        backgroundPosition: 'center center'
-                                    }}
-                                ></div>
-                            )}
-                            {!data.iconSrc && data.color && (
-                                <div
-                                    style={{
-                                        width: 35,
-                                        height: 35,
-                                        display: 'flex',
-                                        flexShrink: 0,
-                                        marginRight: 10,
-                                        borderRadius: '50%',
-                                        background: data.color
-                                    }}
-                                ></div>
-                            )}
+                            {!data.iconSrc && <IconTool size={28} color={brandColor} />}
+                        </Box>
+                        <Typography
+                            sx={{
+                                fontSize: '1.125rem',
+                                fontWeight: 600,
+                                color: 'rgb(51, 65, 85)',
+                                mb: 1
+                            }}
+                        >
+                            {data.templateName || data.name}
+                        </Typography>
+                        {data.description && (
                             <Typography
                                 sx={{
                                     display: '-webkit-box',
-                                    fontSize: '1.25rem',
-                                    fontWeight: 500,
-                                    WebkitLineClamp: 2,
-                                    WebkitBoxOrient: 'vertical',
-                                    textOverflow: 'ellipsis',
-                                    overflow: 'hidden'
-                                }}
-                            >
-                                {data.templateName || data.name}
-                            </Typography>
-                        </div>
-                        {data.description && (
-                            <span
-                                style={{
-                                    display: '-webkit-box',
-                                    marginTop: 10,
                                     overflowWrap: 'break-word',
                                     WebkitLineClamp: 3,
                                     WebkitBoxOrient: 'vertical',
                                     textOverflow: 'ellipsis',
-                                    overflow: 'hidden'
+                                    overflow: 'hidden',
+                                    color: 'rgb(100, 116, 139)',
+                                    fontSize: '0.875rem',
+                                    lineHeight: 1.6,
+                                    mb: 2
                                 }}
                             >
                                 {data.description}
-                            </span>
+                            </Typography>
                         )}
                     </Box>
-                    {images && (
-                        <Box
-                            sx={{
-                                display: 'flex',
-                                alignItems: 'center',
-                                justifyContent: 'start',
-                                gap: 1
+                    <Box 
+                        sx={{ 
+                            mt: 'auto',
+                            pt: 2,
+                            borderTop: `1px solid ${alpha(brandColor, 0.1)}`,
+                            display: 'flex',
+                            justifyContent: 'space-between',
+                            alignItems: 'center'
+                        }}
+                    >
+                        {images && images.length > 0 && (
+                            <Box sx={{ display: 'flex', gap: 1 }}>
+                                {images.slice(0, 3).map((img, index) => (
+                                    <Box
+                                        key={index}
+                                        sx={{
+                                            width: 28,
+                                            height: 28,
+                                            borderRadius: '8px',
+                                            backgroundColor: alpha(brandColor, 0.05),
+                                            border: `1px solid ${alpha(brandColor, 0.1)}`,
+                                            padding: '4px',
+                                            display: 'flex',
+                                            alignItems: 'center',
+                                            justifyContent: 'center'
+                                        }}
+                                    >
+                                        <Box
+                                            component="img"
+                                            src={img}
+                                            sx={{
+                                                width: '100%',
+                                                height: '100%',
+                                                objectFit: 'contain'
+                                            }}
+                                            alt=""
+                                        />
+                                    </Box>
+                                ))}
+                                {images.length > 3 && (
+                                    <Typography
+                                        sx={{
+                                            color: 'rgb(100, 116, 139)',
+                                            fontSize: '0.75rem',
+                                            fontWeight: 500,
+                                            display: 'flex',
+                                            alignItems: 'center'
+                                        }}
+                                    >
+                                        +{images.length - 3}
+                                    </Typography>
+                                )}
+                            </Box>
+                        )}
+                        <Button 
+                            className="edit-button"
+                            sx={{ 
+                                minWidth: 'auto',
+                                backgroundColor: alpha(brandColor, 0.05),
+                                color: brandColor,
+                                border: `1px solid ${alpha(brandColor, 0.15)}`,
+                                borderRadius: '10px',
+                                px: 2,
+                                py: 1,
+                                fontSize: '0.875rem',
+                                fontWeight: 600,
+                                transition: 'all 0.3s ease-in-out',
+                                '&:hover': {
+                                    backgroundColor: brandColor,
+                                    color: '#fff'
+                                }
                             }}
+                            startIcon={<IconEdit size={18} />}
                         >
-                            {images.slice(0, images.length > 3 ? 3 : images.length).map((img) => (
-                                <Box
-                                    key={img}
-                                    sx={{
-                                        width: 30,
-                                        height: 30,
-                                        borderRadius: '50%',
-                                        backgroundColor: customization.isDarkMode
-                                            ? theme.palette.common.white
-                                            : theme.palette.grey[300] + 75
-                                    }}
-                                >
-                                    <img style={{ width: '100%', height: '100%', padding: 5, objectFit: 'contain' }} alt='' src={img} />
-                                </Box>
-                            ))}
-                            {images.length > 3 && (
-                                <Typography sx={{ alignItems: 'center', display: 'flex', fontSize: '.9rem', fontWeight: 200 }}>
-                                    + {images.length - 3} More
-                                </Typography>
-                            )}
-                        </Box>
-                    )}
+                            Edit
+                        </Button>
+                    </Box>
                 </Grid>
             </Box>
         </CardWrapper>

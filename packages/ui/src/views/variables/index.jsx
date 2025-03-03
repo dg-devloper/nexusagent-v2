@@ -201,9 +201,9 @@ const Variables = () => {
                     <Stack flexDirection='column' sx={{ gap: 3 }}>
                         <HeaderSection
                             onSearchChange={onSearchChange}
-                            title={AppIcon.variables.headerTitle}
-                            subtitle={AppIcon.variables.description}
-                            icon={AppIcon.variables.icon}
+                            title={AppIcon.apiConfig.headerTitle}
+                            subtitle={AppIcon.apiConfig.description}
+                            icon={AppIcon.apiConfig.icon}
                         >
                             <StyledButton
                                 variant='contained'

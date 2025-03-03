@@ -1,93 +1,114 @@
-// assets
 import {
-    IconUsersGroup,
-    IconHierarchy,
-    IconBuildingStore,
-    IconKey,
-    IconTool,
-    IconLock,
+    IconChartBar,
+    IconBrain,
+    IconUsers,
     IconRobot,
-    IconVariable,
+    IconPuzzle,
+    IconPlugConnected,
     IconFiles,
-    IconFlower,
-    IconBasketStar,
-    IconBriefcaseFilled,
-    IconSettingsAutomation,
-    IconCloudLock,
-    IconWorldCog
+    IconUserCircle,
+    IconSettings,
+    IconShield,
+    IconCode,
+    IconBook,
+    IconHeadset,
+    IconDashboard,
+    IconAdjustments,
+    IconLock,
+    IconDatabase,
+    IconUserPlus,
+    IconUsersGroup
 } from '@tabler/icons-react'
 
-const icons = {
-    IconUsersGroup,
-    IconHierarchy,
-    IconBuildingStore,
-    IconKey,
-    IconTool,
-    IconLock,
-    IconRobot,
-    IconVariable,
-    IconFiles,
-    IconFlower,
-    IconWorldCog,
-    IconBriefcaseFilled,
-    IconSettingsAutomation,
-    IconCloudLock,
-    IconBasketStar
-}
-
 const AppIcon = {
-    chatbot: {
-        icon: icons.IconFlower
+    // Main Section
+    dashboard: {
+        icon: IconDashboard,
+        headerTitle: 'Dashboard',
+        description: 'Overview and analytics of your workspace'
     },
-    chatflow: {
-        icon: icons.IconHierarchy,
-        headerTitle: 'Agent Flow',
-        description: `Create and manage a single, customized workflow for your agent. This menu allows you to design interactive conversation paths, integrate functionalities, and tailor the agent's behavior to meet specific needs. Perfect for building focused and efficient solutions.`
+    aiWorkspace: {
+        icon: IconBrain,
+        headerTitle: 'AI Workspace',
+        description: 'Manage your AI workflows and automations'
     },
-    agentflows: {
-        icon: icons.IconUsersGroup,
-        headerTitle: 'Multi-Agent Flow',
-        description: `Design and manage workflows that incorporate multiple agents within a single flow. This menu enables you to create interconnected agents, define their roles, and build complex, collaborative interactions to handle diverse scenarios effectively.`
+    flowStudio: {
+        icon: IconUserPlus,
+        headerTitle: 'Flow Studio',
+        description: 'Design and create AI conversation flows'
     },
-    assistants: {
-        icon: icons.IconRobot,
-        headerTitle: 'Flow Assistant',
-        description: 'lorem'
+    teamAgents: {
+        icon: IconUsers,
+        headerTitle: 'Team Agents',
+        description: 'Manage multi-agent collaborations'
     },
+    aiAssistant: {
+        icon: IconRobot,
+        headerTitle: 'AI Assistant',
+        description: 'Configure AI assistants for automation'
+    },
+
+    // Tools Section
     marketplaces: {
-        icon: icons.IconBriefcaseFilled,
-        headerTitle: 'Marketplace',
-        description: `Discover and access a wide range of plugins, templates, and integrations to extend the functionality of Nexus Agent. The Marketplace provides tools and resources to enhance workflows, streamline processes, and integrate seamlessly with third-party services.`
+        icon: IconPuzzle,
+        headerTitle: 'Plugins',
+        description: 'Browse and manage plugins'
     },
-    tools: {
-        icon: icons.IconWorldCog,
-        headerTitle: 'Integration Tool',
-        description: `Discover and configure various tools to enhance your workflows. Integrate external functionalities, automate tasks, and expand the capabilities of your flows effortlessly`
-    },
-    config: {
-        icon: icons.IconSettingsAutomation,
-        headerTitle: 'Setting',
-        description: 'lorem'
-    },
-    credential: {
-        icon: icons.IconCloudLock,
-        headerTitle: 'Credential',
-        description: `Securely store and manage authentication details such as API keys and tokens. This menu ensures easy and safe integration with third-party services required for your workflows.`
-    },
-    variables: {
-        icon: icons.IconVariable,
-        headerTitle: 'Variable',
-        description: `Define and manage dynamic variables to personalize workflows and automate processes. This menu allows you to configure reusable data points for seamless flow customization.`
-    },
-    apikey: {
-        icon: icons.IconKey,
-        headerTitle: 'API Key',
-        description: `Generate and manage API keys for secure access to Nexus Agent services or integration with external applications. Control and monitor access to your workflows effectively.`
+    integrations: {
+        icon: IconPlugConnected,
+        headerTitle: 'Integrations',
+        description: 'Connect external services and tools'
     },
     documentStores: {
-        icon: icons.IconFiles,
-        headerTitle: 'Library',
-        description: `Organize, store, and access important documents for use in workflows. This menu provides a centralized repository to manage knowledge bases and support your flow processes.`
+        icon: IconFiles,
+        headerTitle: 'Document Stores',
+        description: 'Manage your document libraries'
+    },
+
+    // Team Section
+    members: {
+        icon: IconUsersGroup,
+        headerTitle: 'Team Members',
+        description: 'Manage team members and permissions'
+    },
+    roles: {
+        icon: IconShield,
+        headerTitle: 'Roles',
+        description: 'Configure team roles and access'
+    },
+
+    // Settings Section
+    profile: {
+        icon: IconUserCircle,
+        headerTitle: 'Profile',
+        description: 'Manage your account settings'
+    },
+    controls: {
+        icon: IconAdjustments,
+        headerTitle: 'Controls',
+        description: 'Configure system settings'
+    },
+    security: {
+        icon: IconLock,
+        headerTitle: 'Security',
+        description: 'Manage security settings'
+    },
+    apiConfig: {
+        icon: IconCode,
+        headerTitle: 'API Configuration',
+        description: 'Configure API settings'
+    },
+
+    // Help Section
+    documentation: {
+        icon: IconBook,
+        headerTitle: 'Documentation',
+        description: 'Access guides and documentation'
+    },
+    support: {
+        icon: IconHeadset,
+        headerTitle: 'Support',
+        description: 'Get help and support'
     }
 }
 
