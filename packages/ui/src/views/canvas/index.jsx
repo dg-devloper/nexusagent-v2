@@ -11,7 +11,7 @@ import {
     closeSnackbar as closeSnackbarAction,
     SET_MENU
 } from '@/store/actions'
-import { omit, cloneDeep } from 'lodash'
+import { cloneDeep } from 'lodash'
 
 // material-ui
 import { Box, Button, Fab, useMediaQuery } from '@mui/material'
@@ -54,7 +54,6 @@ import useNotifier from '@/utils/useNotifier'
 import { usePrompt } from '@/utils/usePrompt'
 
 // const
-import { FLOWISE_CREDENTIAL_ID } from '@/store/constant'
 
 const nodeTypes = { customNode: CanvasNode, stickyNote: StickyNote }
 const edgeTypes = { buttonedge: ButtonEdge, filledLoadingEdge: FilledLoadingEdge }
@@ -103,41 +102,50 @@ const Canvas = () => {
 
     // Debounce flowData updates
     const updateFlowDebounceRef = useRef(null)
-    const updateFlowData = useCallback((newNodes, newEdges) => {
-        if (updateFlowDebounceRef.current) {
-            clearTimeout(updateFlowDebounceRef.current)
-        }
-        updateFlowDebounceRef.current = setTimeout(() => {
-            dispatch({
-                type: SET_CHATFLOW,
-                chatflow: {
-                    ...canvas.chatflow,
-                    flowData: JSON.stringify({ nodes: newNodes, edges: newEdges })
-                }
-            })
-        }, 500)
-    }, [dispatch, canvas.chatflow])
+    const updateFlowData = useCallback(
+        (newNodes, newEdges) => {
+            if (updateFlowDebounceRef.current) {
+                clearTimeout(updateFlowDebounceRef.current)
+            }
+            updateFlowDebounceRef.current = setTimeout(() => {
+                dispatch({
+                    type: SET_CHATFLOW,
+                    chatflow: {
+                        ...canvas.chatflow,
+                        flowData: JSON.stringify({ nodes: newNodes, edges: newEdges })
+                    }
+                })
+            }, 500)
+        },
+        [dispatch, canvas.chatflow]
+    )
 
     // Update nodes and edges with flowData changes
-    const onNodesChange = useCallback((changes) => {
-        setNodes((nds) => {
-            const newNodes = applyNodeChanges(changes, nds)
-            if (newNodes !== nds) {
-                updateFlowData(newNodes, edges)
-            }
-            return newNodes
-        })
-    }, [edges, updateFlowData])
+    const onNodesChange = useCallback(
+        (changes) => {
+            setNodes((nds) => {
+                const newNodes = applyNodeChanges(changes, nds)
+                if (newNodes !== nds) {
+                    updateFlowData(newNodes, edges)
+                }
+                return newNodes
+            })
+        },
+        [edges, updateFlowData]
+    )
 
-    const onEdgesChange = useCallback((changes) => {
-        setEdges((eds) => {
-            const newEdges = applyEdgeChanges(changes, eds)
-            if (newEdges !== eds) {
-                updateFlowData(nodes, newEdges)
-            }
-            return newEdges
-        })
-    }, [nodes, updateFlowData])
+    const onEdgesChange = useCallback(
+        (changes) => {
+            setEdges((eds) => {
+                const newEdges = applyEdgeChanges(changes, eds)
+                if (newEdges !== eds) {
+                    updateFlowData(nodes, newEdges)
+                }
+                return newEdges
+            })
+        },
+        [nodes, updateFlowData]
+    )
 
     // ==============================|| Chatflow API ||============================== //
 
@@ -148,60 +156,63 @@ const Canvas = () => {
 
     // ==============================|| Events & Actions ||============================== //
 
-    const onConnect = useCallback((params) => {
-        const newEdge = {
-            ...params,
-            type: 'buttonedge',
-            markerEnd: {
-                type: MarkerType.Arrow,
-                width: 15,
-                height: 15
-            },
-            id: `${params.source}-${params.sourceHandle}-${params.target}-${params.targetHandle}`
-        }
+    const onConnect = useCallback(
+        (params) => {
+            const newEdge = {
+                ...params,
+                type: 'buttonedge',
+                markerEnd: {
+                    type: MarkerType.Arrow,
+                    width: 15,
+                    height: 15
+                },
+                id: `${params.source}-${params.sourceHandle}-${params.target}-${params.targetHandle}`
+            }
 
-        const targetNodeId = params.targetHandle.split('-')[0]
-        const sourceNodeId = params.sourceHandle.split('-')[0]
-        const targetInput = params.targetHandle.split('-')[2]
+            const targetNodeId = params.targetHandle.split('-')[0]
+            const sourceNodeId = params.sourceHandle.split('-')[0]
+            const targetInput = params.targetHandle.split('-')[2]
 
-        setNodes((nds) => {
-            const newNodes = nds.map((node) => {
-                if (node.id === targetNodeId) {
-                    let value
-                    const inputAnchor = node.data.inputAnchors.find((ancr) => ancr.name === targetInput)
-                    const inputParam = node.data.inputParams.find((param) => param.name === targetInput)
+            setNodes((nds) => {
+                const newNodes = nds.map((node) => {
+                    if (node.id === targetNodeId) {
+                        let value
+                        const inputAnchor = node.data.inputAnchors.find((ancr) => ancr.name === targetInput)
+                        const inputParam = node.data.inputParams.find((param) => param.name === targetInput)
 
-                    if (inputAnchor && inputAnchor.list) {
-                        const newValues = node.data.inputs[targetInput] || []
-                        if (targetInput === 'tools') {
-                            rearrangeToolsOrdering(newValues, sourceNodeId)
+                        if (inputAnchor && inputAnchor.list) {
+                            const newValues = node.data.inputs[targetInput] || []
+                            if (targetInput === 'tools') {
+                                rearrangeToolsOrdering(newValues, sourceNodeId)
+                            } else {
+                                newValues.push(`{{${sourceNodeId}.data.instance}}`)
+                            }
+                            value = newValues
+                        } else if (inputParam && inputParam.acceptVariable) {
+                            value = node.data.inputs[targetInput] || ''
                         } else {
-                            newValues.push(`{{${sourceNodeId}.data.instance}}`)
+                            value = `{{${sourceNodeId}.data.instance}}`
                         }
-                        value = newValues
-                    } else if (inputParam && inputParam.acceptVariable) {
-                        value = node.data.inputs[targetInput] || ''
-                    } else {
-                        value = `{{${sourceNodeId}.data.instance}}`
-                    }
-                    node.data = {
-                        ...node.data,
-                        inputs: {
-                            ...node.data.inputs,
-                            [targetInput]: value
+                        node.data = {
+                            ...node.data,
+                            inputs: {
+                                ...node.data.inputs,
+                                [targetInput]: value
+                            }
                         }
                     }
-                }
-                return node
+                    return node
+                })
+
+                updateFlowData(newNodes, [...edges, newEdge])
+                return newNodes
             })
 
-            updateFlowData(newNodes, [...edges, newEdge])
-            return newNodes
-        })
-
-        setEdges((eds) => addEdge(newEdge, eds))
-        setDirty()
-    }, [edges, updateFlowData])
+            setEdges((eds) => addEdge(newEdge, eds))
+            setDirty()
+        },
+        [edges, updateFlowData]
+    )
 
     const handleLoadFlow = (file) => {
         try {
@@ -549,10 +560,7 @@ const Canvas = () => {
                                     </Fab>
                                 )}
                                 {isUpsertButtonEnabled && <VectorStorePopUp chatflowid={chatflowId} />}
-                                <CanvasSubHeader
-                                    chatflow={chatflow}
-                                    isAgentCanvas={isAgentCanvas}
-                                />
+                                <CanvasSubHeader chatflow={chatflow} isAgentCanvas={isAgentCanvas} />
                                 <ChatPopUp isAgentCanvas={isAgentCanvas} chatflowid={chatflowId} />
                             </ReactFlow>
                         </div>

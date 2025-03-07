@@ -6,19 +6,16 @@ import FormControl from '@mui/material/FormControl'
 import TextField from '@mui/material/TextField'
 import Typography from '@mui/material/Typography'
 import { styled } from '@mui/material/styles'
-import ForgotPassword from './ForgotPassword'
+import logoBlue from '@/assets/images/nexus_agent_logo_blue.png'
+import logo from '@/assets/images/nexus.png'
+
 import authApi from '@/api/auth'
 import { useAuth } from '@/hooks/useAuth'
 import { useNavigate } from 'react-router'
 import { Link } from 'react-router-dom'
-import { 
-    Divider, 
-    IconButton, 
-    InputAdornment,
-    Paper
-} from '@mui/material'
-import { 
-    Visibility, 
+import { Divider, IconButton, InputAdornment, Paper } from '@mui/material'
+import {
+    Visibility,
     VisibilityOff,
     Google as GoogleIcon,
     Facebook as FacebookIcon,
@@ -176,8 +173,8 @@ export default function SignInCard() {
     }
 
     return (
-        <Box 
-            sx={{ 
+        <Box
+            sx={{
                 display: 'flex',
                 minHeight: '100vh'
             }}
@@ -196,14 +193,14 @@ export default function SignInCard() {
             >
                 {/* Logo */}
                 <Box sx={{ position: 'absolute', top: 40, left: 40 }}>
-                    <img src="/logo.png" alt="Logo" style={{ height: 40 }} />
+                    <img src={logoBlue} alt='Logo' style={{ height: 40 }} />
                 </Box>
 
                 <FormContainer elevation={0}>
-                    <Typography variant="h4" sx={{ fontWeight: 700, mb: 1, textAlign: 'center' }}>
+                    <Typography variant='h4' sx={{ fontWeight: 700, mb: 1, textAlign: 'center' }}>
                         Sign In
                     </Typography>
-                    <Typography variant="body1" sx={{ color: '#64748B', mb: 4, textAlign: 'center' }}>
+                    <Typography variant='body1' sx={{ color: '#64748B', mb: 4, textAlign: 'center' }}>
                         Welcome back! Please enter your details
                     </Typography>
 
@@ -217,25 +214,25 @@ export default function SignInCard() {
                                 color: '#DC2626'
                             }}
                         >
-                            <Typography variant="body2" sx={{ fontWeight: 500 }}>
+                            <Typography variant='body2' sx={{ fontWeight: 500 }}>
                                 Invalid credentials. Please try again.
                             </Typography>
                         </Box>
                     )}
 
-                    <Box component="form" onSubmit={handleSubmit} noValidate>
+                    <Box component='form' onSubmit={handleSubmit} noValidate>
                         <FormControl fullWidth sx={{ mb: 2 }}>
                             <FormLabel sx={{ mb: 1, fontWeight: 500 }}>Email</FormLabel>
                             <Box sx={{ position: 'relative' }}>
                                 <InputIcon>
-                                    <MailIcon fontSize="small" />
+                                    <MailIcon fontSize='small' />
                                 </InputIcon>
                                 <StyledTextField
                                     error={usernameError}
                                     helperText={usernameErrorMessage}
-                                    id="username"
-                                    name="username"
-                                    placeholder="Enter your email"
+                                    id='username'
+                                    name='username'
+                                    placeholder='Enter your email'
                                     fullWidth
                                 />
                             </Box>
@@ -245,24 +242,20 @@ export default function SignInCard() {
                             <FormLabel sx={{ mb: 1, fontWeight: 500 }}>Password</FormLabel>
                             <Box sx={{ position: 'relative' }}>
                                 <InputIcon>
-                                    <LockIcon fontSize="small" />
+                                    <LockIcon fontSize='small' />
                                 </InputIcon>
                                 <StyledTextField
                                     error={passwordError}
                                     helperText={passwordErrorMessage}
-                                    name="password"
-                                    placeholder="••••••••"
+                                    name='password'
+                                    placeholder='••••••••'
                                     type={showPassword ? 'text' : 'password'}
-                                    id="password"
+                                    id='password'
                                     fullWidth
                                     InputProps={{
                                         endAdornment: (
-                                            <InputAdornment position="end">
-                                                <IconButton
-                                                    onClick={handleClickShowPassword}
-                                                    edge="end"
-                                                    sx={{ color: '#94A3B8', mr: 1 }}
-                                                >
+                                            <InputAdornment position='end'>
+                                                <IconButton onClick={handleClickShowPassword} edge='end' sx={{ color: '#94A3B8', mr: 1 }}>
                                                     {showPassword ? <VisibilityOff /> : <Visibility />}
                                                 </IconButton>
                                             </InputAdornment>
@@ -272,41 +265,29 @@ export default function SignInCard() {
                             </Box>
                         </FormControl>
 
-                        <StyledButton
-                            type="submit"
-                            fullWidth
-                            variant="contained"
-                            onClick={validateInputs}
-                            sx={{ mb: 3 }}
-                        >
+                        <StyledButton type='submit' fullWidth variant='contained' onClick={validateInputs} sx={{ mb: 3 }}>
                             Sign in
                         </StyledButton>
 
                         <Divider sx={{ mb: 3 }}>
-                            <Typography variant="body2" sx={{ color: '#64748B', px: 2 }}>
+                            <Typography variant='body2' sx={{ color: '#64748B', px: 2 }}>
                                 or continue with
                             </Typography>
                         </Divider>
 
                         <Box sx={{ display: 'flex', gap: 2, mb: 3 }}>
-                            <SocialButton 
-                                fullWidth 
-                                startIcon={<GoogleIcon />}
-                            >
+                            <SocialButton fullWidth startIcon={<GoogleIcon />}>
                                 Google
                             </SocialButton>
-                            <SocialButton 
-                                fullWidth 
-                                startIcon={<FacebookIcon />}
-                            >
+                            <SocialButton fullWidth startIcon={<FacebookIcon />}>
                                 Facebook
                             </SocialButton>
                         </Box>
 
-                        <Typography variant="body2" align="center" sx={{ color: '#64748B' }}>
-                            Don't have an account?{' '}
+                        <Typography variant='body2' align='center' sx={{ color: '#64748B' }}>
+                            Don&apos;t have an account?
                             <Link
-                                to="/register"
+                                to='/register'
                                 style={{
                                     color: '#2563EB',
                                     textDecoration: 'none',
@@ -347,37 +328,26 @@ export default function SignInCard() {
                         backgroundRepeat: 'repeat'
                     }}
                 />
-                
+
                 <Box sx={{ position: 'relative', maxWidth: 480, textAlign: 'center' }}>
-                    <Typography variant="h3" sx={{ fontWeight: 700, mb: 2 }}>
+                    <Typography variant='h3' sx={{ fontWeight: 700, mb: 2, color: 'white' }}>
                         Welcome back!
                     </Typography>
-                    <Typography variant="h4" sx={{ fontWeight: 700, mb: 3 }}>
+                    <Typography variant='h4' sx={{ fontWeight: 700, mb: 3, color: 'white' }}>
                         Please sign in to your account
                     </Typography>
-                    <Typography variant="body1" sx={{ opacity: 0.8 }}>
+                    <Typography variant='body1' sx={{ opacity: 0.8 }}>
                         Access your dashboard to manage your business analytics, reports, and insights all in one place.
                     </Typography>
 
                     {/* Analytics Preview */}
                     <Box
                         sx={{
-                            mt: 6,
                             p: 3,
-                            borderRadius: 2,
-                            backgroundColor: 'rgba(255, 255, 255, 0.1)',
-                            backdropFilter: 'blur(10px)'
+                            borderRadius: 2
                         }}
                     >
-                        <img 
-                            src="/analytics-preview.png" 
-                            alt="Analytics Preview" 
-                            style={{ 
-                                width: '100%',
-                                height: 'auto',
-                                borderRadius: 8
-                            }} 
-                        />
+                        <img src={logo} alt='Preview Analytic' style={{ width: '300px' }} />
                     </Box>
                 </Box>
             </Box>

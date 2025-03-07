@@ -2,21 +2,9 @@ import { useEffect, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 
 // material-ui
-import { 
-    Box, 
-    Grid, 
-    Card, 
-    Typography, 
-    Stack,
-    Button,
-    IconButton,
-    InputBase,
-    Paper,
-    alpha
-} from '@mui/material'
+import { Box, Grid, Card, Typography, Stack, Button, IconButton, InputBase, Paper, alpha } from '@mui/material'
 
 // project imports
-import MainCard from '@/ui-component/cards/MainCard'
 import { DashboardTable } from '@/ui-component/table/DashboardTable'
 import ErrorBoundary from '@/ErrorBoundary'
 
@@ -25,13 +13,13 @@ import chatflowsApi from '@/api/chatflows'
 import client from '@/api/client'
 
 // const
-import { baseURL } from '@/store/constant'
 
 // Hooks
 import useApi from '@/hooks/useApi'
 
 // icons
 import { IconSearch } from '@tabler/icons-react'
+import { useTheme } from '@emotion/react'
 
 const brandColor = '#2b63d9'
 
@@ -57,9 +45,9 @@ const FeatureCard = ({ title, description, buttonText, gradient }) => (
         }}
     >
         <Stack spacing={3}>
-            <Typography 
-                variant="h5" 
-                sx={{ 
+            <Typography
+                variant='h5'
+                sx={{
                     color: '#fff',
                     fontWeight: 600,
                     fontSize: '1.25rem',
@@ -69,8 +57,8 @@ const FeatureCard = ({ title, description, buttonText, gradient }) => (
             >
                 {title}
             </Typography>
-            <Typography 
-                sx={{ 
+            <Typography
+                sx={{
                     color: 'rgba(255,255,255,0.9)',
                     fontSize: '0.875rem',
                     lineHeight: 1.6,
@@ -81,7 +69,7 @@ const FeatureCard = ({ title, description, buttonText, gradient }) => (
                 {description}
             </Typography>
             <Button
-                variant="contained"
+                variant='contained'
                 sx={{
                     bgcolor: 'rgba(255,255,255,0.15)',
                     backdropFilter: 'blur(10px)',
@@ -103,6 +91,7 @@ const FeatureCard = ({ title, description, buttonText, gradient }) => (
 )
 
 const Home = () => {
+    const theme = useTheme()
     const navigate = useNavigate()
     const [isLoading, setLoading] = useState(true)
     const [error, setError] = useState(null)
@@ -137,10 +126,7 @@ const Home = () => {
     useEffect(() => {
         const fetchData = async () => {
             try {
-                const [chatflows, agentflows] = await Promise.all([
-                    getAllChatflowsApi.request(),
-                    getAllAgentflowsApi.request()
-                ])
+                const [chatflows, agentflows] = await Promise.all([getAllChatflowsApi.request(), getAllAgentflowsApi.request()])
 
                 // Process images for all flows
                 const newImages = {}
@@ -176,28 +162,37 @@ const Home = () => {
 
     return (
         <Stack spacing={4}>
-            <Grid container spacing={3}>
-                <Grid item xs={12} md={4}>
+            <Grid
+                container
+                gap={4}
+                sx={{
+                    flexWrap: 'wrap',
+                    [theme.breakpoints.up('md')]: {
+                        flexWrap: 'nowrap'
+                    }
+                }}
+            >
+                <Grid>
                     <FeatureCard
-                        title="Ready Made Solutions"
-                        description="Get started with our customizable templates. Save time and focus on what truly matters—bringing your creative ideas to life."
-                        buttonText="Browse Templates"
+                        title='Ready Made Solutions'
+                        description='Get started with our customizable templates. Save time and focus on what truly matters—bringing your creative ideas to life.'
+                        buttonText='Browse Templates'
                         gradient={`linear-gradient(135deg, ${brandColor} 0%, ${alpha(brandColor, 0.8)} 100%)`}
                     />
                 </Grid>
-                <Grid item xs={12} md={4}>
+                <Grid>
                     <FeatureCard
-                        title="AI-Powered Automation"
-                        description="Unlock the power of AI to simplify your processes. From task automation to insightful reporting, AI helps you work smarter, not harder."
-                        buttonText="Try AI Tools"
+                        title='AI-Powered Automation'
+                        description='Unlock the power of AI to simplify your processes. From task automation to insightful reporting, AI helps you work smarter, not harder.'
+                        buttonText='Try AI Tools'
                         gradient={`linear-gradient(135deg, ${alpha(brandColor, 0.9)} 0%, ${alpha(brandColor, 0.7)} 100%)`}
                     />
                 </Grid>
-                <Grid item xs={12} md={4}>
+                <Grid>
                     <FeatureCard
-                        title="Knowledge Base"
-                        description="Reach out for support whenever you need it. Our help resources and expert team are here to assist you at every step of your journey."
-                        buttonText="Get Support"
+                        title='Knowledge Base'
+                        description='Reach out for support whenever you need it. Our help resources and expert team are here to assist you at every step of your journey.'
+                        buttonText='Get Support'
                         gradient={`linear-gradient(135deg, ${alpha(brandColor, 0.8)} 0%, ${alpha(brandColor, 0.6)} 100%)`}
                     />
                 </Grid>
@@ -206,19 +201,15 @@ const Home = () => {
             {error ? (
                 <ErrorBoundary error={error} />
             ) : (
-                <Card 
-                    sx={{ 
+                <Card
+                    sx={{
                         borderRadius: 3,
                         boxShadow: `0 0 2px 0 ${alpha(brandColor, 0.2)}, 0 12px 24px -4px ${alpha(brandColor, 0.12)}`
                     }}
                 >
                     <Box sx={{ p: 3 }}>
                         <Stack spacing={3}>
-                            <Stack 
-                                direction="row" 
-                                spacing={2}
-                                alignItems="center"
-                            >
+                            <Stack direction='row' spacing={2} alignItems='center'>
                                 <Paper
                                     elevation={0}
                                     sx={{
@@ -237,14 +228,14 @@ const Home = () => {
                                         <IconSearch size={20} />
                                     </IconButton>
                                     <InputBase
-                                        sx={{ 
-                                            ml: 1, 
+                                        sx={{
+                                            ml: 1,
                                             flex: 1,
                                             '& input::placeholder': {
                                                 color: alpha(brandColor, 0.6)
                                             }
                                         }}
-                                        placeholder="Search workflows"
+                                        placeholder='Search workflows'
                                         value={searchQuery}
                                         onChange={(e) => setSearchQuery(e.target.value)}
                                     />
@@ -265,6 +256,13 @@ const Home = () => {
             )}
         </Stack>
     )
+}
+
+FeatureCard.propTypes = {
+    title: PropTypes.string,
+    description: PropTypes.string,
+    buttonText: PropTypes.string,
+    gradient: PropTypes.string
 }
 
 export default Home

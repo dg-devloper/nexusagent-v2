@@ -5,7 +5,6 @@ import PerfectScrollbar from 'react-perfect-scrollbar'
 import { BrowserView, MobileView } from 'react-device-detect'
 import MenuList from './MenuList'
 import { drawerWidth } from '@/store/constant'
-import LogoSection from '../LogoSection'
 
 const Sidebar = ({ drawerOpen, drawerToggle }) => {
     const theme = useTheme()
@@ -15,7 +14,7 @@ const Sidebar = ({ drawerOpen, drawerToggle }) => {
         <>
             <BrowserView>
                 <PerfectScrollbar
-                    component="div"
+                    component='div'
                     style={{
                         height: '100vh',
                         paddingLeft: drawerOpen ? '16px' : '12px',
@@ -37,10 +36,10 @@ const Sidebar = ({ drawerOpen, drawerToggle }) => {
 
     return (
         <Box
-            component="nav"
+            component='nav'
             sx={{
                 flexShrink: 0,
-                width: matchUpMd ? drawerOpen ? drawerWidth : 72 : 'auto',
+                width: matchUpMd ? (drawerOpen ? drawerWidth : 72) : 'auto',
                 transition: theme.transitions.create('width', {
                     easing: theme.transitions.easing.sharp,
                     duration: theme.transitions.duration.enteringScreen
@@ -49,12 +48,12 @@ const Sidebar = ({ drawerOpen, drawerToggle }) => {
         >
             <Drawer
                 variant={matchUpMd ? 'permanent' : 'temporary'}
-                anchor="left"
+                anchor='left'
                 open={drawerOpen}
                 onClose={drawerToggle}
                 sx={{
                     '& .MuiDrawer-paper': {
-                        width: matchUpMd ? drawerOpen ? drawerWidth : 72 : drawerWidth,
+                        width: matchUpMd ? (drawerOpen ? drawerWidth : 72) : drawerWidth,
                         background: '#fff',
                         color: theme.palette.text.primary,
                         borderRight: '1px solid rgba(145, 158, 171, 0.12)',
@@ -66,8 +65,7 @@ const Sidebar = ({ drawerOpen, drawerToggle }) => {
                         overflowX: 'hidden',
                         [theme.breakpoints.up('md')]: {
                             position: 'fixed',
-                            height: 'calc(100% - 56px)',
-                            top: '56px',
+                            top: '0px',
                             left: 0
                         },
                         '& .MuiListSubheader-root': {

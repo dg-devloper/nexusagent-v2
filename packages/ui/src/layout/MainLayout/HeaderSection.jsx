@@ -74,9 +74,9 @@ const HeaderSection = ({ children, onSearchChange, title, subtitle, icon }) => {
                     </Grid>
                     <Grid item xs>
                         <Stack spacing={1}>
-                            <Typography 
-                                variant='h3' 
-                                sx={{ 
+                            <Typography
+                                variant='h3'
+                                sx={{
                                     color: '#fff',
                                     fontWeight: 700,
                                     textShadow: '0 2px 4px rgba(0,0,0,0.1)',
@@ -85,8 +85,8 @@ const HeaderSection = ({ children, onSearchChange, title, subtitle, icon }) => {
                             >
                                 {title}
                             </Typography>
-                            <Typography 
-                                sx={{ 
+                            <Typography
+                                sx={{
                                     color: 'rgba(255, 255, 255, 0.9)',
                                     fontSize: '1rem',
                                     maxWidth: '600px',
@@ -142,6 +142,7 @@ const HeaderSection = ({ children, onSearchChange, title, subtitle, icon }) => {
                                 fontSize: '0.95rem',
                                 transition: 'all 0.3s ease-in-out',
                                 position: 'relative',
+                                margiinLeft: '2rem',
                                 zIndex: 1,
                                 '& .MuiOutlinedInput-notchedOutline': {
                                     border: 'none'
@@ -172,7 +173,7 @@ const HeaderSection = ({ children, onSearchChange, title, subtitle, icon }) => {
                                 }
                             }}
                             startAdornment={
-                                <InputAdornment position="start">
+                                <InputAdornment position='start'>
                                     <Box
                                         sx={{
                                             color: 'rgba(255, 255, 255, 0.6)',
@@ -184,13 +185,13 @@ const HeaderSection = ({ children, onSearchChange, title, subtitle, icon }) => {
                                             borderRight: '1px solid rgba(255, 255, 255, 0.1)'
                                         }}
                                     >
-                                        <IconSearch 
-                                            style={{ 
-                                                color: 'inherit', 
-                                                width: 22, 
+                                        <IconSearch
+                                            style={{
+                                                color: 'inherit',
+                                                width: 22,
                                                 height: 22,
-                                                strokeWidth: 1.5 
-                                            }} 
+                                                strokeWidth: 1.5
+                                            }}
                                         />
                                     </Box>
                                 </InputAdornment>

@@ -88,7 +88,7 @@ const MainLayout = () => {
                     <Main theme={theme} open={leftDrawerOpened}>
                         {/* header */}
                         <AppBar
-                            position="fixed"
+                            position='fixed'
                             elevation={0}
                             sx={{
                                 width: { md: `calc(100% - ${leftDrawerOpened ? drawerWidth : 72}px)` },

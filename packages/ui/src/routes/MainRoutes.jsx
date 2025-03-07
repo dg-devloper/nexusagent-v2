@@ -53,7 +53,6 @@ const ShowStoredChunks = Loadable(lazy(() => import('@/views/docstore/ShowStored
 const LoaderConfigPreviewChunks = Loadable(lazy(() => import('@/views/docstore/LoaderConfigPreviewChunks')))
 const VectorStoreConfigure = Loadable(lazy(() => import('@/views/docstore/VectorStoreConfigure')))
 const VectorStoreQuery = Loadable(lazy(() => import('@/views/docstore/VectorStoreQuery')))
-const LandingPage = Loadable(lazy(() => import('@/views/landingpage')))
 
 // ==============================|| MAIN ROUTING ||============================== //
 
@@ -149,7 +148,7 @@ const MainRoutes = {
             path: '/document-stores/query/:id',
             element: <VectorStoreQuery />
         },
-        
+
         // Route untuk halaman yang belum tersedia
         {
             path: '/members',
@@ -171,7 +170,7 @@ const MainRoutes = {
             path: '/support',
             element: <ComingSoon />
         },
-        
+
         // Wildcard route untuk menangkap semua route yang tidak terdaftar
         {
             path: '*',

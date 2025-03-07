@@ -8,28 +8,20 @@ import {
     Box,
     Divider,
     Drawer,
-    ListItemText,
     useMediaQuery,
     Accordion,
     AccordionSummary,
     AccordionDetails,
-    ClickAwayListener,
     InputAdornment,
     List,
-    ListItemButton,
-    ListItem,
-    ListItemAvatar,
     ListItemIcon,
     OutlinedInput,
-    Paper,
     Typography,
-    Chip,
     Tab,
     Tabs
 } from '@mui/material'
 
 // project imports
-import { drawerCanvasWidth } from '@/store/constant'
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore'
 import CategoryIcon from './CategoryIcon'
 import NodeItem from './NodeItem'
@@ -38,9 +30,6 @@ import { SidebarContainer } from './style'
 // third-party
 import PerfectScrollbar from 'react-perfect-scrollbar'
 
-// project imports
-import MainCard from '@/ui-component/cards/MainCard'
-
 // icons
 import { IconSearch, IconX } from '@tabler/icons-react'
 import LlamaindexPNG from '@/assets/images/llamaindex.png'
@@ -48,9 +37,7 @@ import LangChainPNG from '@/assets/images/langchain.png'
 import utilNodesPNG from '@/assets/images/utilNodes.png'
 
 // const
-import { baseURL } from '@/store/constant'
 import { SET_COMPONENT_NODES } from '@/store/actions'
-import LogoSection from '@/layout/MainLayout/LogoSection'
 
 // Priority order for categories
 const categoryOrder = [
@@ -125,7 +112,7 @@ const Sidebar = ({ drawerOpen, drawerToggle, window, nodesData, node, isAgentCan
 
     const getSearchedNodes = (value) => {
         if (!nodesData) return []
-        
+
         return nodesData.filter((nd) => {
             const passesName = nd.name.toLowerCase().includes(value.toLowerCase())
             const passesLabel = nd.label.toLowerCase().includes(value.toLowerCase())
@@ -223,7 +210,7 @@ const Sidebar = ({ drawerOpen, drawerToggle, window, nodesData, node, isAgentCan
             component='nav'
             sx={{
                 flexShrink: { md: 0 },
-                width: matchUpMd ? drawerCanvasWidth : 'auto'
+                width: matchUpMd ? '375px' : 'auto'
             }}
         >
             <Drawer
@@ -234,7 +221,7 @@ const Sidebar = ({ drawerOpen, drawerToggle, window, nodesData, node, isAgentCan
                 onClose={drawerToggle}
                 sx={{
                     '& .MuiDrawer-paper': {
-                        width: drawerCanvasWidth,
+                        width: '375px',
                         border: 'none',
                         top: '56px',
                         height: 'calc(100% - 56px)'
@@ -244,9 +231,7 @@ const Sidebar = ({ drawerOpen, drawerToggle, window, nodesData, node, isAgentCan
             >
                 <SidebarContainer>
                     <Box sx={{ p: 2, flexShrink: 0 }}>
-
                         <OutlinedInput
-                            autoFocus
                             size='small'
                             sx={{
                                 width: '100%',
@@ -277,12 +262,7 @@ const Sidebar = ({ drawerOpen, drawerToggle, window, nodesData, node, isAgentCan
                                         }}
                                         title='Clear Search'
                                     >
-                                        <IconX
-                                            stroke={1.5}
-                                            size='1rem'
-                                            onClick={() => filterSearch('')}
-                                            style={{ cursor: 'pointer' }}
-                                        />
+                                        <IconX stroke={1.5} size='1rem' onClick={() => filterSearch('')} style={{ cursor: 'pointer' }} />
                                     </InputAdornment>
                                 )
                             }
@@ -293,6 +273,7 @@ const Sidebar = ({ drawerOpen, drawerToggle, window, nodesData, node, isAgentCan
                                 sx={{
                                     minHeight: '50px',
                                     height: '50px',
+                                    overflow: 'auto',
                                     '& .MuiTabs-indicator': {
                                         backgroundColor: theme.palette.primary.main
                                     },
@@ -372,11 +353,7 @@ const Sidebar = ({ drawerOpen, drawerToggle, window, nodesData, node, isAgentCan
                                         </AccordionSummary>
                                         <AccordionDetails sx={{ p: 0 }}>
                                             {nodes[category].map((node) => (
-                                                <NodeItem
-                                                    key={node.name}
-                                                    node={node}
-                                                    onDragStart={onDragStart}
-                                                />
+                                                <NodeItem key={node.name} node={node} onDragStart={onDragStart} />
                                             ))}
                                         </AccordionDetails>
                                     </Accordion>

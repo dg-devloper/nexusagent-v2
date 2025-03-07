@@ -1,8 +1,8 @@
-import { Typography } from '@mui/material'
 import { Box } from '@mui/material'
 import NavGroup from './NavGroup'
 import menuItem from '@/menu-items'
 import { useSelector } from 'react-redux'
+import LogoSection from '../LogoSection'
 
 const MenuList = () => {
     const customization = useSelector((state) => state.customization)
@@ -10,23 +10,25 @@ const MenuList = () => {
 
     const items = Array.isArray(menuItem?.items) ? menuItem.items : []
 
-    const navItems = items.map((item, index) => {
-        if (!item) return null
+    const navItems = items
+        .map((item, index) => {
+            if (!item) return null
 
-        if (!item.id || !item.title || !item.type) {
+            if (!item.id || !item.title || !item.type) {
+                return null
+            }
+
+            if (item.type === 'group' && (!Array.isArray(item.children) || item.children.length === 0)) {
+                return null
+            }
+
+            if (item.type === 'group') {
+                return <NavGroup key={`${item.id}-${index}`} item={item} />
+            }
+
             return null
-        }
-
-        if (item.type === 'group' && (!Array.isArray(item.children) || item.children.length === 0)) {
-            return null
-        }
-
-        if (item.type === 'group') {
-            return <NavGroup key={`${item.id}-${index}`} item={item} />
-        }
-
-        return null
-    }).filter(Boolean)
+        })
+        .filter(Boolean)
 
     return (
         <Box
@@ -113,6 +115,7 @@ const MenuList = () => {
                 }
             }}
         >
+            <LogoSection />
             {navItems}
         </Box>
     )

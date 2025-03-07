@@ -120,8 +120,9 @@ const Credentials = () => {
     const onSearchChange = (event) => {
         setSearch(event.target.value)
     }
+
     function filterCredentials(data) {
-        return data.credentialName.toLowerCase().indexOf(search.toLowerCase()) > -1
+        return data.name.toLowerCase().indexOf(search.toLowerCase()) > -1
     }
 
     const listCredential = () => {
@@ -260,8 +261,8 @@ const Credentials = () => {
                                 variant='contained'
                                 onClick={listCredential}
                                 startIcon={<IconPlus />}
-                                sx={{ 
-                                    borderRadius: 2, 
+                                sx={{
+                                    borderRadius: 2,
                                     height: 40,
                                     backgroundColor: '#1F64FF',
                                     '&:hover': {
@@ -273,17 +274,17 @@ const Credentials = () => {
                             </StyledButton>
                         </HeaderSection>
                         {!isLoading && credentials.length <= 0 ? (
-                            <Stack 
-                                sx={{ 
-                                    alignItems: 'center', 
+                            <Stack
+                                sx={{
+                                    alignItems: 'center',
                                     justifyContent: 'center',
                                     py: 8
-                                }} 
+                                }}
                                 flexDirection='column'
                                 spacing={2}
                             >
                                 <Typography
-                                    variant="h5"
+                                    variant='h5'
                                     sx={{
                                         color: 'rgb(99, 115, 129)',
                                         textAlign: 'center',
@@ -293,7 +294,7 @@ const Credentials = () => {
                                     No credentials yet. Add your first credential to get started!
                                 </Typography>
                                 <StyledButton
-                                    variant="contained"
+                                    variant='contained'
                                     onClick={listCredential}
                                     startIcon={<IconPlus />}
                                     sx={{
@@ -310,10 +311,10 @@ const Credentials = () => {
                                 </StyledButton>
                             </Stack>
                         ) : (
-                            <TableContainer 
-                                component={Paper} 
+                            <TableContainer
+                                component={Paper}
                                 elevation={0}
-                                sx={{ 
+                                sx={{
                                     border: `1px solid ${alpha(brandColor, 0.1)}`,
                                     borderRadius: 4,
                                     overflow: 'hidden',
@@ -327,7 +328,7 @@ const Credentials = () => {
                                             <StyledTableCell>Name</StyledTableCell>
                                             <StyledTableCell>Last Updated</StyledTableCell>
                                             <StyledTableCell>Created</StyledTableCell>
-                                            <StyledTableCell align="right">Actions</StyledTableCell>
+                                            <StyledTableCell align='right'>Actions</StyledTableCell>
                                         </TableRow>
                                     </TableHead>
                                     <TableBody>
@@ -340,7 +341,13 @@ const Credentials = () => {
                                                                 sx={{
                                                                     height: 72,
                                                                     borderRadius: 3,
-                                                                    background: `linear-gradient(90deg, ${alpha(brandColor, 0.04)} 0%, ${alpha(brandColor, 0.02)} 50%, ${alpha(brandColor, 0.04)} 100%)`,
+                                                                    background: `linear-gradient(90deg, ${alpha(
+                                                                        brandColor,
+                                                                        0.04
+                                                                    )} 0%, ${alpha(brandColor, 0.02)} 50%, ${alpha(
+                                                                        brandColor,
+                                                                        0.04
+                                                                    )} 100%)`,
                                                                     backgroundSize: '200% 100%',
                                                                     animation: 'pulse 2s ease-in-out infinite',
                                                                     '@keyframes pulse': {
@@ -414,8 +421,8 @@ const Credentials = () => {
                                                             </Box>
                                                         </StyledTableCell>
                                                         <StyledTableCell>
-                                                            <Typography 
-                                                                sx={{ 
+                                                            <Typography
+                                                                sx={{
                                                                     color: 'rgb(100, 116, 139)',
                                                                     fontSize: '0.875rem',
                                                                     fontWeight: 500
@@ -425,8 +432,8 @@ const Credentials = () => {
                                                             </Typography>
                                                         </StyledTableCell>
                                                         <StyledTableCell>
-                                                            <Typography 
-                                                                sx={{ 
+                                                            <Typography
+                                                                sx={{
                                                                     color: 'rgb(100, 116, 139)',
                                                                     fontSize: '0.875rem',
                                                                     fontWeight: 500
@@ -435,10 +442,10 @@ const Credentials = () => {
                                                                 {moment(credential.createdDate).format('MMM D, YYYY')}
                                                             </Typography>
                                                         </StyledTableCell>
-                                                        <StyledTableCell align="right">
-                                                            <Stack direction="row" spacing={1} justifyContent="flex-end">
-                                                                <IconButton 
-                                                                    title='Edit' 
+                                                        <StyledTableCell align='right'>
+                                                            <Stack direction='row' spacing={1} justifyContent='flex-end'>
+                                                                <IconButton
+                                                                    title='Edit'
                                                                     onClick={() => edit(credential)}
                                                                     sx={{
                                                                         color: brandColor,
