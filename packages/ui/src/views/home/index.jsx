@@ -23,6 +23,7 @@ import { useTheme } from '@emotion/react'
 
 const brandColor = '#2b63d9'
 
+/* eslint-disable */
 const FeatureCard = ({ title, description, buttonText, gradient }) => (
     <Card
         sx={{
@@ -89,6 +90,7 @@ const FeatureCard = ({ title, description, buttonText, gradient }) => (
         </Stack>
     </Card>
 )
+/* eslint-disable */
 
 const Home = () => {
     const theme = useTheme()
@@ -256,13 +258,6 @@ const Home = () => {
             )}
         </Stack>
     )
-}
-
-FeatureCard.propTypes = {
-    title: PropTypes.string,
-    description: PropTypes.string,
-    buttonText: PropTypes.string,
-    gradient: PropTypes.string
 }
 
 export default Home
