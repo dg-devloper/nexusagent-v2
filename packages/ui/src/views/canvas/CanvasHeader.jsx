@@ -5,9 +5,9 @@ import { useEffect, useRef, useState, useCallback } from 'react'
 
 // material-ui
 import { useTheme, alpha } from '@mui/material/styles'
-import { 
-    Box, 
-    Typography, 
+import {
+    Box,
+    Typography,
     Stack,
     IconButton,
     Fade,
@@ -28,8 +28,7 @@ import {
 } from '@mui/material'
 
 // icons
-import { 
-    IconChevronDown,
+import {
     IconNotification,
     IconSettings,
     IconBook,
@@ -40,16 +39,10 @@ import {
     IconX,
     IconCloudCheck,
     IconCloudUpload,
-    IconCopy,
-    IconDownload,
-    IconTrash,
-    IconAdjustments,
-    IconAlertTriangle,
-    IconTemplate
+    IconAlertTriangle
 } from '@tabler/icons-react'
 
 // project imports
-import Settings from '@/views/settings'
 import SaveChatflowDialog from '@/ui-component/dialog/SaveChatflowDialog'
 import agentsettings from '@/menu-items/agentsettings'
 import APICodeDialog from '@/views/chatflows/APICodeDialog'
@@ -68,16 +61,16 @@ import useApi from '@/hooks/useApi'
 
 // utils
 import { generateExportFlowData } from '@/utils/genericHelper'
-import { uiBaseURL } from '@/store/constant'
 import { closeSnackbar as closeSnackbarAction, enqueueSnackbar as enqueueSnackbarAction, SET_CHATFLOW, REMOVE_DIRTY } from '@/store/actions'
 
 // ==============================|| CANVAS HEADER ||============================== //
 
+/* eslint-disable */
 const UnsavedChangesDialog = ({ open, onClose, onConfirm }) => {
     const theme = useTheme()
     return (
-        <Dialog 
-            open={open} 
+        <Dialog
+            open={open}
             onClose={onClose}
             PaperProps={{
                 sx: {
@@ -91,25 +84,30 @@ const UnsavedChangesDialog = ({ open, onClose, onConfirm }) => {
                 Unsaved Changes
             </DialogTitle>
             <DialogContent>
-                <Typography>
-                    You have unsaved changes. Would you like to save them before leaving?
-                </Typography>
+                <Typography>You have unsaved changes. Would you like to save them before leaving?</Typography>
             </DialogContent>
             <DialogActions sx={{ px: 3, pb: 3 }}>
-                <Button onClick={onClose} color="inherit">Cancel</Button>
-                <Button onClick={() => onClose('discard')} color="error">Discard</Button>
-                <Button onClick={onConfirm} variant="contained">Save</Button>
+                <Button onClick={onClose} color='inherit'>
+                    Cancel
+                </Button>
+                <Button onClick={() => onClose('discard')} color='error'>
+                    Discard
+                </Button>
+                <Button onClick={onConfirm} variant='contained'>
+                    Save
+                </Button>
             </DialogActions>
         </Dialog>
     )
 }
 
+/* eslint-disable */
 // Dialog konfirmasi penghapusan
 const DeleteConfirmDialog = ({ open, onClose, onConfirm, title }) => {
     const theme = useTheme()
     return (
-        <Dialog 
-            open={open} 
+        <Dialog
+            open={open}
             onClose={onClose}
             PaperProps={{
                 sx: {
@@ -123,13 +121,15 @@ const DeleteConfirmDialog = ({ open, onClose, onConfirm, title }) => {
                 {title || 'Confirm Delete'}
             </DialogTitle>
             <DialogContent>
-                <Typography>
-                    Are you sure you want to delete this {title}? This action cannot be undone.
-                </Typography>
+                <Typography>Are you sure you want to delete this {title}? This action cannot be undone.</Typography>
             </DialogContent>
             <DialogActions sx={{ px: 3, pb: 3 }}>
-                <Button onClick={onClose} color="inherit">Cancel</Button>
-                <Button onClick={onConfirm} color="error" variant="contained">Delete</Button>
+                <Button onClick={onClose} color='inherit'>
+                    Cancel
+                </Button>
+                <Button onClick={onConfirm} color='error' variant='contained'>
+                    Delete
+                </Button>
             </DialogActions>
         </Dialog>
     )
@@ -178,25 +178,25 @@ const CanvasHeader = ({ isAgentCanvas, handleSaveFlow, handleDeleteFlow, handleL
     // Get settings menu items from agentsettings
     const getSettingsItems = () => {
         // Always use agent_settings menu items for both canvas types
-        return agentsettings.children.map(item => {
-            let icon = null;
+        return agentsettings.children.map((item) => {
+            let icon = null
             if (item.icon) {
-                const Icon = item.icon;
+                const Icon = item.icon
                 // Gunakan ukuran icon yang konsisten tanpa hardcoding warna khusus
-                icon = <Icon size={20} />;
+                icon = <Icon size={20} />
             }
-            
+
             return {
                 icon: icon,
                 label: item.title,
                 onClick: () => onSettingsItemClick(item.id),
                 // Tidak perlu hardcoding warna untuk item delete
                 color: undefined
-            };
-        });
-    };
-    
-    const settingsItems = getSettingsItems();
+            }
+        })
+    }
+
+    const settingsItems = getSettingsItems()
 
     // Autosave functionality with better feedback
     const autoSave = useCallback(() => {
@@ -214,7 +214,7 @@ const CanvasHeader = ({ isAgentCanvas, handleSaveFlow, handleDeleteFlow, handleL
                         autoHideDuration: 1000,
                         anchorOrigin: {
                             vertical: 'bottom',
-                            horizontal: 'center',
+                            horizontal: 'center'
                         }
                     }
                 })
@@ -304,7 +304,7 @@ const CanvasHeader = ({ isAgentCanvas, handleSaveFlow, handleDeleteFlow, handleL
                             variant: 'error',
                             persist: true,
                             action: (key) => (
-                                <IconButton size="small" onClick={() => closeSnackbar(key)}>
+                                <IconButton size='small' onClick={() => closeSnackbar(key)}>
                                     <IconX />
                                 </IconButton>
                             )
@@ -312,12 +312,12 @@ const CanvasHeader = ({ isAgentCanvas, handleSaveFlow, handleDeleteFlow, handleL
                     })
                     return
                 }
-                
+
                 let flowData = canvas.chatflow.flowData
                 const parsedFlowData = JSON.parse(flowData)
                 flowData = JSON.stringify(parsedFlowData)
                 localStorage.setItem('duplicatedFlowData', flowData)
-                
+
                 // Use navigate instead of window.open to avoid login issues
                 navigate(`/${isAgentCanvas ? 'agentcanvas' : 'canvas'}`)
             } catch (e) {
@@ -329,7 +329,7 @@ const CanvasHeader = ({ isAgentCanvas, handleSaveFlow, handleDeleteFlow, handleL
                         variant: 'error',
                         persist: true,
                         action: (key) => (
-                            <IconButton size="small" onClick={() => closeSnackbar(key)}>
+                            <IconButton size='small' onClick={() => closeSnackbar(key)}>
                                 <IconX />
                             </IconButton>
                         )
@@ -359,7 +359,7 @@ const CanvasHeader = ({ isAgentCanvas, handleSaveFlow, handleDeleteFlow, handleL
                         variant: 'error',
                         persist: true,
                         action: (key) => (
-                            <IconButton size="small" onClick={() => closeSnackbar(key)}>
+                            <IconButton size='small' onClick={() => closeSnackbar(key)}>
                                 <IconX />
                             </IconButton>
                         )
@@ -410,16 +410,16 @@ const CanvasHeader = ({ isAgentCanvas, handleSaveFlow, handleDeleteFlow, handleL
     const submitFlowName = () => {
         // Jika sudah dalam proses submit, jangan lakukan apa-apa
         if (isSubmittingRef.current) return
-        
+
         // Tandai bahwa sedang dalam proses submit
         isSubmittingRef.current = true
-        
+
         // Simpan nilai input sebelum menutup mode edit
         const newName = flowNameRef.current ? flowNameRef.current.value.trim() : ''
-        
+
         // Hentikan mode edit terlebih dahulu untuk mencegah loop
         setEditingFlowName(false)
-        
+
         if (!canvas.chatflow?.id || !flowNameRef.current) {
             enqueueSnackbar({
                 message: 'Cannot update name: chatflow not available',
@@ -433,7 +433,7 @@ const CanvasHeader = ({ isAgentCanvas, handleSaveFlow, handleDeleteFlow, handleL
             isSubmittingRef.current = false
             return
         }
-        
+
         if (!newName) {
             enqueueSnackbar({
                 message: 'Chatflow name cannot be empty',
@@ -447,24 +447,23 @@ const CanvasHeader = ({ isAgentCanvas, handleSaveFlow, handleDeleteFlow, handleL
             isSubmittingRef.current = false
             return
         }
-        
+
         if (newName === canvas.chatflow.name) {
             // Reset flag submit
             isSubmittingRef.current = false
             return // Tidak ada perubahan, tidak perlu update
         }
-        
+
         const updateBody = {
             name: newName
         }
-        
+
         // Gunakan setTimeout untuk memastikan state sudah diperbarui
         setTimeout(() => {
-            updateChatflowApi.request(canvas.chatflow.id, updateBody)
-                .finally(() => {
-                    // Reset flag submit setelah API call selesai
-                    isSubmittingRef.current = false
-                })
+            updateChatflowApi.request(canvas.chatflow.id, updateBody).finally(() => {
+                // Reset flag submit setelah API call selesai
+                isSubmittingRef.current = false
+            })
         }, 0)
     }
 
@@ -520,22 +519,22 @@ const CanvasHeader = ({ isAgentCanvas, handleSaveFlow, handleDeleteFlow, handleL
 
     // Ref untuk melacak apakah notifikasi sudah ditampilkan
     const notificationShownRef = useRef(false)
-    
+
     // Efek untuk menangani respons API update chatflow
     useEffect(() => {
         // Hanya jalankan ketika ada data baru dan notifikasi belum ditampilkan
         if (updateChatflowApi.data && !notificationShownRef.current) {
             // Tandai bahwa notifikasi sudah ditampilkan
             notificationShownRef.current = true
-            
+
             // Update state dengan data baru
             setFlowName(updateChatflowApi.data.name)
-            
+
             // Gunakan setTimeout untuk menunda dispatch action
             setTimeout(() => {
                 dispatch({ type: SET_CHATFLOW, chatflow: updateChatflowApi.data })
                 setLastSaveTime(new Date())
-                
+
                 // Tampilkan notifikasi sukses
                 enqueueSnackbar({
                     message: 'Chatflow name updated successfully',
@@ -545,7 +544,7 @@ const CanvasHeader = ({ isAgentCanvas, handleSaveFlow, handleDeleteFlow, handleL
                         autoHideDuration: 3000
                     }
                 })
-                
+
                 // Reset flag notifikasi setelah beberapa saat
                 setTimeout(() => {
                     notificationShownRef.current = false
@@ -554,14 +553,15 @@ const CanvasHeader = ({ isAgentCanvas, handleSaveFlow, handleDeleteFlow, handleL
         } else if (updateChatflowApi.error) {
             // Tampilkan notifikasi error
             enqueueSnackbar({
-                message: 'Failed to update chatflow: ' + 
+                message:
+                    'Failed to update chatflow: ' +
                     (updateChatflowApi.error.response?.data?.message || updateChatflowApi.error.message || 'Unknown error'),
                 options: {
                     key: new Date().getTime() + Math.random(),
                     variant: 'error',
                     persist: true,
                     action: (key) => (
-                        <IconButton size="small" onClick={() => closeSnackbar(key)}>
+                        <IconButton size='small' onClick={() => closeSnackbar(key)}>
                             <IconX />
                         </IconButton>
                     )
@@ -584,36 +584,36 @@ const CanvasHeader = ({ isAgentCanvas, handleSaveFlow, handleDeleteFlow, handleL
 
     return (
         <>
-            <Box sx={{ 
-                width: '100%', 
-                height: '56px', 
-                background: theme.palette.mode === 'dark' 
-                    ? theme.palette.background.paper
-                    : '#f8f9fa',
-                borderBottom: `1px solid ${theme.palette.divider}`,
-                display: 'flex',
-                alignItems: 'center',
-                px: 2,
-                transition: 'all 0.3s ease',
-                position: 'fixed',
-                zIndex: 1100,
-                left: 0,
-                right: 0,
-                top: 0,
-                margin: 0
-            }}>
-                <Stack direction="row" alignItems="center" spacing={1} sx={{ flex: 1 }}>
+            <Box
+                sx={{
+                    width: '100%',
+                    height: '56px',
+                    background: theme.palette.mode === 'dark' ? theme.palette.background.paper : '#f8f9fa',
+                    borderBottom: `1px solid ${theme.palette.divider}`,
+                    display: 'flex',
+                    alignItems: 'center',
+                    px: 2,
+                    transition: 'all 0.3s ease',
+                    position: 'fixed',
+                    zIndex: 1100,
+                    left: 0,
+                    right: 0,
+                    top: 0,
+                    margin: 0
+                }}
+            >
+                <Stack direction='row' alignItems='center' spacing={1} sx={{ flex: 1 }}>
                     {/* Logo */}
                     <Box sx={{ display: 'flex', alignItems: 'center', mr: 2 }}>
-                        <Logo type="blue" />
+                        <Logo type='blue' />
                     </Box>
-                    
+
                     {/* Left side */}
-                    <Tooltip title="Back">
-                        <IconButton 
-                            size="small"
+                    <Tooltip title='Back'>
+                        <IconButton
+                            size='small'
                             onClick={handleBack}
-                            className="slide-in"
+                            className='slide-in'
                             sx={{
                                 transition: 'all 0.2s ease',
                                 '&:hover': {
@@ -626,15 +626,15 @@ const CanvasHeader = ({ isAgentCanvas, handleSaveFlow, handleDeleteFlow, handleL
                         </IconButton>
                     </Tooltip>
 
-                    <Typography variant="body2" color="text.primary" sx={{ opacity: 0.9 }}>
+                    <Typography variant='body2' color='text.primary' sx={{ opacity: 0.9 }}>
                         My Projects
                     </Typography>
-                    <Typography variant="body2" color="text.primary" sx={{ opacity: 0.9 }}>
+                    <Typography variant='body2' color='text.primary' sx={{ opacity: 0.9 }}>
                         /
                     </Typography>
 
                     {!isEditingFlowName ? (
-                        <Stack direction="row" alignItems="center" spacing={0.5}>
+                        <Stack direction='row' alignItems='center' spacing={0.5}>
                             <Typography
                                 sx={{
                                     fontSize: '0.875rem',
@@ -647,39 +647,39 @@ const CanvasHeader = ({ isAgentCanvas, handleSaveFlow, handleDeleteFlow, handleL
                                 {canvas.isDirty && <strong style={{ color: '#ffcc00' }}>*</strong>}
                                 {canvas.chatflow?.name || title}
                             </Typography>
-                                <Tooltip title="Edit Name">
-                                    <IconButton 
-                                        size="small" 
-                                        aria-label="Edit Name"
-                                        onClick={() => {
-                                            // Jika sedang dalam proses submit, jangan aktifkan mode edit
-                                            if (!isEditingFlowName && !isSubmittingRef.current) {
-                                                setEditingFlowName(true);
-                                            }
-                                        }}
-                                        sx={{ 
-                                            ml: 0.5,
-                                            color: theme.palette.text.secondary,
-                                            '&:hover': {
-                                                color: theme.palette.primary.main
-                                            }
-                                        }}
-                                    >
-                                        <IconEdit size={16} style={{ color: theme.palette.text.primary }} />
-                                    </IconButton>
-                                </Tooltip>
+                            <Tooltip title='Edit Name'>
+                                <IconButton
+                                    size='small'
+                                    aria-label='Edit Name'
+                                    onClick={() => {
+                                        // Jika sedang dalam proses submit, jangan aktifkan mode edit
+                                        if (!isEditingFlowName && !isSubmittingRef.current) {
+                                            setEditingFlowName(true)
+                                        }
+                                    }}
+                                    sx={{
+                                        ml: 0.5,
+                                        color: theme.palette.text.secondary,
+                                        '&:hover': {
+                                            color: theme.palette.primary.main
+                                        }
+                                    }}
+                                >
+                                    <IconEdit size={16} style={{ color: theme.palette.text.primary }} />
+                                </IconButton>
+                            </Tooltip>
                         </Stack>
                     ) : (
-                        <ClickAwayListener 
-                            mouseEvent="onMouseDown"
-                            touchEvent="onTouchStart"
+                        <ClickAwayListener
+                            mouseEvent='onMouseDown'
+                            touchEvent='onTouchStart'
                             onClickAway={() => {
                                 if (isEditingFlowName) {
-                                    setEditingFlowName(false);
+                                    setEditingFlowName(false)
                                 }
                             }}
                         >
-                            <Stack direction="row" alignItems="center" spacing={0.5}>
+                            <Stack direction='row' alignItems='center' spacing={0.5}>
                                 <InputBase
                                     inputRef={flowNameRef}
                                     defaultValue={canvas.chatflow?.name}
@@ -693,24 +693,23 @@ const CanvasHeader = ({ isAgentCanvas, handleSaveFlow, handleDeleteFlow, handleL
                                             backgroundColor: theme.palette.background.default,
                                             transition: theme.transitions.create(['border-color', 'box-shadow']),
                                             '&:focus': {
-                                                boxShadow: `0 0 0 2px ${theme.palette.primary.main}`,
-                                            },
-                                        },
+                                                boxShadow: `0 0 0 2px ${theme.palette.primary.main}`
+                                            }
+                                        }
                                     }}
                                     onKeyDown={(e) => {
                                         if (e.key === 'Enter') submitFlowName()
                                         if (e.key === 'Escape') setEditingFlowName(false)
                                     }}
-                                    autoFocus
                                 />
-                                <Tooltip title="Save Name">
-                                    <IconButton 
-                                        size="small"
-                                        aria-label="Save Name"
+                                <Tooltip title='Save Name'>
+                                    <IconButton
+                                        size='small'
+                                        aria-label='Save Name'
                                         onClick={() => {
                                             // Jika sedang dalam proses submit, jangan lakukan apa-apa
                                             if (isEditingFlowName && flowNameRef.current && !isSubmittingRef.current) {
-                                                submitFlowName();
+                                                submitFlowName()
                                             }
                                         }}
                                         sx={{ color: theme.palette.success.main }}
@@ -718,14 +717,14 @@ const CanvasHeader = ({ isAgentCanvas, handleSaveFlow, handleDeleteFlow, handleL
                                         <IconCheck size={16} />
                                     </IconButton>
                                 </Tooltip>
-                                <Tooltip title="Cancel">
-                                    <IconButton 
-                                        size="small"
-                                        aria-label="Cancel"
+                                <Tooltip title='Cancel'>
+                                    <IconButton
+                                        size='small'
+                                        aria-label='Cancel'
                                         onClick={() => {
                                             // Jika sedang dalam proses submit, jangan lakukan apa-apa
                                             if (isEditingFlowName && !isSubmittingRef.current) {
-                                                setEditingFlowName(false);
+                                                setEditingFlowName(false)
                                             }
                                         }}
                                         sx={{ color: theme.palette.error.main }}
@@ -740,30 +739,15 @@ const CanvasHeader = ({ isAgentCanvas, handleSaveFlow, handleDeleteFlow, handleL
                     {/* Middle */}
                     <Box sx={{ flex: 1, display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
                         {/* Run & API Buttons */}
-                        <Box sx={{ 
-                            display: 'flex', 
-                            backgroundColor: '#fff',
-                            borderRadius: '8px',
-                            border: '1px solid #e0e0e0',
-                            overflow: 'hidden'
-                        }}>
-                            <Button
-                                startIcon={<IconDeviceFloppy size={18} />}
-                                sx={{
-                                    py: 0.5,
-                                    px: 2,
-                                    borderRadius: '8px 0 0 8px',
-                                    borderRight: '1px solid #e0e0e0',
-                                    backgroundColor: '#fff',
-                                    color: theme.palette.text.primary,
-                                    '&:hover': {
-                                        backgroundColor: alpha(theme.palette.primary.main, 0.1),
-                                    }
-                                }}
-                                onClick={onSaveChatflowClick}
-                            >
-                                Playground
-                            </Button>
+                        <Box
+                            sx={{
+                                display: 'flex',
+                                backgroundColor: '#fff',
+                                borderRadius: '8px',
+                                border: '1px solid #e0e0e0',
+                                overflow: 'hidden'
+                            }}
+                        >
                             <Button
                                 startIcon={<IconDeviceFloppy size={18} />}
                                 sx={{
@@ -773,7 +757,7 @@ const CanvasHeader = ({ isAgentCanvas, handleSaveFlow, handleDeleteFlow, handleL
                                     backgroundColor: '#fff',
                                     color: theme.palette.text.primary,
                                     '&:hover': {
-                                        backgroundColor: alpha(theme.palette.primary.main, 0.1),
+                                        backgroundColor: alpha(theme.palette.primary.main, 0.1)
                                     }
                                 }}
                                 onClick={onAPIDialogClick}
@@ -786,34 +770,31 @@ const CanvasHeader = ({ isAgentCanvas, handleSaveFlow, handleDeleteFlow, handleL
                         <Box sx={{ position: 'absolute', right: '50%', transform: 'translateX(50%)' }}>
                             {isSaving ? (
                                 <Fade in={isSaving} timeout={{ enter: 800, exit: 200 }}>
-                                    <Box sx={{ 
-                                        display: 'flex',
-                                        alignItems: 'center',
-                                        gap: 0.5,
-                                        color: theme.palette.primary.main
-                                    }}>
-                                        <IconCloudUpload size={18} className="saving-icon" />
-                                        <Typography variant="caption">Saving...</Typography>
+                                    <Box
+                                        sx={{
+                                            display: 'flex',
+                                            alignItems: 'center',
+                                            gap: 0.5,
+                                            color: theme.palette.primary.main
+                                        }}
+                                    >
+                                        <IconCloudUpload size={18} className='saving-icon' />
+                                        <Typography variant='caption'>Saving...</Typography>
                                     </Box>
                                 </Fade>
                             ) : (
-                                <Stack direction="row" spacing={0.5} alignItems="center">
+                                <Stack direction='row' spacing={0.5} alignItems='center'>
                                     {canvas.isDirty ? (
-                                        <Tooltip title="Save Changes">
-                                            <IconButton
-                                                size="small"
-                                                onClick={onSaveChatflowClick}
-                                                color="warning"
-                                            >
+                                        <Tooltip title='Save Changes'>
+                                            <IconButton size='small' onClick={onSaveChatflowClick} color='warning'>
                                                 <IconDeviceFloppy size={18} />
                                             </IconButton>
                                         </Tooltip>
                                     ) : (
-                                        <Tooltip title={lastSaveTime ? `Last saved at ${lastSaveTime.toLocaleTimeString()}` : 'Not saved yet'}>
-                                            <IconButton
-                                                size="small"
-                                                sx={{ color: theme.palette.success.main }}
-                                            >
+                                        <Tooltip
+                                            title={lastSaveTime ? `Last saved at ${lastSaveTime.toLocaleTimeString()}` : 'Not saved yet'}
+                                        >
+                                            <IconButton size='small' sx={{ color: theme.palette.success.main }}>
                                                 <IconCloudCheck size={18} />
                                             </IconButton>
                                         </Tooltip>
@@ -824,11 +805,11 @@ const CanvasHeader = ({ isAgentCanvas, handleSaveFlow, handleDeleteFlow, handleL
                     </Box>
 
                     {/* Right side */}
-                    <Stack direction="row" spacing={0.5} alignItems="center" className="fade-in">
+                    <Stack direction='row' spacing={0.5} alignItems='center' className='fade-in'>
                         {canvas.chatflow?.id && (
-                            <Tooltip title="Notifications">
-                                <IconButton 
-                                    size="small"
+                            <Tooltip title='Notifications'>
+                                <IconButton
+                                    size='small'
                                     sx={{
                                         transition: 'all 0.2s ease',
                                         '&:hover': {
@@ -841,9 +822,9 @@ const CanvasHeader = ({ isAgentCanvas, handleSaveFlow, handleDeleteFlow, handleL
                                 </IconButton>
                             </Tooltip>
                         )}
-                        <Tooltip title="Documentation">
-                            <IconButton 
-                                size="small"
+                        <Tooltip title='Documentation'>
+                            <IconButton
+                                size='small'
                                 sx={{
                                     transition: 'all 0.2s ease',
                                     '&:hover': {
@@ -855,11 +836,11 @@ const CanvasHeader = ({ isAgentCanvas, handleSaveFlow, handleDeleteFlow, handleL
                                 <IconBook size={18} style={{ color: theme.palette.text.primary }} />
                             </IconButton>
                         </Tooltip>
-                        <Tooltip title="Settings">
-                            <IconButton 
-                                size="small"
+                        <Tooltip title='Settings'>
+                            <IconButton
+                                size='small'
                                 onClick={(e) => setSettingsAnchorEl(e.currentTarget)}
-                                className="pulse-effect"
+                                className='pulse-effect'
                                 sx={{
                                     transition: 'all 0.2s ease',
                                     '&:hover': {
@@ -875,41 +856,68 @@ const CanvasHeader = ({ isAgentCanvas, handleSaveFlow, handleDeleteFlow, handleL
                 </Stack>
             </Box>
 
-            <style jsx global>{`
+            <style>{`
                 @keyframes saving {
-                    0% { transform: translateY(0) scale(1); opacity: 1; }
-                    50% { transform: translateY(-3px) scale(1.1); opacity: 0.8; }
-                    100% { transform: translateY(0) scale(1); opacity: 1; }
+                    0% {
+                        transform: translateY(0) scale(1);
+                        opacity: 1;
+                    }
+                    50% {
+                        transform: translateY(-3px) scale(1.1);
+                        opacity: 0.8;
+                    }
+                    100% {
+                        transform: translateY(0) scale(1);
+                        opacity: 1;
+                    }
                 }
-                
+
                 @keyframes pulse {
-                    0% { box-shadow: 0 0 0 0 rgba(43, 99, 217, 0.4); }
-                    70% { box-shadow: 0 0 0 6px rgba(43, 99, 217, 0); }
-                    100% { box-shadow: 0 0 0 0 rgba(43, 99, 217, 0); }
+                    0% {
+                        box-shadow: 0 0 0 0 rgba(43, 99, 217, 0.4);
+                    }
+                    70% {
+                        box-shadow: 0 0 0 6px rgba(43, 99, 217, 0);
+                    }
+                    100% {
+                        box-shadow: 0 0 0 0 rgba(43, 99, 217, 0);
+                    }
                 }
-                
+
                 @keyframes fadeIn {
-                    from { opacity: 0; transform: translateY(-10px); }
-                    to { opacity: 1; transform: translateY(0); }
+                    from {
+                        opacity: 0;
+                        transform: translateY(-10px);
+                    }
+                    to {
+                        opacity: 1;
+                        transform: translateY(0);
+                    }
                 }
-                
+
                 @keyframes slideIn {
-                    from { transform: translateX(-20px); opacity: 0; }
-                    to { transform: translateX(0); opacity: 1; }
+                    from {
+                        transform: translateX(-20px);
+                        opacity: 0;
+                    }
+                    to {
+                        transform: translateX(0);
+                        opacity: 1;
+                    }
                 }
-                
+
                 .saving-icon {
                     animation: saving 1.2s ease-in-out infinite;
                 }
-                
+
                 .pulse-effect {
                     animation: pulse 2s infinite;
                 }
-                
+
                 .fade-in {
                     animation: fadeIn 0.3s ease-out forwards;
                 }
-                
+
                 .slide-in {
                     animation: slideIn 0.3s ease-out forwards;
                 }
@@ -921,11 +929,11 @@ const CanvasHeader = ({ isAgentCanvas, handleSaveFlow, handleDeleteFlow, handleL
                 onClose={() => setSettingsAnchorEl(null)}
                 anchorOrigin={{
                     vertical: 'bottom',
-                    horizontal: 'right',
+                    horizontal: 'right'
                 }}
                 transformOrigin={{
                     vertical: 'top',
-                    horizontal: 'right',
+                    horizontal: 'right'
                 }}
                 PaperProps={{
                     elevation: 0,
@@ -943,26 +951,24 @@ const CanvasHeader = ({ isAgentCanvas, handleSaveFlow, handleDeleteFlow, handleL
                             height: 10,
                             bgcolor: 'background.paper',
                             transform: 'translateY(-50%) rotate(45deg)',
-                            zIndex: 0,
-                        },
-                    },
+                            zIndex: 0
+                        }
+                    }
                 }}
             >
                 <List sx={{ width: 200, py: 0.5 }}>
                     {settingsItems.map((item, index) => (
                         <ListItem key={index} disablePadding>
                             <ListItemButton onClick={item.onClick}>
-                                <ListItemIcon sx={{ minWidth: 36 }}>
-                                    {item.icon}
-                                </ListItemIcon>
-                                <ListItemText 
-                                    primary={item.label} 
-                                    sx={{ 
+                                <ListItemIcon sx={{ minWidth: 36 }}>{item.icon}</ListItemIcon>
+                                <ListItemText
+                                    primary={item.label}
+                                    sx={{
                                         color: item.color,
                                         '& .MuiTypography-root': {
                                             fontSize: '0.875rem'
                                         }
-                                    }} 
+                                    }}
                                 />
                             </ListItemButton>
                         </ListItem>
@@ -970,13 +976,9 @@ const CanvasHeader = ({ isAgentCanvas, handleSaveFlow, handleDeleteFlow, handleL
                 </List>
             </Popover>
 
-            <UnsavedChangesDialog 
-                open={showUnsavedDialog}
-                onClose={handleUnsavedDialogClose}
-                onConfirm={handleUnsavedDialogConfirm}
-            />
+            <UnsavedChangesDialog open={showUnsavedDialog} onClose={handleUnsavedDialogClose} onConfirm={handleUnsavedDialogConfirm} />
 
-            <DeleteConfirmDialog 
+            <DeleteConfirmDialog
                 open={showDeleteDialog}
                 onClose={handleDeleteDialogClose}
                 onConfirm={handleDeleteDialogConfirm}
@@ -993,23 +995,13 @@ const CanvasHeader = ({ isAgentCanvas, handleSaveFlow, handleDeleteFlow, handleL
                 onCancel={() => setFlowDialogOpen(false)}
                 onConfirm={onConfirmSaveName}
             />
-            {apiDialogOpen && (
-                <APICodeDialog 
-                    show={apiDialogOpen} 
-                    dialogProps={apiDialogProps} 
-                    onCancel={() => setAPIDialogOpen(false)} 
-                />
-            )}
+            {apiDialogOpen && <APICodeDialog show={apiDialogOpen} dialogProps={apiDialogProps} onCancel={() => setAPIDialogOpen(false)} />}
             <ViewMessagesDialog
                 show={viewMessagesDialogOpen}
                 dialogProps={viewMessagesDialogProps}
                 onCancel={() => setViewMessagesDialogOpen(false)}
             />
-            <ViewLeadsDialog 
-                show={viewLeadsDialogOpen} 
-                dialogProps={viewLeadsDialogProps} 
-                onCancel={() => setViewLeadsDialogOpen(false)} 
-            />
+            <ViewLeadsDialog show={viewLeadsDialogOpen} dialogProps={viewLeadsDialogProps} onCancel={() => setViewLeadsDialogOpen(false)} />
             {exportAsTemplateDialogOpen && (
                 <ExportAsTemplateDialog
                     show={exportAsTemplateDialogOpen}
@@ -1028,7 +1020,7 @@ const CanvasHeader = ({ isAgentCanvas, handleSaveFlow, handleDeleteFlow, handleL
                 dialogProps={chatflowConfigurationDialogProps}
                 onCancel={() => setChatflowConfigurationDialogOpen(false)}
             />
-            
+
             {/* Hidden file input for loadChatflow */}
             <input
                 type='file'
@@ -1037,15 +1029,15 @@ const CanvasHeader = ({ isAgentCanvas, handleSaveFlow, handleDeleteFlow, handleL
                 ref={inputFile}
                 style={{ display: 'none' }}
                 onChange={(e) => {
-                    if (!e.target.files) return;
-                    const file = e.target.files[0];
-                    const reader = new FileReader();
+                    if (!e.target.files) return
+                    const file = e.target.files[0]
+                    const reader = new FileReader()
                     reader.onload = (evt) => {
-                        if (!evt?.target?.result) return;
-                        handleLoadFlow(evt.target.result);
-                    };
-                    reader.readAsText(file);
-                    e.target.value = ''; // Reset input
+                        if (!evt?.target?.result) return
+                        handleLoadFlow(evt.target.result)
+                    }
+                    reader.readAsText(file)
+                    e.target.value = '' // Reset input
                 }}
             />
         </>

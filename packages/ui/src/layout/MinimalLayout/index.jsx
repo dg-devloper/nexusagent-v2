@@ -69,7 +69,7 @@ const MinimalLayout = () => {
     // Handle left drawer
     const leftDrawerOpened = useSelector((state) => state.customization.opened)
     const canvas = useSelector((state) => state.canvas)
-    
+
     const handleLeftDrawerToggle = () => {
         dispatch({ type: SET_MENU, opened: !leftDrawerOpened })
     }
@@ -126,8 +126,8 @@ const MinimalLayout = () => {
     const handleLoadFlow = (file) => {
         try {
             const flowData = JSON.parse(file)
-            dispatch({ 
-                type: SET_CHATFLOW, 
+            dispatch({
+                type: SET_CHATFLOW,
                 chatflow: {
                     flowData: JSON.stringify(flowData),
                     isDirty: true
@@ -283,8 +283,8 @@ const MinimalLayout = () => {
                                     borderColor: theme.palette.divider
                                 }}
                             >
-                                <CanvasHeader 
-                                    handleLeftDrawerToggle={handleLeftDrawerToggle} 
+                                <CanvasHeader
+                                    handleLeftDrawerToggle={handleLeftDrawerToggle}
                                     hideLeftDrawerToggle={true}
                                     handleSaveFlow={handleSaveFlow}
                                     handleDeleteFlow={handleDeleteFlow}
