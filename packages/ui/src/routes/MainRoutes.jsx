@@ -11,7 +11,7 @@ const Home = Loadable(lazy(() => import('@/views/home')))
 const ComingSoon = Loadable(lazy(() => import('@/views/comingsoon')))
 
 // chats routing
-const Chat = Loadable(lazy(() => import('@/views/chats')))
+// const Chat = Loadable(lazy(() => import('@/views/chats')))
 
 // chat prediction routing
 const ChatPrediction = Loadable(lazy(() => import('@/views/chat')))
@@ -33,6 +33,9 @@ const APIKey = Loadable(lazy(() => import('@/views/apikey')))
 
 // tools routing
 const Tools = Loadable(lazy(() => import('@/views/tools')))
+
+// whatsapp routing
+const WhatsApp = Loadable(lazy(() => import('@/views/whatsapp')))
 
 // assistants routing
 const Assistants = Loadable(lazy(() => import('@/views/assistants')))
@@ -63,6 +66,10 @@ const MainRoutes = {
         {
             path: '/',
             element: <Home />
+        },
+        {
+            path: '/whatsapp',
+            element: <WhatsApp />
         },
         {
             path: '/chat/:predictionId',
