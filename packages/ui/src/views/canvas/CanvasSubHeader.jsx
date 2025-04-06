@@ -1,5 +1,5 @@
 import PropTypes from 'prop-types'
-import { useState, useRef } from 'react'
+import { useState } from 'react'
 
 // material-ui
 import { Box, Stack } from '@mui/material'
@@ -52,13 +52,15 @@ const CanvasSubHeader = ({ chatflow, isAgentCanvas }) => {
             <Stack flexDirection='row' justifyContent='space-between' sx={{ position: 'absolute', right: 20, top: 20 }}>
                 <Box sx={{ display: 'flex', gap: '0' }}>
                     {chatflow?.id && (
-                        <Box sx={{ 
-                            display: 'flex', 
-                            backgroundColor: '#fff',
-                            borderRadius: '8px',
-                            border: '1px solid #e0e0e0',
-                            overflow: 'hidden'
-                        }}>
+                        <Box
+                            sx={{
+                                display: 'flex',
+                                backgroundColor: '#fff',
+                                borderRadius: '8px',
+                                border: '1px solid #e0e0e0',
+                                overflow: 'hidden'
+                            }}
+                        >
                             <StyledFab
                                 variant='extended'
                                 sx={{
@@ -73,7 +75,7 @@ const CanvasSubHeader = ({ chatflow, isAgentCanvas }) => {
                                     color: '#000',
                                     boxShadow: 'none',
                                     '&:hover': {
-                                        backgroundColor: 'rgba(25, 118, 210, 0.08)',
+                                        backgroundColor: 'rgba(25, 118, 210, 0.08)'
                                     }
                                 }}
                                 size='small'
@@ -81,9 +83,9 @@ const CanvasSubHeader = ({ chatflow, isAgentCanvas }) => {
                                 title='Playground'
                                 onClick={() => {
                                     // Find and click the Run button from ChatPopUp
-                                    const runButton = document.querySelector('[aria-label="chat"]');
+                                    const runButton = document.querySelector('[aria-label="chat"]')
                                     if (runButton) {
-                                        runButton.click();
+                                        runButton.click()
                                     }
                                 }}
                             >
@@ -103,7 +105,7 @@ const CanvasSubHeader = ({ chatflow, isAgentCanvas }) => {
                                     color: '#000',
                                     boxShadow: 'none',
                                     '&:hover': {
-                                        backgroundColor: 'rgba(25, 118, 210, 0.08)',
+                                        backgroundColor: 'rgba(25, 118, 210, 0.08)'
                                     }
                                 }}
                                 size='small'
@@ -119,13 +121,7 @@ const CanvasSubHeader = ({ chatflow, isAgentCanvas }) => {
                 </Box>
             </Stack>
 
-            {apiDialogOpen && (
-                <APICodeDialog 
-                    show={apiDialogOpen} 
-                    dialogProps={apiDialogProps} 
-                    onCancel={() => setAPIDialogOpen(false)} 
-                />
-            )}
+            {apiDialogOpen && <APICodeDialog show={apiDialogOpen} dialogProps={apiDialogProps} onCancel={() => setAPIDialogOpen(false)} />}
         </>
     )
 }

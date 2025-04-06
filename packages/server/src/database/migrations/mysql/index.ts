@@ -32,7 +32,7 @@ import { AddTypeToAssistant1733011290987 } from './1733011290987-AddTypeToAssist
 import { AddSomeColumnToUsers1738830671265 } from './1738830671265-AddSomeColumnToUsers'
 import { AddEmailVerifiedAtToUser1738842119976 } from './1738842119976-AddEmailVerifiedAtToUser'
 import { AddUserVerification1738845121323 } from './1738845121323-AddUserVerification'
-
+import { AddWhatsapp1743884059452 } from './1743884059452-AddWhatsapp'
 export const mysqlMigrations = [
     Init1693840429259,
     ModifyChatFlow1693997791471,
@@ -67,5 +67,6 @@ export const mysqlMigrations = [
     AddTypeToAssistant1733011290987,
     AddSomeColumnToUsers1738830671265,
     AddEmailVerifiedAtToUser1738842119976,
-    AddUserVerification1738845121323
+    AddUserVerification1738845121323,
+    AddWhatsapp1743884059452
 ]

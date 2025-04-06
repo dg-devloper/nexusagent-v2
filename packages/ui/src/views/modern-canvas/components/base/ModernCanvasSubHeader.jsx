@@ -29,11 +29,7 @@ import useApi from '@/hooks/useApi'
 // utils
 import { generateExportFlowData } from '@/utils/genericHelper'
 import { uiBaseURL } from '@/store/constant'
-import {
-    closeSnackbar as closeSnackbarAction,
-    enqueueSnackbar as enqueueSnackbarAction,
-    SET_CHATFLOW
-} from '@/store/actions'
+import { closeSnackbar as closeSnackbarAction, enqueueSnackbar as enqueueSnackbarAction, SET_CHATFLOW } from '@/store/actions'
 
 const ModernCanvasSubHeader = ({ chatflow, isAgentCanvas, handleSaveFlow, handleDeleteFlow, handleLoadFlow }) => {
     const dispatch = useDispatch()
@@ -92,7 +88,7 @@ const ModernCanvasSubHeader = ({ chatflow, isAgentCanvas, handleSaveFlow, handle
                         variant: 'error',
                         persist: true,
                         action: (key) => (
-                            <Button className="modern-snackbar-btn" onClick={() => closeSnackbar(key)}>
+                            <Button className='modern-snackbar-btn' onClick={() => closeSnackbar(key)}>
                                 <IconX />
                             </Button>
                         )
@@ -229,9 +225,9 @@ const ModernCanvasSubHeader = ({ chatflow, isAgentCanvas, handleSaveFlow, handle
     return (
         <>
             <Stack
-                flexDirection="row"
-                justifyContent="space-between"
-                className="modern-canvas-subheader"
+                flexDirection='row'
+                justifyContent='space-between'
+                className='modern-canvas-subheader'
                 sx={{
                     position: 'absolute',
                     right: themeVariables.spacing.medium,
@@ -242,9 +238,9 @@ const ModernCanvasSubHeader = ({ chatflow, isAgentCanvas, handleSaveFlow, handle
                 <Box sx={{ display: 'flex', gap: themeVariables.spacing.small }}>
                     {chatflow?.id && (
                         <Button
-                            className="modern-canvas-subheader-btn"
-                            variant="contained"
-                            color="primary"
+                            className='modern-canvas-subheader-btn'
+                            variant='contained'
+                            color='primary'
                             startIcon={<IconCode />}
                             onClick={onAPIDialogClick}
                             sx={{
@@ -262,9 +258,9 @@ const ModernCanvasSubHeader = ({ chatflow, isAgentCanvas, handleSaveFlow, handle
                     )}
 
                     <Button
-                        className="modern-canvas-subheader-btn"
-                        variant="contained"
-                        color="primary"
+                        className='modern-canvas-subheader-btn'
+                        variant='contained'
+                        color='primary'
                         startIcon={<IconBookmark />}
                         onClick={onSaveChatflowClick}
                         sx={{
@@ -282,9 +278,9 @@ const ModernCanvasSubHeader = ({ chatflow, isAgentCanvas, handleSaveFlow, handle
 
                     <Button
                         ref={settingsRef}
-                        className="modern-canvas-subheader-settings-btn"
-                        variant="contained"
-                        color="primary"
+                        className='modern-canvas-subheader-settings-btn'
+                        variant='contained'
+                        color='primary'
                         onClick={() => setSettingsOpen(!isSettingsOpen)}
                         sx={{
                             minWidth: 'auto',
@@ -323,23 +319,13 @@ const ModernCanvasSubHeader = ({ chatflow, isAgentCanvas, handleSaveFlow, handle
                 onCancel={() => setFlowDialogOpen(false)}
                 onConfirm={onConfirmSaveName}
             />
-            {apiDialogOpen && (
-                <APICodeDialog
-                    show={apiDialogOpen}
-                    dialogProps={apiDialogProps}
-                    onCancel={() => setAPIDialogOpen(false)}
-                />
-            )}
+            {apiDialogOpen && <APICodeDialog show={apiDialogOpen} dialogProps={apiDialogProps} onCancel={() => setAPIDialogOpen(false)} />}
             <ViewMessagesDialog
                 show={viewMessagesDialogOpen}
                 dialogProps={viewMessagesDialogProps}
                 onCancel={() => setViewMessagesDialogOpen(false)}
             />
-            <ViewLeadsDialog
-                show={viewLeadsDialogOpen}
-                dialogProps={viewLeadsDialogProps}
-                onCancel={() => setViewLeadsDialogOpen(false)}
-            />
+            <ViewLeadsDialog show={viewLeadsDialogOpen} dialogProps={viewLeadsDialogProps} onCancel={() => setViewLeadsDialogOpen(false)} />
             {exportAsTemplateDialogOpen && (
                 <ExportAsTemplateDialog
                     show={exportAsTemplateDialogOpen}
@@ -353,7 +339,7 @@ const ModernCanvasSubHeader = ({ chatflow, isAgentCanvas, handleSaveFlow, handle
                 onCancel={() => setUpsertHistoryDialogOpen(false)}
             />
             <ChatflowConfigurationDialog
-                key="chatflowConfiguration"
+                key='chatflowConfiguration'
                 show={chatflowConfigurationDialogOpen}
                 dialogProps={chatflowConfigurationDialogProps}
                 onCancel={() => setChatflowConfigurationDialogOpen(false)}

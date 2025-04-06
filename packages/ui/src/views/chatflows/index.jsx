@@ -18,7 +18,6 @@ import client from '@/api/client'
 // Hooks
 import useApi from '@/hooks/useApi'
 // const
-import { baseURL } from '@/store/constant'
 
 // icons
 import { IconPlus } from '@tabler/icons-react'
@@ -117,12 +116,12 @@ const Chatflows = () => {
                         subtitle={AppIcon.flowStudio.description}
                         icon={AppIcon.flowStudio.icon}
                     >
-                        <StyledButton 
-                            variant='contained' 
-                            onClick={addNew} 
-                            startIcon={<IconPlus />} 
-                            sx={{ 
-                                borderRadius: 2, 
+                        <StyledButton
+                            variant='contained'
+                            onClick={addNew}
+                            startIcon={<IconPlus />}
+                            sx={{
+                                borderRadius: 2,
                                 height: 40,
                                 backgroundColor: '#1F64FF',
                                 '&:hover': {
@@ -144,19 +143,19 @@ const Chatflows = () => {
                             setError={setError}
                         />
                     )}
-                    
+
                     {!isLoading && (!getAllChatflowsApi.data || getAllChatflowsApi.data.length === 0) && (
-                        <Stack 
-                            sx={{ 
-                                alignItems: 'center', 
+                        <Stack
+                            sx={{
+                                alignItems: 'center',
                                 justifyContent: 'center',
                                 py: 8
-                            }} 
+                            }}
                             flexDirection='column'
                             spacing={2}
                         >
                             <Typography
-                                variant="h5"
+                                variant='h5'
                                 sx={{
                                     color: 'rgb(99, 115, 129)',
                                     textAlign: 'center',
@@ -166,7 +165,7 @@ const Chatflows = () => {
                                 No flows yet. Create your first flow to get started!
                             </Typography>
                             <StyledButton
-                                variant="contained"
+                                variant='contained'
                                 onClick={addNew}
                                 startIcon={<IconPlus />}
                                 sx={{

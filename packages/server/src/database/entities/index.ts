@@ -13,6 +13,7 @@ import { ApiKey } from './ApiKey'
 import { CustomTemplate } from './CustomTemplate'
 import { User } from './User'
 import { UserVerification } from './UserVerification'
+import { Whatsapp } from './Whatsapp'
 
 export const entities = {
     ChatFlow,
@@ -29,5 +30,6 @@ export const entities = {
     ApiKey,
     User,
     CustomTemplate,
-    UserVerification
+    UserVerification,
+    Whatsapp
 }

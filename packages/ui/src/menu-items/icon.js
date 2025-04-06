@@ -1,5 +1,4 @@
 import {
-    IconChartBar,
     IconBrain,
     IconUsers,
     IconRobot,
@@ -7,7 +6,6 @@ import {
     IconPlugConnected,
     IconFiles,
     IconUserCircle,
-    IconSettings,
     IconShield,
     IconCode,
     IconBook,
@@ -15,9 +13,9 @@ import {
     IconDashboard,
     IconAdjustments,
     IconLock,
-    IconDatabase,
     IconUserPlus,
-    IconUsersGroup
+    IconUsersGroup,
+    IconBrandWhatsapp
 } from '@tabler/icons-react'
 
 const AppIcon = {
@@ -47,7 +45,11 @@ const AppIcon = {
         headerTitle: 'AI Assistant',
         description: 'Configure AI assistants for automation'
     },
-
+    whatsapp: {
+        icon: IconBrandWhatsapp,
+        headerTitle: 'Whatsapp',
+        description: 'Manage your whatsapp conversations'
+    },
     // Tools Section
     marketplaces: {
         icon: IconPuzzle,

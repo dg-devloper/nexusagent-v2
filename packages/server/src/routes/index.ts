@@ -47,6 +47,7 @@ import auth from './auth'
 import userRouter from './user'
 import JsonWebToken from 'jsonwebtoken'
 import usersService from '../services/users'
+import waRouter from './wa'
 
 const router = express.Router()
 router.use('/auth', auth)
@@ -57,6 +58,7 @@ router.use('/internal-chatmessage', internalChatmessagesRouter)
 router.use('/internal-prediction', internalPredictionRouter)
 router.use('/ping', pingRouter)
 router.use('/prediction', predictionRouter)
+
 router.use(async (req, res, next) => {
     let token = req.headers.authorization!
 
@@ -104,6 +106,7 @@ router.use(async (req, res, next) => {
         })
     }
 })
+router.use('/whatsapp', waRouter)
 router.use('/', userRouter)
 router.use('/apikey', apikeyRouter)
 router.use('/assistants', assistantsRouter)

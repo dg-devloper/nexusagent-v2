@@ -1,6 +1,7 @@
 /* eslint-disable */
-import { Entity, Column, CreateDateColumn, UpdateDateColumn, PrimaryGeneratedColumn } from 'typeorm'
+import { Entity, Column, CreateDateColumn, UpdateDateColumn, PrimaryGeneratedColumn, OneToOne } from 'typeorm'
 import { ChatflowType, IChatFlow } from '../../Interface'
+import { Whatsapp } from './Whatsapp'
 
 @Entity()
 export class ChatFlow implements IChatFlow {
@@ -53,4 +54,7 @@ export class ChatFlow implements IChatFlow {
     @Column({ type: 'timestamp' })
     @UpdateDateColumn()
     updatedDate: Date
+
+    @OneToOne(() => Whatsapp, (whatsapp) => whatsapp.chatflow)
+    whatsapp: Whatsapp
 }

@@ -2,7 +2,7 @@ import { IAction, ICommonObject, IFileUpload, INode, INodeData as INodeDataFromC
 
 export type MessageType = 'apiMessage' | 'userMessage'
 
-export type ChatflowType = 'CHATFLOW' | 'MULTIAGENT' | 'ASSISTANT'
+export type ChatflowType = 'CHATFLOW' | 'MULTIAGENT' | 'ASSISTANT' | 'WHATSAPP'
 
 export type AssistantType = 'CUSTOM' | 'OPENAI' | 'AZURE'
 
@@ -67,6 +67,16 @@ export interface IChatMessageFeedback {
     createdDate: Date
 }
 
+export interface iWhatsapp {
+    id: string
+    userId: string
+    chatflow: IChatFlow
+    sessionId: string
+    isActive: boolean
+    phoneNumber: string
+    createdDate: Date
+    updatedDate: Date
+}
 export interface IUser {
     id: string
     name: string

@@ -15,6 +15,7 @@ import { utilGetUploadsConfig } from '../../utils/getUploadsConfig'
 import logger from '../../utils/logger'
 import { FLOWISE_METRIC_COUNTERS, FLOWISE_COUNTER_STATUS } from '../../Interface.Metrics'
 import { QueryRunner } from 'typeorm'
+import { Whatsapp } from '../../database/entities/Whatsapp'
 
 // Check if chatflow valid for streaming
 const checkIfChatflowIsValidForStreaming = async (chatflowId: string): Promise<any> => {
@@ -111,11 +112,19 @@ const getAllChatflows = async (type?: ChatflowType, userId?: string): Promise<Ch
         const dbResponse = await appServer.AppDataSource.getRepository(ChatFlow).find({
             where: { userId: userId }
         })
+
         if (type === 'MULTIAGENT') {
             return dbResponse.filter((chatflow) => chatflow.type === 'MULTIAGENT')
         } else if (type === 'CHATFLOW') {
             // fetch all chatflows that are not agentflow
             return dbResponse.filter((chatflow) => chatflow.type === 'CHATFLOW' || !chatflow.type)
+        } else if (type === 'WHATSAPP') {
+            const whatsappFlow = await appServer.AppDataSource.getRepository(Whatsapp).find({
+                where: { userId: userId }
+            })
+
+            const chatflowId = new Set(whatsappFlow.map((data) => data.chatflowId))
+            return dbResponse.filter((data) => !chatflowId.has(data.id))
         }
         return dbResponse
     } catch (error) {

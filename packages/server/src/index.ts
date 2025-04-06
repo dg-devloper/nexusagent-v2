@@ -26,6 +26,7 @@ import { IMetricsProvider } from './Interface.Metrics'
 import { Prometheus } from './metrics/Prometheus'
 import { OpenTelemetry } from './metrics/OpenTelemetry'
 import 'global-agent/bootstrap'
+import { activateAllWhatsappSession, upsertSession } from './services/whatsapp/socket'
 
 declare global {
     namespace Express {
@@ -294,8 +295,15 @@ export async function start(): Promise<void> {
     await serverApp.initDatabase()
     await serverApp.config(io)
 
+    io.on('connection', (socket) => {
+        socket.on('barcode', (chatflowid: { chatflowId: string }) => {
+            upsertSession(socket.handshake.auth.token, io, socket.id, chatflowid.chatflowId)
+        })
+    })
+
     server.listen(port, host, () => {
         logger.info(`⚡️ [server]: Flowise Server is listening at ${host ? 'http://' + host : ''}:${port}`)
+        activateAllWhatsappSession()
     })
 }
 

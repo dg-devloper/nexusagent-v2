@@ -70,6 +70,14 @@ const dashboard = {
                     url: '/tools',
                     icon: AppIcon.integrations.icon,
                     breadcrumbs: true
+                },
+                {
+                    id: 'whatsapp',
+                    title: 'Whatsapp',
+                    type: 'item',
+                    url: '/whatsapp',
+                    icon: AppIcon.whatsapp.icon,
+                    breadcrumbs: true
                 }
             ]
         },

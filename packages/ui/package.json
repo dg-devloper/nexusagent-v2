@@ -67,7 +67,8 @@
         "remark-math": "^5.1.1",
         "socket.io-client": "^4.6.1",
         "uuid": "^9.0.1",
-        "yup": "^0.32.9"
+        "yup": "^0.32.9",
+        "react-qr-code": "^2.0.12"
     },
     "scripts": {
         "dev": "vite",

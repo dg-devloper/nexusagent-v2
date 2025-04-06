@@ -1,5 +1,7 @@
 import client from './client'
 
+const getAllWhatsappFlow = () => client.get('/chatflows?type=WHATSAPP')
+
 const getAllChatflows = () => client.get('/chatflows?type=CHATFLOW')
 
 const getAllAgentflows = () => client.get('/chatflows?type=MULTIAGENT')
@@ -30,5 +32,6 @@ export default {
     updateChatflow,
     deleteChatflow,
     getIsChatflowStreaming,
-    getAllowChatflowUploads
+    getAllowChatflowUploads,
+    getAllWhatsappFlow
 }

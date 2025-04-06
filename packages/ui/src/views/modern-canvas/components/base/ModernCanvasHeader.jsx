@@ -8,15 +8,7 @@ import { useTheme } from '@mui/material/styles'
 import { Avatar, Box, ButtonBase, Typography, Stack, TextField, Button } from '@mui/material'
 
 // icons
-import {
-    IconSettings,
-    IconChevronLeft,
-    IconDeviceFloppy,
-    IconPencil,
-    IconCheck,
-    IconX,
-    IconCode
-} from '@tabler/icons-react'
+import { IconSettings, IconChevronLeft, IconDeviceFloppy, IconPencil, IconCheck, IconX, IconCode } from '@tabler/icons-react'
 
 // project imports
 import Settings from '@/views/settings'
@@ -37,11 +29,7 @@ import useApi from '@/hooks/useApi'
 // utils
 import { generateExportFlowData } from '@/utils/genericHelper'
 import { uiBaseURL } from '@/store/constant'
-import {
-    closeSnackbar as closeSnackbarAction,
-    enqueueSnackbar as enqueueSnackbarAction,
-    SET_CHATFLOW
-} from '@/store/actions'
+import { closeSnackbar as closeSnackbarAction, enqueueSnackbar as enqueueSnackbarAction, SET_CHATFLOW } from '@/store/actions'
 
 const ModernCanvasHeader = ({ chatflow, isAgentCanvas, handleSaveFlow, handleDeleteFlow, handleLoadFlow }) => {
     const theme = useTheme()
@@ -101,7 +89,7 @@ const ModernCanvasHeader = ({ chatflow, isAgentCanvas, handleSaveFlow, handleDel
                         variant: 'error',
                         persist: true,
                         action: (key) => (
-                            <Button className="modern-snackbar-btn" onClick={() => closeSnackbar(key)}>
+                            <Button className='modern-snackbar-btn' onClick={() => closeSnackbar(key)}>
                                 <IconX />
                             </Button>
                         )
@@ -237,33 +225,31 @@ const ModernCanvasHeader = ({ chatflow, isAgentCanvas, handleSaveFlow, handleDel
 
     return (
         <>
-            <Stack flexDirection="row" justifyContent="space-between" className="modern-canvas-header">
-                <Stack flexDirection="row" className="modern-canvas-header-left">
+            <Stack flexDirection='row' justifyContent='space-between' className='modern-canvas-header'>
+                <Stack flexDirection='row' className='modern-canvas-header-left'>
                     <Box>
-                        <ButtonBase title="Back" className="modern-canvas-header-back-btn">
+                        <ButtonBase title='Back' className='modern-canvas-header-back-btn'>
                             <Avatar
-                                variant="rounded"
-                                className="modern-canvas-header-avatar"
+                                variant='rounded'
+                                className='modern-canvas-header-avatar'
                                 onClick={() =>
-                                    window.history.state && window.history.state.idx > 0
-                                        ? navigate(-1)
-                                        : navigate('/', { replace: true })
+                                    window.history.state && window.history.state.idx > 0 ? navigate(-1) : navigate('/', { replace: true })
                                 }
                             >
                                 <IconChevronLeft />
                             </Avatar>
                         </ButtonBase>
                     </Box>
-                    <Box className="modern-canvas-header-title">
+                    <Box className='modern-canvas-header-title'>
                         {!isEditingFlowName ? (
-                            <Stack flexDirection="row" alignItems="center">
-                                <Typography variant="h5">
-                                    {canvas.isDirty && <span className="modern-canvas-header-dirty">*</span>} {flowName}
+                            <Stack flexDirection='row' alignItems='center'>
+                                <Typography variant='h5'>
+                                    {canvas.isDirty && <span className='modern-canvas-header-dirty'>*</span>} {flowName}
                                 </Typography>
                                 {chatflow?.id && (
                                     <ButtonBase
-                                        title="Edit Name"
-                                        className="modern-canvas-header-edit-btn"
+                                        title='Edit Name'
+                                        className='modern-canvas-header-edit-btn'
                                         onClick={() => setEditingFlowName(true)}
                                     >
                                         <IconPencil />
@@ -271,28 +257,23 @@ const ModernCanvasHeader = ({ chatflow, isAgentCanvas, handleSaveFlow, handleDel
                                 )}
                             </Stack>
                         ) : (
-                            <Stack flexDirection="row" alignItems="center">
+                            <Stack flexDirection='row' alignItems='center'>
                                 <TextField
-                                    autoFocus
-                                    size="small"
+                                    size='small'
                                     inputRef={flowNameRef}
-                                    className="modern-canvas-header-input"
+                                    className='modern-canvas-header-input'
                                     defaultValue={flowName}
                                     onKeyDown={(e) => {
                                         if (e.key === 'Enter') submitFlowName()
                                         else if (e.key === 'Escape') setEditingFlowName(false)
                                     }}
                                 />
-                                <ButtonBase
-                                    title="Save Name"
-                                    className="modern-canvas-header-save-btn"
-                                    onClick={submitFlowName}
-                                >
+                                <ButtonBase title='Save Name' className='modern-canvas-header-save-btn' onClick={submitFlowName}>
                                     <IconCheck />
                                 </ButtonBase>
                                 <ButtonBase
-                                    title="Cancel"
-                                    className="modern-canvas-header-cancel-btn"
+                                    title='Cancel'
+                                    className='modern-canvas-header-cancel-btn'
                                     onClick={() => setEditingFlowName(false)}
                                 >
                                     <IconX />
@@ -301,27 +282,19 @@ const ModernCanvasHeader = ({ chatflow, isAgentCanvas, handleSaveFlow, handleDel
                         )}
                     </Box>
                 </Stack>
-                <Box className="modern-canvas-header-actions">
+                <Box className='modern-canvas-header-actions'>
                     {chatflow?.id && (
-                        <ButtonBase
-                            title="API Endpoint"
-                            className="modern-canvas-header-api-btn"
-                            onClick={onAPIDialogClick}
-                        >
+                        <ButtonBase title='API Endpoint' className='modern-canvas-header-api-btn' onClick={onAPIDialogClick}>
                             <IconCode />
                         </ButtonBase>
                     )}
-                    <ButtonBase
-                        title={`Save ${title}`}
-                        className="modern-canvas-header-save-flow-btn"
-                        onClick={onSaveChatflowClick}
-                    >
+                    <ButtonBase title={`Save ${title}`} className='modern-canvas-header-save-flow-btn' onClick={onSaveChatflowClick}>
                         <IconDeviceFloppy />
                     </ButtonBase>
                     <ButtonBase
                         ref={settingsRef}
-                        title="Settings"
-                        className="modern-canvas-header-settings-btn"
+                        title='Settings'
+                        className='modern-canvas-header-settings-btn'
                         onClick={() => setSettingsOpen(!isSettingsOpen)}
                     >
                         <IconSettings />
@@ -349,23 +322,13 @@ const ModernCanvasHeader = ({ chatflow, isAgentCanvas, handleSaveFlow, handleDel
                 onCancel={() => setFlowDialogOpen(false)}
                 onConfirm={onConfirmSaveName}
             />
-            {apiDialogOpen && (
-                <APICodeDialog
-                    show={apiDialogOpen}
-                    dialogProps={apiDialogProps}
-                    onCancel={() => setAPIDialogOpen(false)}
-                />
-            )}
+            {apiDialogOpen && <APICodeDialog show={apiDialogOpen} dialogProps={apiDialogProps} onCancel={() => setAPIDialogOpen(false)} />}
             <ViewMessagesDialog
                 show={viewMessagesDialogOpen}
                 dialogProps={viewMessagesDialogProps}
                 onCancel={() => setViewMessagesDialogOpen(false)}
             />
-            <ViewLeadsDialog
-                show={viewLeadsDialogOpen}
-                dialogProps={viewLeadsDialogProps}
-                onCancel={() => setViewLeadsDialogOpen(false)}
-            />
+            <ViewLeadsDialog show={viewLeadsDialogOpen} dialogProps={viewLeadsDialogProps} onCancel={() => setViewLeadsDialogOpen(false)} />
             {exportAsTemplateDialogOpen && (
                 <ExportAsTemplateDialog
                     show={exportAsTemplateDialogOpen}
@@ -379,7 +342,7 @@ const ModernCanvasHeader = ({ chatflow, isAgentCanvas, handleSaveFlow, handleDel
                 onCancel={() => setUpsertHistoryDialogOpen(false)}
             />
             <ChatflowConfigurationDialog
-                key="chatflowConfiguration"
+                key='chatflowConfiguration'
                 show={chatflowConfigurationDialogOpen}
                 dialogProps={chatflowConfigurationDialogProps}
                 onCancel={() => setChatflowConfigurationDialogOpen(false)}
