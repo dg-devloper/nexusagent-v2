@@ -120,7 +120,10 @@ const getAllChatflows = async (type?: ChatflowType, userId?: string): Promise<Ch
             return dbResponse.filter((chatflow) => chatflow.type === 'CHATFLOW' || !chatflow.type)
         } else if (type === 'WHATSAPP') {
             const whatsappFlow = await appServer.AppDataSource.getRepository(Whatsapp).find({
-                where: { userId: userId }
+                where: {
+                    userId: userId,
+                    isActive: true
+                }
             })
 
             const chatflowId = new Set(whatsappFlow.map((data) => data.chatflowId))

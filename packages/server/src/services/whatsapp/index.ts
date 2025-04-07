@@ -10,16 +10,25 @@ import { getMySQLAuthState } from '../../utils/mysqlAuth'
 const deleteWhatsappSession = async (sessionId: string): Promise<boolean> => {
     try {
         const appServer = getRunningExpressApp()
-        const whatsappRepo = appServer.AppDataSource.getRepository(Whatsapp)
-
-        const result = await whatsappRepo.delete({
-            sessionId: sessionId
-        })
 
         const { removeCreds } = await getMySQLAuthState(sessionId)
-        removeCreds()
 
-        return result.affected ? result.affected > 0 : false
+        const whatsappRepo = appServer.AppDataSource.getRepository(Whatsapp)
+
+        const whatsapp = await whatsappRepo.findOneBy({
+            sessionId
+        })
+
+        if (!whatsapp) {
+            throw new InternalFlowiseError(StatusCodes.NOT_FOUND, `Whatsapp session ${sessionId} not found`)
+        }
+
+        whatsapp.isActive = false
+        await whatsappRepo.save(whatsapp)
+
+        await removeCreds()
+
+        return true
     } catch (error) {
         logger.error(`Error deleting WhatsApp session: ${getErrorMessage(error)}`)
         throw new InternalFlowiseError(StatusCodes.INTERNAL_SERVER_ERROR, `Error deleting WhatsApp session: ${getErrorMessage(error)}`)
@@ -32,7 +41,7 @@ const getAllWhatsappDataByUserId = async (userId: string) => {
         const appServer = getRunningExpressApp()
         const repo = await appServer.AppDataSource.getRepository(Whatsapp)
         const data = await repo.query(
-            'SELECT whatsapp.*, chat_flow.name FROM whatsapp INNER JOIN chat_flow ON whatsapp.chatflowId COLLATE utf8mb4_unicode_ci = chat_flow.id COLLATE utf8mb4_unicode_ci WHERE whatsapp.userId = ?',
+            'SELECT whatsapp.*, chat_flow.name FROM whatsapp INNER JOIN chat_flow ON whatsapp.chatflowId COLLATE utf8mb4_unicode_ci = chat_flow.id COLLATE utf8mb4_unicode_ci WHERE whatsapp.userId = ? AND whatsapp.isActive = 1',
             [userId]
         )
 

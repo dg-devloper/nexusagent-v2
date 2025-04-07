@@ -45,8 +45,8 @@ const WhatsAppMessages = () => {
     const [alertMessage, setAlertMessage] = useState('')
     const getAllChatflowsApi = useApi(chatflowsApi.getAllWhatsappFlow)
     const getAllWhatsappApi = useApi(whatsappApi.getAllWhatsapp)
-    const [isLoading, setLoading] = useState(true)
-    const [error, setError] = useState(true)
+    const [isLoading, setLoading] = useState(true) // eslint-disable-line
+    const [error, setError] = useState(true) // eslint-disable-line
     const [errorAgent, setErrorAgent] = useState(false)
     const [isRequestBarcode, setIsRequestBarcode] = useState(false)
     const [deleteDialogOpen, setDeleteDialogOpen] = useState(false)
@@ -103,7 +103,6 @@ const WhatsAppMessages = () => {
 
     const handleDeleteCancel = () => {
         setDeleteDialogOpen(false)
-        setSelectedMessageId(null)
     }
 
     useEffect(() => {

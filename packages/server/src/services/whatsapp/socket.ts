@@ -9,13 +9,14 @@ import { getRunningExpressApp } from '../../utils/getRunningExpressApp'
 import { Whatsapp } from '../../database/entities/Whatsapp'
 import { App } from '../../index'
 import { getMySQLAuthState } from '../../utils/mysqlAuth'
+import appLogger from '../../utils/logger'
 
 const logger = pino({ level: 'silent' })
 
 export async function createSession(
     sessionId: string,
-    chatflowId: string,
-    userId: string,
+    chatflowId: string | undefined = undefined,
+    userId: string | undefined = undefined,
     socket: Server | undefined = undefined,
     socketId: string | undefined = undefined,
     appServer: App | undefined = undefined
@@ -31,8 +32,6 @@ export async function createSession(
     const sock = makeWASocket({
         auth: state,
         logger: logger,
-        connectTimeoutMs: 60000,
-        retryRequestDelayMs: 250,
         browser: ['Chrome (Linux)', '', '']
     })
 
@@ -41,6 +40,7 @@ export async function createSession(
         const { connection, lastDisconnect, qr } = update
 
         if (qr) {
+            console.log('GENERATING NEW QR')
             if (socketId && socket) {
                 socket.to(socketId).emit('qrcode', { action: 'generate', qrcode: qr, success: true })
             }
@@ -48,7 +48,6 @@ export async function createSession(
 
         if (connection === 'close') {
             const shouldReconnect = (lastDisconnect?.error as Boom)?.output?.statusCode !== DisconnectReason.loggedOut
-            console.log(`Koneksi terputus untuk sesi ${sessionId}, mencoba menghubungkan kembali:`, shouldReconnect)
 
             if (shouldReconnect) {
                 await createSession(sessionId, chatflowId, userId, socket, socketId, appServer)
@@ -56,7 +55,7 @@ export async function createSession(
                 console.log(`Sesi ${sessionId} telah logout, silakan scan ulang QR code`)
             }
         } else if (connection === 'open') {
-            await saveCreds()
+            console.log('ID WA', generateRandomString)
             // Update QR di sessions setelah terhubung
             if (socketId && socket) {
                 socket.to(socketId).emit('waconnect', { connected: true, success: true })
@@ -64,7 +63,7 @@ export async function createSession(
 
             if (appServer) {
                 // Check apakah data chatflow sudah ada di database
-                const chatflow = await appServer.AppDataSource.getRepository(Whatsapp).findOneBy({ chatflowId: chatflowId })
+                const chatflow = await appServer.AppDataSource.getRepository(Whatsapp).findOneBy({ chatflowId: chatflowId, isActive: true })
                 if (!chatflow) {
                     const wa = await appServer.AppDataSource.getRepository(Whatsapp).create({
                         chatflowId: chatflowId,
@@ -83,22 +82,33 @@ export async function createSession(
 
     // Menangani pesan masuk
     sock.ev.on('messages.upsert', async ({ messages }) => {
-        const m = messages[0]
-        if (!m.message) return
+        try {
+            if (!appServer) return
+            const chatflow = await appServer.AppDataSource.getRepository(Whatsapp).findOneBy({ sessionId: sessionId })
 
-        if (m.key.fromMe) return
+            if (!chatflow) return
 
-        const message = m.message.extendedTextMessage?.text || m.message.conversation
-        const id = m.key.remoteJid
-        const response = await query(message!, chatflowId)
+            if (!chatflow.isActive) return
 
-        console.log('Send message')
-        sock.sendMessage(id!, { text: response.text })
+            const m = messages[0]
+            if (!m.message) return
+
+            if (m.key.fromMe) return
+
+            const message = m.message.extendedTextMessage?.text || m.message.conversation
+            const id = m.key.remoteJid
+
+            if (!chatflowId) return
+            const response = await query(message!, chatflowId)
+
+            sock.sendMessage(id!, { text: response.text || 'Maaf, saya tidak mengerti pertanyaan Anda' })
+        } catch (err) {
+            appLogger.error('Failed querying to agent')
+        }
     })
 
     // Menangani error
     sock.ev.on('creds.update', async () => {
-        console.log('creds.update')
         await saveCreds()
     })
 
@@ -125,12 +135,16 @@ export const upsertSession = async (token: string, io: Server, socketId: string,
 }
 
 export const activateAllWhatsappSession = async () => {
-    const appServer = getRunningExpressApp()
-    const sessions = await appServer.AppDataSource.getRepository(Whatsapp).find()
+    try {
+        const appServer = getRunningExpressApp()
+        const sessions = await appServer.AppDataSource.getRepository(Whatsapp).find({ where: { isActive: true } })
 
-    sessions.forEach(async (session) => {
-        await createSession(session.sessionId, session.chatflowId, session.userId)
-    })
+        sessions.forEach(async (session) => {
+            await createSession(session.sessionId, session.chatflowId, session.userId)
+        })
+    } catch (err) {
+        console.log(err)
+    }
 }
 
 const verifUser = async (token: string) => {
@@ -179,26 +193,3 @@ async function query(question: string, chatflowId: string) {
     const result = await response.json()
     return result
 }
-
-// Fungsi untuk menutup sesi WhatsApp
-// export async function closeSession(sessionId: string): Promise<void> {
-//     try {
-//         const session = sessions.get(sessionId)
-//         if (session) {
-//             // Menutup koneksi WhatsApp
-//             if (session.socket) {
-//                 await session.socket.logout()
-//                 session.socket.end()
-//             }
-
-//             // Menghapus sesi dari map
-//             sessions.delete(sessionId)
-//             console.log(`Sesi ${sessionId} telah ditutup`)
-//         } else {
-//             console.log(`Sesi ${sessionId} tidak ditemukan`)
-//         }
-//     } catch (error) {
-//         console.error(`Error saat menutup sesi ${sessionId}:`, error)
-//         throw error
-//     }
-// }

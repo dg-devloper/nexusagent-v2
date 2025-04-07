@@ -1,7 +1,7 @@
 import { useEffect, useState, useRef, useCallback } from 'react'
 
 // material-ui
-import { Box, Stack, ButtonGroup, Typography, alpha, Chip, Tooltip, Grid, InputBase, InputAdornment } from '@mui/material'
+import { Box, Stack, ButtonGroup, Typography, alpha, Chip, Grid, InputBase, InputAdornment } from '@mui/material'
 
 // project imports
 import MainCard from '@/ui-component/cards/MainCard'
@@ -18,9 +18,19 @@ import toolsApi from '@/api/tools'
 import useApi from '@/hooks/useApi'
 
 // icons
-import { IconPlus, IconFileUpload, IconLayoutGrid, IconLayoutList, IconPlugConnected, IconCode, IconApi, IconBrandJavascript, IconInfoCircle, IconSearch } from '@tabler/icons-react'
+import {
+    IconPlus,
+    IconFileUpload,
+    IconLayoutGrid,
+    IconLayoutList,
+    IconPlugConnected,
+    IconCode,
+    IconApi,
+    IconBrandJavascript,
+    IconInfoCircle,
+    IconSearch
+} from '@tabler/icons-react'
 import ErrorBoundary from '@/ErrorBoundary'
-import AppIcon from '@/menu-items/icon'
 
 const brandColor = '#2b63d9'
 const buttonBlue = '#5379e0'
@@ -63,21 +73,24 @@ const Tools = () => {
         }
     }, [])
 
-    const handleFileUpload = useCallback((e) => {
-        if (!e.target.files) return
+    const handleFileUpload = useCallback(
+        (e) => {
+            if (!e.target.files) return
 
-        const file = e.target.files[0]
+            const file = e.target.files[0]
 
-        const reader = new FileReader()
-        reader.onload = (evt) => {
-            if (!evt?.target?.result) {
-                return
+            const reader = new FileReader()
+            reader.onload = (evt) => {
+                if (!evt?.target?.result) {
+                    return
+                }
+                const { result } = evt.target
+                onUploadFile(result)
             }
-            const { result } = evt.target
-            onUploadFile(result)
-        }
-        reader.readAsText(file)
-    }, [onUploadFile])
+            reader.readAsText(file)
+        },
+        [onUploadFile]
+    )
 
     const addNew = useCallback(() => {
         const dialogProp = {
@@ -172,7 +185,7 @@ const Tools = () => {
             <Stack spacing={4} sx={{ position: 'relative', zIndex: 1 }}>
                 <Grid container spacing={3}>
                     <Grid item xs={12} md={7}>
-                        <Stack direction="row" spacing={3} alignItems="center">
+                        <Stack direction='row' spacing={3} alignItems='center'>
                             <Box
                                 sx={{
                                     backgroundColor: 'rgba(255, 255, 255, 0.1)',
@@ -191,9 +204,9 @@ const Tools = () => {
                                 <IconPlugConnected stroke={2} size='1.5rem' style={{ color: '#fff' }} />
                             </Box>
                             <Stack spacing={1}>
-                                <Typography 
-                                    variant='h3' 
-                                    sx={{ 
+                                <Typography
+                                    variant='h3'
+                                    sx={{
                                         color: '#fff',
                                         fontWeight: 700,
                                         textShadow: '0 2px 4px rgba(0,0,0,0.1)',
@@ -202,8 +215,8 @@ const Tools = () => {
                                 >
                                     Custom Tools
                                 </Typography>
-                                <Typography 
-                                    sx={{ 
+                                <Typography
+                                    sx={{
                                         color: 'rgba(255, 255, 255, 0.9)',
                                         fontSize: '1rem',
                                         lineHeight: 1.6
@@ -214,10 +227,10 @@ const Tools = () => {
                             </Stack>
                         </Stack>
 
-                        <Stack direction="row" spacing={2} sx={{ mt: 3 }}>
-                            <Chip 
-                                icon={<IconCode size={16} />} 
-                                label="JavaScript Functions" 
+                        <Stack direction='row' spacing={2} sx={{ mt: 3 }}>
+                            <Chip
+                                icon={<IconCode size={16} />}
+                                label='JavaScript Functions'
                                 sx={{
                                     backgroundColor: 'rgba(255, 255, 255, 0.15)',
                                     color: 'white',
@@ -228,9 +241,9 @@ const Tools = () => {
                                     }
                                 }}
                             />
-                            <Chip 
-                                icon={<IconApi size={16} />} 
-                                label="API Integration" 
+                            <Chip
+                                icon={<IconApi size={16} />}
+                                label='API Integration'
                                 sx={{
                                     backgroundColor: 'rgba(255, 255, 255, 0.15)',
                                     color: 'white',
@@ -241,9 +254,9 @@ const Tools = () => {
                                     }
                                 }}
                             />
-                            <Chip 
-                                icon={<IconBrandJavascript size={16} />} 
-                                label="Custom Logic" 
+                            <Chip
+                                icon={<IconBrandJavascript size={16} />}
+                                label='Custom Logic'
                                 sx={{
                                     backgroundColor: 'rgba(255, 255, 255, 0.15)',
                                     color: 'white',
@@ -268,11 +281,9 @@ const Tools = () => {
                             }}
                         >
                             <Stack spacing={2}>
-                                <Stack direction="row" spacing={1.5} alignItems="center">
+                                <Stack direction='row' spacing={1.5} alignItems='center'>
                                     <IconInfoCircle size={20} style={{ color: 'white' }} />
-                                    <Typography sx={{ color: 'white', fontWeight: 600 }}>
-                                        What are Custom Tools?
-                                    </Typography>
+                                    <Typography sx={{ color: 'white', fontWeight: 600 }}>What are Custom Tools?</Typography>
                                 </Stack>
                                 <Typography sx={{ color: 'rgba(255, 255, 255, 0.9)', fontSize: '0.875rem', lineHeight: 1.6 }}>
                                     Custom Tools allow you to extend your AI capabilities by creating JavaScript functions that can:
@@ -340,7 +351,7 @@ const Tools = () => {
                     >
                         <InputBase
                             inputRef={searchInputRef}
-                            placeholder="Search name or description..."
+                            placeholder='Search name or description...'
                             onChange={onSearchChange}
                             sx={{
                                 borderRadius: '16px',
@@ -353,10 +364,10 @@ const Tools = () => {
                                 padding: '8px 16px 8px 16px',
                                 boxShadow: '0 4px 12px rgba(0,0,0,0.1)',
                                 '&:hover': {
-                                    backgroundColor: 'rgba(255, 255, 255, 0.2)',
+                                    backgroundColor: 'rgba(255, 255, 255, 0.2)'
                                 },
                                 '&.Mui-focused': {
-                                    backgroundColor: 'rgba(255, 255, 255, 0.25)',
+                                    backgroundColor: 'rgba(255, 255, 255, 0.25)'
                                 },
                                 '& .MuiInputBase-input::placeholder': {
                                     color: 'rgba(255, 255, 255, 0.7)',
@@ -364,26 +375,26 @@ const Tools = () => {
                                 }
                             }}
                             startAdornment={
-                                <InputAdornment position="start" sx={{ color: 'rgba(255, 255, 255, 0.7)', mr: 1 }}>
+                                <InputAdornment position='start' sx={{ color: 'rgba(255, 255, 255, 0.7)', mr: 1 }}>
                                     <IconSearch stroke={1.5} size='1.2rem' />
                                 </InputAdornment>
                             }
                         />
                     </Box>
 
-                    <Stack direction="row" spacing={2}>
-                        <ButtonGroup 
-                            variant="contained" 
-                            sx={{ 
-                                borderRadius: '16px', 
+                    <Stack direction='row' spacing={2}>
+                        <ButtonGroup
+                            variant='contained'
+                            sx={{
+                                borderRadius: '16px',
                                 overflow: 'hidden',
                                 boxShadow: '0 4px 12px rgba(0,0,0,0.1)'
                             }}
                         >
                             <StyledButton
                                 onClick={() => handleChange('list')}
-                                sx={{ 
-                                    borderTopLeftRadius: '16px', 
+                                sx={{
+                                    borderTopLeftRadius: '16px',
                                     borderBottomLeftRadius: '16px',
                                     height: 40,
                                     minWidth: 40,
@@ -401,8 +412,8 @@ const Tools = () => {
                             </StyledButton>
                             <StyledButton
                                 onClick={() => handleChange('card')}
-                                sx={{ 
-                                    borderTopRightRadius: '16px', 
+                                sx={{
+                                    borderTopRightRadius: '16px',
                                     borderBottomRightRadius: '16px',
                                     height: 40,
                                     minWidth: 40,
@@ -421,8 +432,8 @@ const Tools = () => {
                         </ButtonGroup>
                         <StyledButton
                             onClick={() => inputRef.current.click()}
-                            sx={{ 
-                                borderRadius: '16px', 
+                            sx={{
+                                borderRadius: '16px',
                                 height: 40,
                                 padding: '0 20px',
                                 backgroundColor: buttonBlue,
@@ -450,8 +461,8 @@ const Tools = () => {
                         />
                         <StyledButton
                             onClick={addNew}
-                            sx={{ 
-                                borderRadius: '16px', 
+                            sx={{
+                                borderRadius: '16px',
                                 height: 40,
                                 padding: '0 20px',
                                 backgroundColor: buttonBlue,
@@ -493,7 +504,10 @@ const Tools = () => {
                                                 sx={{
                                                     height: 160,
                                                     borderRadius: 3,
-                                                    background: `linear-gradient(90deg, ${alpha(brandColor, 0.04)} 0%, ${alpha(brandColor, 0.02)} 50%, ${alpha(brandColor, 0.04)} 100%)`,
+                                                    background: `linear-gradient(90deg, ${alpha(brandColor, 0.04)} 0%, ${alpha(
+                                                        brandColor,
+                                                        0.02
+                                                    )} 50%, ${alpha(brandColor, 0.04)} 100%)`,
                                                     backgroundSize: '200% 100%',
                                                     animation: 'pulse 2s ease-in-out infinite',
                                                     '@keyframes pulse': {
@@ -520,17 +534,17 @@ const Tools = () => {
                             <ToolsTable data={filteredData} isLoading={isLoading} onSelect={edit} />
                         )}
                         {!isLoading && (!filteredData || filteredData.length === 0) && (
-                            <Stack 
-                                sx={{ 
-                                    alignItems: 'center', 
+                            <Stack
+                                sx={{
+                                    alignItems: 'center',
                                     justifyContent: 'center',
                                     py: 8
-                                }} 
+                                }}
                                 flexDirection='column'
                                 spacing={2}
                             >
                                 <Typography
-                                    variant="h5"
+                                    variant='h5'
                                     sx={{
                                         color: 'rgb(99, 115, 129)',
                                         textAlign: 'center',
@@ -540,7 +554,7 @@ const Tools = () => {
                                     No tools yet. Create your first tool to get started!
                                 </Typography>
                                 <StyledButton
-                                    variant="contained"
+                                    variant='contained'
                                     onClick={addNew}
                                     startIcon={<IconPlus />}
                                     sx={{

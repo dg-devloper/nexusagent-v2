@@ -50,7 +50,7 @@ import AppIcon from '@/menu-items/icon'
 
 const brandColor = '#2b63d9'
 
-const StyledTableCell = styled(TableCell)(({ theme }) => ({
+const StyledTableCell = styled(TableCell)(({ _ }) => ({
     borderBottom: `1px solid ${alpha(brandColor, 0.1)}`,
     padding: '20px 24px',
     [`&.${tableCellClasses.head}`]: {
