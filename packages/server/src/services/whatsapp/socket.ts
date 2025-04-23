@@ -1,4 +1,4 @@
-import { default as makeWASocket, DisconnectReason } from 'baileys'
+import { default as makeWASocket, DisconnectReason, downloadMediaMessage } from 'baileys'
 import { Boom } from '@hapi/boom'
 import pino from 'pino'
 import JsonWebToken from 'jsonwebtoken'
@@ -10,6 +10,7 @@ import { Whatsapp } from '../../database/entities/Whatsapp'
 import { App } from '../../index'
 import { getMySQLAuthState } from '../../utils/mysqlAuth'
 import appLogger from '../../utils/logger'
+import chatflowsService from '../chatflows'
 
 const logger = pino({ level: 'silent' })
 
@@ -55,7 +56,6 @@ export async function createSession(
                 console.log(`Sesi ${sessionId} telah logout, silakan scan ulang QR code`)
             }
         } else if (connection === 'open') {
-            console.log('ID WA', generateRandomString)
             // Update QR di sessions setelah terhubung
             if (socketId && socket) {
                 socket.to(socketId).emit('waconnect', { connected: true, success: true })
@@ -87,21 +87,62 @@ export async function createSession(
             const chatflow = await appServer.AppDataSource.getRepository(Whatsapp).findOneBy({ sessionId: sessionId })
 
             if (!chatflow) return
-
             if (!chatflow.isActive) return
 
             const m = messages[0]
             if (!m.message) return
 
             if (m.key.fromMe) return
-
-            const message = m.message.extendedTextMessage?.text || m.message.conversation
             const id = m.key.remoteJid
 
             if (!chatflowId) return
-            const response = await query(message!, chatflowId)
 
-            sock.sendMessage(id!, { text: response.text || 'Maaf, saya tidak mengerti pertanyaan Anda' })
+            if (m.message.imageMessage) {
+                const isValidUpload = await chatflowsService.checkIfChatflowIsValidForUploads(chatflowId)
+                if (isValidUpload.isImageUploadAllowed) {
+                    const buffer = await downloadMediaMessage(
+                        m,
+                        'buffer',
+                        {},
+                        { logger: sock.logger, reuploadRequest: sock.updateMediaMessage }
+                    )
+
+                    const mimeType = m.message.imageMessage.mimetype
+                    const base64String = buffer.toString('base64')
+                    const dataUri = `data:${mimeType};base64,${base64String}`
+
+                    console.log(m.message.imageMessage.caption)
+
+                    // checkIfChatflowIsValidForUploads
+
+                    const response = await query(
+                        {
+                            question: m.message.imageMessage.caption,
+                            uploads: [
+                                {
+                                    type: 'file',
+                                    name: `image.${mimeType?.split('/')[1]}`,
+                                    data: dataUri,
+                                    mime: mimeType
+                                }
+                            ]
+                        },
+                        chatflowId
+                    )
+                    sock.sendMessage(id!, { text: response.text || 'Maaf, saya tidak mengerti pertanyaan Anda' })
+                } else {
+                    sock.sendMessage(id!, { text: 'Maaf, Anda tidak dapat mengirim gambar' })
+                }
+            } else {
+                const message = m.message.extendedTextMessage?.text || m.message.conversation
+                const response = await query(
+                    {
+                        question: message!
+                    },
+                    chatflowId
+                )
+                sock.sendMessage(id!, { text: response.text || 'Maaf, saya tidak mengerti pertanyaan Anda' })
+            }
         } catch (err) {
             appLogger.error('Failed querying to agent')
         }
@@ -140,7 +181,7 @@ export const activateAllWhatsappSession = async () => {
         const sessions = await appServer.AppDataSource.getRepository(Whatsapp).find({ where: { isActive: true } })
 
         sessions.forEach(async (session) => {
-            await createSession(session.sessionId, session.chatflowId, session.userId)
+            await createSession(session.sessionId, session.chatflowId, session.userId, undefined, undefined, appServer)
         })
     } catch (err) {
         console.log(err)
@@ -182,13 +223,13 @@ export const generateRandomString = (): string => {
     return `${timestamp}-${randomChars}`
 }
 
-async function query(question: string, chatflowId: string) {
+async function query(data: {}, chatflowId: string) {
     const response = await fetch(`http://localhost:3000/api/v1/prediction/${chatflowId}`, {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json'
         },
-        body: JSON.stringify({ question })
+        body: JSON.stringify(data)
     })
     const result = await response.json()
     return result

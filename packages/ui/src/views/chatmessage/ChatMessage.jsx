@@ -1072,6 +1072,7 @@ export const ChatMessage = ({ open, chatflowid, isAgentCanvas, isDialog, preview
     // Get chatflow uploads capability
     useEffect(() => {
         if (getAllowChatFlowUploads.data) {
+            console.log(getAllowChatFlowUploads.data)
             setIsChatFlowAvailableForImageUploads(getAllowChatFlowUploads.data?.isImageUploadAllowed ?? false)
             setIsChatFlowAvailableForRAGFileUploads(getAllowChatFlowUploads.data?.isRAGFileUploadAllowed ?? false)
             setIsChatFlowAvailableForSpeech(getAllowChatFlowUploads.data?.isSpeechToTextEnabled ?? false)
